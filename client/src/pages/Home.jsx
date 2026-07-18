@@ -103,7 +103,7 @@ export default function Home() {
           >
             {projects?.slice(0, 6).map((project) => (
               <SwiperSlide key={project.id}>
-                <Link to={`/projects/${project.slug}`}>
+                <Link to={project.pdf_url ? `/portfolio/${project.slug}` : `/projects/${project.slug}`}>
                   <HomeProjectCard project={project} />
                 </Link>
               </SwiperSlide>

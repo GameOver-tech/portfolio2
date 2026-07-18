@@ -2,30 +2,19 @@ import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-const supabaseServiceRole = import.meta.env.VITE_SUPABASE_SERVICE_ROLE
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase credentials not found. Check your environment variables.')
 }
 
-// Public client (anon key) — respects RLS. Used on the frontend site.
+// Public client (anon key) — respects RLS.
+// Admin users authenticate via supabase.auth.signInWithPassword() on the Login page.
+// Once logged in, Supabase RLS policies with auth.role() = 'authenticated'
+// grant full CRUD access — no service role key needed in the browser.
 export const supabase = createClient(
   supabaseUrl || '',
   supabaseAnonKey || ''
 )
 
-// Admin client (service role key) — bypasses RLS. Used ONLY in admin panel pages.
-// Allows full CRUD on all tables regardless of publish/active status.
-let _adminSupabase
-if (supabaseServiceRole) {
-  _adminSupabase = createClient(supabaseUrl || '', supabaseServiceRole)
-} else {
-  console.warn(
-    '[adminSupabase] VITE_SUPABASE_SERVICE_ROLE is not set. ' +
-    'Falling back to anon key — admin CRUD operations may fail if RLS blocks writes. ' +
-    'Add VITE_SUPABASE_SERVICE_ROLE to your .env file.'
-  )
-  _adminSupabase = supabase
-}
-
-export const adminSupabase = _adminSupabase
+// For backward compatibility with admin pages that import { adminSupabase }
+export const adminSupabase = supabase

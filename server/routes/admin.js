@@ -125,6 +125,15 @@ router.post('/categories', async (req, res) => {
 })
 
 router.delete('/categories/:id', async (req, res) => {
+  // First, get the category name to find projects using it
+  const { data: category } = await supabase.from('categories').select('name').eq('id', req.params.id).single()
+
+  if (category) {
+    // Reassign projects using this category to null (uncategorized)
+    await supabase.from('projects').update({ category: null, updated_at: new Date() }).eq('category', category.name)
+  }
+
+  // Then delete the category itself
   await supabase.from('categories').delete().eq('id', req.params.id)
   res.json({ success: true })
 })

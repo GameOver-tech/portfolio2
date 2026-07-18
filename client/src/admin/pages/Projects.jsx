@@ -7,7 +7,7 @@ import { refreshSite } from '../../utils/refresh'
 const defaultForm = {
   title: '', slug: '', description: '', category: '', client: '', duration: '',
   software: '', thumbnail_url: '', project_url: '', case_study_url: '', github_url: '',
-  problem: '', solution: '', status: 'published', featured: false
+  pdf_url: '', problem: '', solution: '', status: 'published', featured: false
 }
 
 function generateSlug(title) {
@@ -135,6 +135,7 @@ export default function AdminProjects() {
       project_url: item.project_url || '',
       case_study_url: item.case_study_url || '',
       github_url: item.github_url || '',
+      pdf_url: item.pdf_url || '',
       problem: item.problem || '',
       solution: item.solution || '',
       status: item.status || 'published',
@@ -262,6 +263,17 @@ export default function AdminProjects() {
                   <label className="block text-xs text-gray mb-1">GitHub / Repository URL</label>
                   <input value={form.github_url} onChange={(e) => setForm({ ...form, github_url: e.target.value })} placeholder="https://github.com/..." className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-colors" />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray mb-1">PDF URL (Portfolio Viewer)</label>
+                <input value={form.pdf_url} onChange={(e) => setForm({ ...form, pdf_url: e.target.value })} placeholder="https://drive.google.com/your-portfolio.pdf" className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-colors" />
+                {form.pdf_url && (
+                  <a href={form.pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 mt-2 text-xs text-primary hover:underline">
+                    <span>Preview PDF Link</span>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  </a>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">

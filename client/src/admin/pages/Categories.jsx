@@ -33,9 +33,11 @@ export default function AdminCategories() {
     fetchData()
   }
 
-  const handleDelete = async (id) => {
-    if (!confirm('Delete this category?')) return
+  const handleDelete = async (id, name) => {
+    if (!confirm(`Delete "${name}"? Projects using this category will become uncategorized.`)) return
     try {
+      // Reassign projects first, then delete the category
+      await supabase.from('projects').update({ category: null }).eq('category', name)
       const { error } = await supabase.from('categories').delete().eq('id', id)
       if (error) throw error
       showToast('Category deleted!')
@@ -58,7 +60,7 @@ export default function AdminCategories() {
         {categories.map((cat) => (
           <div key={cat.id} className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-card border border-white/5">
             <span>{cat.name}</span>
-            <button onClick={() => handleDelete(cat.id)} className="text-gray hover:text-red-400 transition-colors text-sm">✕</button>
+            <button onClick={() => handleDelete(cat.id, cat.name)} className="text-gray hover:text-red-400 transition-colors text-sm">✕</button>
           </div>
         ))}
       </div>

@@ -14,7 +14,9 @@ const app = express()
 // Security
 app.use(helmet())
 app.use(cors({
-  origin: config.corsOrigins,
+  origin: config.corsOrigins.includes('*')
+    ? (origin, cb) => cb(null, origin || true)
+    : config.corsOrigins,
   credentials: true,
 }))
 

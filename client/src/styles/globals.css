@@ -137,6 +137,53 @@ body {
   }
 }
 
+/* PDF Viewer Styles */
+.pdf-page canvas {
+  display: block;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.pdf-page .react-pdf__Page__textContent {
+  display: none;
+}
+
+.pdf-page .react-pdf__Page__annotations {
+  display: none;
+}
+
+@media print {
+  .pdf-page canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  .pdf-page {
+    page-break-after: always;
+    break-inside: avoid;
+  }
+}
+
+/* Hide scrollbar for toolbar */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Shimmer animation for PDF loading skeletons */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
 /* Swiper customization */
 .swiper-pagination-bullet {
   background: #A0A0A0 !important;

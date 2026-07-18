@@ -8,8 +8,9 @@ import { useApp } from '../context/AppContext'
 import { supabase } from '../services/supabase'
 
 function ProjectCard({ project }) {
+  const linkTo = project.pdf_url ? `/portfolio/${project.slug}` : `/projects/${project.slug}`
   return (
-    <Link to={`/projects/${project.slug}`}>
+    <Link to={linkTo}>
       <motion.div
         whileHover={{ y: -8 }}
         className="group relative rounded-2xl overflow-hidden bg-card border border-white/5 min-h-[280px]"
@@ -61,8 +62,8 @@ export default function Projects() {
     })
   }, [])
 
-  // Merge DB categories with hardcoded defaults, deduplicate
-  const allCategories = ['All', ...new Set([...dbCategories, 'Branding', 'Logo', 'Social Media', 'Packaging', 'Print', 'UI'])]
+  // Use only DB categories — no hardcoded defaults so deleted categories don't persist
+  const allCategories = ['All', ...dbCategories]
 
   const filteredProjects = (projects || []).filter((project) => {
     const matchesCategory = activeCategory === 'All' || project.category === activeCategory

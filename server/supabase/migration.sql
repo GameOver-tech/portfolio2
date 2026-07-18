@@ -116,6 +116,7 @@ DO $$ BEGIN
     ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS project_url TEXT;
     ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS case_study_url TEXT;
     ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS github_url TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS pdf_url TEXT;
 EXCEPTION WHEN duplicate_column THEN NULL;
 END $$;
 
