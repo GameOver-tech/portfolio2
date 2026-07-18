@@ -228,6 +228,8 @@ export default function Home() {
               </Link>
               <a
                 href={heroData?.resume_url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
                 download
                 className="px-8 py-4 border border-white/10 rounded-full text-white font-semibold hover:bg-white/5 transition-all duration-300 flex items-center space-x-2"
               >
