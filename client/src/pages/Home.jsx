@@ -58,7 +58,7 @@ function HomeProjectCard({ project }) {
 }
 
 export default function Home() {
-  const { projects, services, testimonials, siteSettings } = useApp()
+  const { projects, services, testimonials, siteSettings, heroData } = useApp()
   const t = siteSettings?.section_titles || {}
   const featuredTitle = (t.featured_projects || 'Featured').replace(/\s*Projects$/, '')
   const servicesTitle = (t.services || 'Services &').replace(/\s*Expertise$/, '')
@@ -227,7 +227,7 @@ export default function Home() {
                 <FiArrowRight />
               </Link>
               <a
-                href="/resume.pdf"
+                href={heroData?.resume_url || '#'}
                 download
                 className="px-8 py-4 border border-white/10 rounded-full text-white font-semibold hover:bg-white/5 transition-all duration-300 flex items-center space-x-2"
               >
