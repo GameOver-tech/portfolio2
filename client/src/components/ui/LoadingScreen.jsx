@@ -28,9 +28,9 @@ export default function LoadingScreen() {
               className="text-6xl font-heading font-bold text-gradient mb-4"
               animate={{ 
                 textShadow: [
-                  '0 0 20px rgba(0,230,118,0.3)',
-                  '0 0 40px rgba(0,230,118,0.6)',
-                  '0 0 20px rgba(0,230,118,0.3)',
+                  '0 0 20px rgba(253,248,245,0.3)',
+                  '0 0 40px rgba(253,248,245,0.5)',
+                  '0 0 20px rgba(253,248,245,0.3)',
                 ]
               }}
               transition={{ duration: 2, repeat: Infinity }}
