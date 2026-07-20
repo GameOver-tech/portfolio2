@@ -8,12 +8,22 @@ import { useApp } from '../context/AppContext'
 import { supabase } from '../services/supabase'
 
 function ProjectCard({ project }) {
-  const linkTo = project.pdf_url ? `/portfolio/${project.slug}` : `/projects/${project.slug}`
+  const detailLink = project.pdf_url ? `/portfolio/${project.slug}` : `/projects/${project.slug}`
+  const externalUrl = project.project_url || '#'
   return (
-    <Link to={linkTo}>
-      <motion.div
-        whileHover={{ y: -8, scale: 1.01 }}
-        className="group relative min-h-[280px] overflow-hidden rounded-[1.75rem] border border-[#EFE5DA] bg-white p-3 shadow-[0_24px_70px_-40px_rgba(31,31,31,0.3)]"
+    <motion.div
+      whileHover={{ y: -8, scale: 1.01 }}
+      className="group relative min-h-[280px] overflow-hidden rounded-[1.75rem] border border-[#EFE5DA] bg-white p-3 shadow-[0_24px_70px_-40px_rgba(31,31,31,0.3)]"
+    >
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View ${project.title} live site`}
+        className="block"
+        onClick={(e) => {
+          if (externalUrl === '#') e.preventDefault()
+        }}
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[#FFF2E8]">
           <div className="absolute inset-0 flex items-center justify-center text-[#9CA3AF]">
@@ -32,19 +42,19 @@ function ProjectCard({ project }) {
             />
           )}
         </div>
+      </a>
 
-        <div className="relative p-4 pt-5">
-          <span className="mb-2 inline-flex rounded-full bg-[#FFF2E8] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-primary">
-            {project.category || 'Uncategorized'}
-          </span>
-          <h3 className="break-words pr-2 font-heading text-lg font-bold text-[#1F1F1F]">{project.title}</h3>
-          <div className="mt-3 flex items-center space-x-2 text-sm font-semibold text-primary">
-            <span>Read More</span>
-            <FiArrowRight />
-          </div>
+      <Link to={detailLink} className="relative block p-4 pt-5">
+        <span className="mb-2 inline-flex rounded-full bg-[#FFF2E8] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-primary">
+          {project.category || 'Uncategorized'}
+        </span>
+        <h3 className="break-words pr-2 font-heading text-lg font-bold text-[#1F1F1F]">{project.title}</h3>
+        <div className="mt-3 flex items-center space-x-2 text-sm font-semibold text-primary">
+          <span>Read More</span>
+          <FiArrowRight />
         </div>
-      </motion.div>
-    </Link>
+      </Link>
+    </motion.div>
   )
 }
 

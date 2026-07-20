@@ -20,30 +20,43 @@ function IconComponent({ icon, size = 24, className = '' }) {
 }
 
 function HomeProjectCard({ project }) {
+  const detailLink = project.pdf_url ? `/portfolio/${project.slug}` : `/projects/${project.slug}`
+  const externalUrl = project.project_url || '#'
   return (
     <motion.div
       whileHover={{ y: -10, scale: 1.01 }}
       className="group relative overflow-hidden rounded-[1.75rem] border border-[#EFE5DA] bg-white p-3 shadow-[0_24px_70px_-40px_rgba(31,31,31,0.35)]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[#FFF2E8]">
-        <div className="absolute inset-0 flex items-center justify-center text-[#9CA3AF]">
-          <div className="flex flex-col items-center space-y-2">
-            <FiImage size={28} />
-            <span className="text-xs">No image</span>
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View ${project.title} live site`}
+        className="block"
+        onClick={(e) => {
+          if (externalUrl === '#') e.preventDefault()
+        }}
+      >
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[#FFF2E8]">
+          <div className="absolute inset-0 flex items-center justify-center text-[#9CA3AF]">
+            <div className="flex flex-col items-center space-y-2">
+              <FiImage size={28} />
+              <span className="text-xs">No image</span>
+            </div>
           </div>
+          {project.thumbnail_url && (
+            <img
+              src={project.thumbnail_url}
+              alt={project.title}
+              className="absolute inset-0 z-10 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
+              onError={(e) => { e.target.style.display = 'none' }}
+            />
+          )}
         </div>
-        {project.thumbnail_url && (
-          <img
-            src={project.thumbnail_url}
-            alt={project.title}
-            className="absolute inset-0 z-10 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
-            onError={(e) => { e.target.style.display = 'none' }}
-          />
-        )}
-      </div>
+      </a>
       <div className="absolute inset-0 rounded-[1.75rem] bg-gradient-to-t from-[#FFF8F2] via-[#FFF8F2]/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      <div className="relative p-4 pt-5">
+      <Link to={detailLink} className="relative block p-4 pt-5">
         <span className="inline-flex rounded-full bg-[#FFF2E8] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-primary">
           {project.category}
         </span>
@@ -52,7 +65,7 @@ function HomeProjectCard({ project }) {
           <span>Explore case study</span>
           <FiArrowRight className="transition-transform group-hover:translate-x-1" />
         </div>
-      </div>
+      </Link>
     </motion.div>
   )
 }
@@ -103,9 +116,7 @@ export default function Home() {
           >
             {projects?.slice(0, 6).map((project) => (
               <SwiperSlide key={project.id}>
-                <Link to={project.pdf_url ? `/portfolio/${project.slug}` : `/projects/${project.slug}`}>
-                  <HomeProjectCard project={project} />
-                </Link>
+                <HomeProjectCard project={project} />
               </SwiperSlide>
             ))}
           </Swiper>
