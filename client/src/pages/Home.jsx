@@ -96,7 +96,7 @@ export default function Home() {
           <SectionReveal>
             <div className="mb-14 text-center">
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Portfolio</span>
-              <h2 className="mt-4 text-4xl font-heading font-bold text-[#1F1F1F] md:text-5xl lg:text-6xl">
+              <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#1F1F1F]">
                 {featuredTitle} <span className="text-gradient">Projects</span>
               </h2>
             </div>
@@ -124,7 +124,7 @@ export default function Home() {
           <div className="mt-10 text-center">
             <Link
               to="/projects"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-3 font-semibold text-[#FFF8F2] shadow-[0_20px_50px_-20px_rgba(244,122,32,0.7)] transition-all duration-300"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 sm:px-8 min-h-[48px] font-semibold text-sm sm:text-base text-[#FFF8F2] shadow-[0_20px_50px_-20px_rgba(244,122,32,0.7)] transition-all duration-300 active:scale-95"
             >
               <span>View All Projects</span>
               <FiArrowRight />
@@ -139,7 +139,7 @@ export default function Home() {
           <SectionReveal>
             <div className="mb-14 text-center">
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">What I Do</span>
-              <h2 className="mt-4 text-4xl font-heading font-bold text-[#1F1F1F] md:text-5xl lg:text-6xl">
+              <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#1F1F1F]">
                 {servicesTitle} <span className="text-gradient">Expertise</span>
               </h2>
             </div>
@@ -175,7 +175,7 @@ export default function Home() {
             <SectionReveal>
               <div className="mb-14 text-center">
                 <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Testimonials</span>
-                <h2 className="mt-4 text-4xl font-heading font-bold text-[#1F1F1F] md:text-5xl lg:text-6xl">
+                <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#1F1F1F]">
                   What <span className="text-gradient">Clients Say</span>
                 </h2>
               </div>
@@ -223,16 +223,16 @@ export default function Home() {
       <section className="section-padding relative">
         <div className="max-w-4xl mx-auto text-center">
           <SectionReveal>
-            <h2 className="text-4xl md:text-6xl font-heading font-bold mb-6">
+            <h2 className="text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-6xl font-heading font-bold mb-6">
               {ctaTitle}
             </h2>
-            <p className="mb-8 max-w-2xl mx-auto text-lg text-[#4B5563]">
+            <p className="mb-8 max-w-2xl mx-auto text-base sm:text-lg text-[#4B5563]">
               {ctaSubtitle}
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
               <Link
                 to="/contact"
-                className="px-8 py-4 bg-gradient-primary text-background font-semibold rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 flex items-center space-x-2"
+                className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 min-h-[48px] bg-gradient-primary text-background font-semibold rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 active:scale-95"
               >
                 <span>Start a Project</span>
                 <FiArrowRight />
@@ -242,7 +242,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 download
-                className="px-8 py-4 border border-[#EFE5DA] rounded-full text-[#1F2937] font-semibold hover:bg-[#FFF2E8] transition-all duration-300 flex items-center space-x-2"
+                className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 min-h-[48px] border border-[#EFE5DA] rounded-full text-[#1F2937] font-semibold hover:bg-[#FFF2E8] transition-all duration-300 active:scale-95"
               >
                 <FiDownload />
                 <span>Download Resume</span>

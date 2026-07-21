@@ -12,6 +12,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -19,6 +20,28 @@ body {
   background-color: #FFF8F2;
   color: #1F2937;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Body scroll lock (for mobile sidebar) ── */
+body.no-scroll {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+/* ── Layout utility: safe container padding on all screens ── */
+.safe-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(16px, 5vw, 32px);
+  padding-right: clamp(16px, 5vw, 32px);
 }
 
 ::selection {
@@ -204,4 +227,67 @@ select::placeholder {
 .swiper-pagination-bullet-active {
   background: #F47A20 !important;
   opacity: 1 !important;
+}
+
+/* ── Mobile Responsiveness Overrides ── */
+
+/* Ensure all decorative blobs never overflow */
+.blob {
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .blob {
+    width: 200px;
+    height: 200px;
+    filter: blur(50px);
+    opacity: 0.12;
+  }
+
+  .blob-1 {
+    top: -60px;
+    right: -60px;
+  }
+
+  .blob-2 {
+    bottom: -80px;
+    left: -80px;
+  }
+
+  .hero-portrait-container {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  footer .grid {
+    gap: 2rem;
+  }
+
+  .swiper-pagination {
+    position: relative !important;
+    margin-top: 1rem;
+    bottom: auto !important;
+  }
+
+  /* Shrink decorative border rings on hero portrait */
+  .hero-portrait-ring-outer {
+    inset: -10px !important;
+  }
+  .hero-portrait-ring-inner {
+    inset: -4px !important;
+  }
+}
+
+/* Swiper: keep pagination out of content zone on tablet+ */
+@media (max-width: 768px) {
+  .swiper-pagination {
+    position: relative !important;
+    margin-top: 0.75rem;
+    bottom: auto !important;
+  }
 }

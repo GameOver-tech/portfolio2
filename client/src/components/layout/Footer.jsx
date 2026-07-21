@@ -132,14 +132,14 @@ export default function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full rounded-xl border border-[#EFE5DA] bg-white/80 px-4 py-3 text-sm text-[#1F1F1F] placeholder:text-[#9CA3AF] focus:border-primary focus:outline-none"
+                  className="w-full rounded-xl border border-[#EFE5DA] bg-white/80 px-4 min-h-[48px] text-sm text-[#1F1F1F] placeholder:text-[#9CA3AF] focus:border-primary focus:outline-none"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full rounded-xl bg-gradient-primary px-4 py-3 text-sm font-semibold text-[#FFF8F2] shadow-[0_16px_44px_-20px_rgba(244,122,32,0.75)] transition-all duration-300 disabled:opacity-50"
+                className="w-full rounded-xl bg-gradient-primary px-4 min-h-[48px] text-sm font-semibold text-[#FFF8F2] shadow-[0_16px_44px_-20px_rgba(244,122,32,0.75)] transition-all duration-300 disabled:opacity-50 active:scale-95"
               >
                 {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
               </button>

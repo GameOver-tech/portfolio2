@@ -30,7 +30,7 @@ export default function About() {
             <SectionReveal>
               <div>
                 <span className="text-primary text-sm font-semibold tracking-widest uppercase">About Me</span>
-                <h1 className="text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
+                <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
                   The Story Behind the <span className="text-gradient">Design</span>
                 </h1>
                 <p className="leading-relaxed mb-6 text-[#4B5563]">
@@ -44,7 +44,7 @@ export default function About() {
                     href={aboutData.cv_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-primary text-background font-semibold rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
+                    className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] bg-gradient-primary text-background font-semibold rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 active:scale-95"
                   >
                     <FiDownload />
                     <span>Download CV</span>
@@ -108,12 +108,12 @@ export default function About() {
       <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal>
-            <div className="flex justify-center space-x-4 mb-12">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
               {['experience', 'skills', 'education'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  className={`px-5 sm:px-6 min-h-[44px] rounded-full text-sm font-semibold transition-all duration-300 active:scale-95 ${
                     activeTab === tab
                       ? 'bg-gradient-primary text-background'
                       : 'bg-white/5 text-[#4B5563] hover:text-[#1F2937] border border-[#EFE5DA]'
@@ -128,13 +128,13 @@ export default function About() {
           {activeTab === 'experience' && (
             <div className="relative">
               <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block" />
-              <div className="space-y-12">
+              <div className="space-y-6 sm:space-y-12">
                 {timeline.map((item, i) => (
                   <SectionReveal key={i} delay={i * 0.1}>
                     <div className={`relative flex items-center ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                       <div className="hidden md:block flex-1" />
                       <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50" />
-                      <div className="flex-1 p-6 rounded-2xl bg-card border border-white/5 ml-8 md:ml-0">
+                      <div className="flex-1 p-5 sm:p-6 rounded-2xl bg-card border border-white/5">
                         <span className="text-primary font-bold text-sm">{item.year}</span>
                         <h3 className="text-lg font-heading font-bold mt-1">{item.event}</h3>
                         <p className="mt-2 text-sm text-[#4B5563]">{item.desc}</p>

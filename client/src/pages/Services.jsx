@@ -37,7 +37,7 @@ export default function Services() {
           <SectionReveal>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="text-primary text-sm font-semibold tracking-widest uppercase">Services</span>
-              <h1 className="text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
+              <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
                 What I <span className="text-gradient">Create</span>
               </h1>
               <p className="leading-relaxed text-[#4B5563]">
@@ -85,7 +85,7 @@ export default function Services() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-heading font-bold">
+              <h2 className="text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl font-heading font-bold">
                 My Design <span className="text-gradient">Process</span>
               </h2>
             </div>

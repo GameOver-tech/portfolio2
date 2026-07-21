@@ -92,7 +92,7 @@ export default function Projects() {
           <SectionReveal>
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Portfolio</span>
-              <h1 className="mt-4 mb-6 font-heading text-4xl font-bold text-[#1F1F1F] md:text-6xl">
+              <h1 className="mt-4 mb-6 font-heading text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-bold text-[#1F1F1F]">
                 My <span className="text-gradient">Work</span>
               </h1>
               <p className="text-lg leading-8 text-[#4B5563]">
@@ -104,7 +104,7 @@ export default function Projects() {
 
           {/* Search & Filter */}
           <SectionReveal>
-            <div className="mb-12 flex flex-col items-center justify-between gap-6 rounded-[1.75rem] border border-[#EFE5DA] bg-white/80 p-5 shadow-[0_24px_70px_-40px_rgba(31,31,31,0.25)] md:flex-row md:p-6">
+            <div className="mb-12 flex flex-col items-center justify-between gap-4 sm:gap-6 rounded-[1.75rem] border border-[#EFE5DA] bg-white/80 p-4 sm:p-5 shadow-[0_24px_70px_-40px_rgba(31,31,31,0.25)] md:flex-row md:p-6">
               <div className="relative w-full md:w-72">
                 <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
                 <input
@@ -112,16 +112,16 @@ export default function Projects() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search projects..."
-                  className="w-full rounded-full border border-[#EFE5DA] bg-[#FFF8F2] py-3 pl-12 pr-4 text-sm text-[#1F1F1F] transition-colors focus:border-primary focus:outline-none"
+                  className="w-full rounded-full border border-[#EFE5DA] bg-[#FFF8F2] py-3 pl-12 pr-4 text-sm text-[#1F1F1F] transition-colors focus:border-primary focus:outline-none min-h-[48px]"
                 />
               </div>
 
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="flex flex-wrap justify-center gap-2 w-full md:w-auto overflow-x-auto scrollbar-none pb-1">
                 {allCategories.map((category) => (
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
-                    className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-300 ${
+                    className={`rounded-full px-4 sm:px-5 min-h-[40px] text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 active:scale-95 ${
                       activeCategory === category
                         ? 'bg-gradient-primary text-[#FFF8F2] shadow-[0_12px_32px_-18px_rgba(244,122,32,0.7)]'
                         : 'border border-[#EFE5DA] bg-white text-[#4B5563] hover:border-primary/30 hover:text-[#1F1F1F]'

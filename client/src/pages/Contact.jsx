@@ -46,7 +46,7 @@ export default function Contact() {
           <SectionReveal>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="text-primary text-sm font-semibold tracking-widest uppercase">Contact</span>
-              <h1 className="text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
+              <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
                 Let's Work <span className="text-gradient">Together</span>
               </h1>
               <p className="leading-relaxed text-[#4B5563]">
@@ -60,13 +60,13 @@ export default function Contact() {
             {/* Contact Form */}
             <SectionReveal>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your Name" required className="w-full px-4 py-4 bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
-                  <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Your Email" required className="w-full px-4 py-4 bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your Name" required className="w-full px-4 min-h-[48px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
+                  <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Your Email" required className="w-full px-4 min-h-[48px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
                 </div>
-                <input type="text" name="subject" value={form.subject} onChange={handleChange} placeholder="Subject" required className="w-full px-4 py-4 bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
-                <textarea name="message" value={form.message} onChange={handleChange} placeholder="Your Message" required rows={6} className="w-full px-4 py-4 bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF] resize-none" />
-                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} type="submit" disabled={status === 'loading'} className="w-full px-8 py-4 bg-gradient-primary text-background font-semibold rounded-xl flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50">
+                <input type="text" name="subject" value={form.subject} onChange={handleChange} placeholder="Subject" required className="w-full px-4 min-h-[48px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
+                <textarea name="message" value={form.message} onChange={handleChange} placeholder="Your Message" required rows={5} className="w-full px-4 py-3 min-h-[120px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF] resize-none" />
+                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} type="submit" disabled={status === 'loading'} className="w-full px-6 min-h-[48px] bg-gradient-primary text-background font-semibold rounded-xl flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50">
                   <FiSend />
                   <span>{status === 'loading' ? 'Sending...' : 'Send Message'}</span>
                 </motion.button>
