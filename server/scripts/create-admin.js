@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import { config } from '../config/env.js'
 
 const adminSchema = {
-  email: 'alihassan.webstudio@gmail.com',
-  password: 'Ah_786@11122',
+  email: 'admin@alihassan.dev',
+  password: 'Admin@786',
 }
 
 async function createAdmin() {

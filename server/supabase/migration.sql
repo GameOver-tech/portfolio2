@@ -3,8 +3,8 @@
 --
 -- AFTER running this migration, create an admin user:
 -- 1. Go to Supabase Dashboard → Authentication → Users → Add User
--- 2. Email: alihassan.webstudio@gmail.com
--- 3. Password: Ah_786@11122
+-- 2. Email: admin@alihassan.dev
+-- 3. Password: Admin@786
 -- 4. Or run: node server/scripts/create-admin.js
 
 -- Enable UUID extension
@@ -361,6 +361,12 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_column THEN NULL;
 END $$;
 
+-- Add pdf_url to certifications
+DO $$ BEGIN
+    ALTER TABLE public.certifications ADD COLUMN IF NOT EXISTS pdf_url TEXT;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
 -- Add missing columns to education
 DO $$ BEGIN
     ALTER TABLE public.education ADD COLUMN IF NOT EXISTS description TEXT;
@@ -512,13 +518,13 @@ INSERT INTO public.social_links (platform, url) VALUES
 ON CONFLICT (platform) DO NOTHING;
 
 -- Insert sample certifications
-INSERT INTO public.certifications (title, issuer, credential_url, issue_date, description, "order", active) VALUES
-  ('Adobe Certified Professional – Visual Design', 'Adobe', 'https://www.credly.com/org/adobe', '2025-01-15', 'Professional certification in visual design using Adobe Photoshop, Illustrator, and InDesign.', 1, true),
-  ('Google UX Design Professional', 'Google (Coursera)', 'https://www.coursera.org/professional-certificates/google-ux-design', '2024-08-20', 'Comprehensive certification in UX research, wireframing, prototyping, and design thinking.', 2, true),
-  ('Meta Front-End Developer', 'Meta (Coursera)', 'https://www.coursera.org/professional-certificates/meta-front-end-developer', '2024-03-10', 'Professional certificate in modern front-end development with React and responsive design.', 3, true),
-  ('Graphic Design Specialization', 'California Institute of the Arts', 'https://www.coursera.org/specializations/graphic-design', '2025-05-01', 'Advanced training in typography, branding, image-making, and visual communication.', 4, true),
-  ('HubSpot Content Marketing', 'HubSpot Academy', 'https://academy.hubspot.com/courses/content-marketing', '2024-11-20', 'Certification in content strategy, social media marketing, and brand storytelling.', 5, true),
-  ('UI/UX Design Bootcamp', 'Designlab', 'https://designlab.com/', '2024-06-15', 'Hands-on certification in user interface design, prototyping with Figma, and user testing.', 6, true)
+INSERT INTO public.certifications (title, issuer, credential_url, issue_date, description, pdf_url, "order", active) VALUES
+  ('Adobe Certified Professional – Visual Design', 'Adobe', 'https://www.credly.com/org/adobe', '2025-01-15', 'Professional certification in visual design using Adobe Photoshop, Illustrator, and InDesign.', 'https://www.adobe.com/content/dam/acom/en/legal/terms/enterprise/pdfs/Adobe-Enterprise-Terms.pdf', 1, true),
+  ('Google UX Design Professional', 'Google (Coursera)', 'https://www.coursera.org/professional-certificates/google-ux-design', '2024-08-20', 'Comprehensive certification in UX research, wireframing, prototyping, and design thinking.', NULL, 2, true),
+  ('Meta Front-End Developer', 'Meta (Coursera)', 'https://www.coursera.org/professional-certificates/meta-front-end-developer', '2024-03-10', 'Professional certificate in modern front-end development with React and responsive design.', NULL, 3, true),
+  ('Graphic Design Specialization', 'California Institute of the Arts', 'https://www.coursera.org/specializations/graphic-design', '2025-05-01', 'Advanced training in typography, branding, image-making, and visual communication.', NULL, 4, true),
+  ('HubSpot Content Marketing', 'HubSpot Academy', 'https://academy.hubspot.com/courses/content-marketing', '2024-11-20', 'Certification in content strategy, social media marketing, and brand storytelling.', NULL, 5, true),
+  ('UI/UX Design Bootcamp', 'Designlab', 'https://designlab.com/', '2024-06-15', 'Hands-on certification in user interface design, prototyping with Figma, and user testing.', NULL, 6, true)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================

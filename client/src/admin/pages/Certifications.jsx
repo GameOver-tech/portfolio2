@@ -24,7 +24,7 @@ export default function AdminCertifications() {
       if (editing) { await adminAPI.updateCertification(editing.id, form); showToast('Certification updated!') }
       else { await adminAPI.createCertification(form); showToast('Certification created!') }
       refreshSite(); setShowModal(false); setEditing(null)
-      setForm({ title: '', issuer: '', credential_url: '', issue_date: '', expiry_date: '', description: '', image_url: '', order: 0, active: true })
+      setForm({ title: '', issuer: '', credential_url: '', issue_date: '', expiry_date: '', description: '', image_url: '', pdf_url: '', order: 0, active: true })
       fetchData()
     } catch { showToast('Error saving', 'error') }
     setLoading(false)
@@ -47,7 +47,7 @@ export default function AdminCertifications() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-heading font-bold">Certifications</h2>
-        <button onClick={() => { setForm({ title: '', issuer: '', credential_url: '', issue_date: '', expiry_date: '', description: '', image_url: '', order: 0, active: true }); setEditing(null); setShowModal(true) }}
+        <button onClick={() => { setForm({ title: '', issuer: '', credential_url: '', issue_date: '', expiry_date: '', description: '', image_url: '', pdf_url: '', order: 0, active: true }); setEditing(null); setShowModal(true) }}
           className="px-6 py-2.5 bg-accent text-background font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all">Add Certification</button>
       </div>
       <DataTable columns={columns} data={items} onEdit={handleEdit} onDelete={handleDelete} searchPlaceholder="Search certifications..." />
@@ -70,6 +70,7 @@ export default function AdminCertifications() {
                 </label>
               </div>
               <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="Badge image URL (optional)" className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30" />
+              <input value={form.pdf_url} onChange={(e) => setForm({ ...form, pdf_url: e.target.value })} placeholder="PDF certificate URL (optional)" className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description" rows={3} className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30" />
               <div className="flex items-center space-x-4">
                 <label className="flex items-center space-x-2 text-sm"><input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="rounded border-border-subtle" /><span>Active</span></label>

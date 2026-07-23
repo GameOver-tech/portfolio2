@@ -18,5 +18,5 @@ export const config = {
   smtpPort: process.env.SMTP_PORT,
   smtpUser: process.env.SMTP_USER,
   smtpPass: process.env.SMTP_PASS,
-  adminEmail: process.env.ADMIN_EMAIL || 'alihassan.webstudio@gmail.com',
+  adminEmail: process.env.ADMIN_EMAIL || 'admin@alihassan.dev',
 }

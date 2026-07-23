@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
-import { FiDownload, FiTarget, FiEye, FiCalendar } from 'react-icons/fi'
+import { FiDownload, FiTarget, FiEye, FiCalendar, FiArrowLeft, FiArrowRight, FiExternalLink, FiAward } from 'react-icons/fi'
 import SectionReveal from '../components/ui/SectionReveal'
 import { staggerContainerFast, staggerItemScale, staggerItem } from '../animations/variants'
 import { useApp } from '../context/AppContext'
@@ -16,6 +16,123 @@ const tabVariants = {
   enter: { opacity: 0, y: 20, scale: 0.95 },
   center: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
   exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] } },
+}
+
+function CertificationsView({ certifications }) {
+  const [selectedCert, setSelectedCert] = useState(null)
+
+  if (selectedCert) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+        <motion.button
+          onClick={() => setSelectedCert(null)}
+          whileHover={{ x: -3 }}
+          className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors"
+        >
+          <FiArrowLeft size={16} /> Back to Certifications
+        </motion.button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shadow-[0_0_10px_rgba(0,240,255,0.1)]">
+                  <FiAward className="text-accent" size={18} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-heading font-semibold text-text-primary">{selectedCert.title}</h3>
+                  <p className="text-sm text-accent">{selectedCert.issuer}</p>
+                </div>
+              </div>
+              {selectedCert.issue_date && (
+                <div className="flex items-center gap-2 text-xs text-text-muted mb-3">
+                  <FiCalendar size={12} />
+                  <span>Issued: {new Date(selectedCert.issue_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                </div>
+              )}
+              <p className="text-sm text-text-muted leading-relaxed">{selectedCert.description || 'No description available.'}</p>
+              {selectedCert.credential_url && (
+                <motion.a
+                  href={selectedCert.credential_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02 }}
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-accent/10 text-accent text-xs font-medium border border-accent/20 hover:bg-accent/20 transition-all"
+                >
+                  <FiExternalLink size={12} /> Verify Credential
+                </motion.a>
+              )}
+            </motion.div>
+          </div>
+
+          <div className="lg:col-span-3">
+            {selectedCert.pdf_url ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="rounded-2xl overflow-hidden border border-border-subtle bg-bg-card shadow-card"
+              >
+                <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-bg-glass">
+                  <span className="text-xs font-medium text-text-muted tracking-wide">CERTIFICATE</span>
+                  <span className="text-[10px] text-text-muted/60">View only mode</span>
+                </div>
+                <div className="relative w-full" style={{ height: '500px' }}>
+                  <iframe
+                    src={`${selectedCert.pdf_url}#toolbar=0&navpanes=0&scrollbar=1`}
+                    className="absolute inset-0 w-full h-full"
+                    style={{ border: 'none' }}
+                    title={selectedCert.title}
+                  />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="h-full min-h-[200px] rounded-2xl border border-dashed border-border-subtle bg-bg-card/30 flex items-center justify-center"
+              >
+                <p className="text-sm text-text-muted">No certificate PDF available for this certification.</p>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="space-y-3">
+      {(certifications?.length > 0 ? certifications : []).map((cert, i) => (
+        <motion.div key={cert.id || i} variants={staggerItem}>
+          <motion.div
+            onClick={() => setSelectedCert(cert)}
+            whileHover={{ y: -1, x: 3 }}
+            className="group cursor-pointer p-4 rounded-xl border border-border-subtle bg-bg-card/50 backdrop-blur-sm shadow-card hover:border-accent/20 hover:bg-accent/[0.02] transition-all duration-300"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(0,240,255,0.08)] group-hover:shadow-[0_0_12px_rgba(0,240,255,0.15)] transition-shadow">
+                  <FiAward className="text-accent" size={15} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-heading font-semibold text-text-primary truncate">{cert.title}</h3>
+                  <p className="text-xs text-text-muted truncate">{cert.issuer}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-xs text-accent/80 group-hover:text-accent transition-colors font-medium hidden sm:inline">Read More</span>
+                <FiArrowRight className="text-accent/60 group-hover:text-accent group-hover:translate-x-0.5 transition-all" size={14} />
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      ))}
+    </motion.div>
+  )
 }
 
 export default function About() {
@@ -139,29 +256,7 @@ export default function About() {
                 </motion.div>
               )}
 
-              {activeTab === 'certifications' && (
-                <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="space-y-4">
-                  {(certifications?.length > 0 ? certifications : []).map((cert, i) => (
-                    <motion.div key={cert.id || i} variants={staggerItem}>
-                      <motion.div whileHover={{ y: -2, x: 4 }} className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-heading font-semibold text-text-primary">{cert.title}</h3>
-                            <p className="mt-1 text-sm text-accent">{cert.issuer}</p>
-                            {cert.description && <p className="mt-2 text-sm text-text-muted">{cert.description}</p>}
-                          </div>
-                          {cert.credential_url && (
-                            <motion.a href={cert.credential_url} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }}
-                              className="flex-shrink-0 px-4 py-2 rounded-full bg-accent/10 text-accent text-xs font-medium border border-accent/20 hover:bg-accent/20 transition-all">
-                              Verify →
-                            </motion.a>
-                          )}
-                        </div>
-                      </motion.div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
+              {activeTab === 'certifications' && <CertificationsView certifications={certifications} />}
             </motion.div>
           </AnimatePresence>
         </div>
