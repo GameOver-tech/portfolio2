@@ -1,6 +1,5 @@
-// Snapshot VITE_ env vars into api/server.env during Vite build.
-// Vercel deploys api/ alongside the serverless function so the server
-// can read it at runtime (VITE_ vars aren't available to server runtime).
+// Snapshots build-time env vars into a JSON file the server can read at runtime.
+// Vercel bundles the entire server/ directory into the serverless function.
 import { writeFileSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -15,13 +14,13 @@ const vars = [
   'JWT_SECRET',
 ]
 
-const lines = []
+const obj = {}
 for (const k of vars) {
-  const v = process.env[k]
-  if (v) lines.push(`${k}=${v}`)
+  const val = process.env[k]
+  if (val) obj[k] = val
 }
 
-if (lines.length) {
-  writeFileSync(resolve(root, 'api/server.env'), lines.join('\n') + '\n')
-  console.log('[generate-env] Wrote api/server.env with', lines.length, 'vars')
+if (Object.keys(obj).length) {
+  writeFileSync(resolve(root, 'server/build-vars.json'), JSON.stringify(obj, null, 2))
+  console.log('[generate-env] Wrote server/build-vars.json (' + Object.keys(obj).length + ' vars)')
 }

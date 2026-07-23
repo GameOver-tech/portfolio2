@@ -8,3 +8,4 @@ build/
 .vite/
 server/scripts/
 api/server.env
+server/build-vars.json
