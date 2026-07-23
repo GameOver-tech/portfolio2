@@ -29,28 +29,23 @@ function AnimatedCounter({ value, suffix, label }) {
   )
 }
 
-const fallbackStats = [
-  { label: 'Years Experience', value: 6, suffix: '+' },
-  { label: 'Projects Delivered', value: 50, suffix: '+' },
-  { label: 'Happy Clients', value: 30, suffix: '+' },
-  { label: 'Technologies', value: 25, suffix: '+' },
-]
-
 export default function StatsSection() {
   const { stats } = useApp()
-  const displayStats = (stats && stats.length > 0) ? stats : fallbackStats
+  const displayStats = stats || []
   return (
     <section className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          {displayStats.map((stat, i) => (
-            <motion.div key={stat.id || stat.label} variants={staggerItemScale}
-              className="text-center p-6 sm:p-8 rounded-2xl glass-card group hover:border-accent/20">
-              <AnimatedCounter value={stat.value} suffix={stat.suffix} label={stat.label} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {displayStats.length > 0 && (
+          <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {displayStats.map((stat, i) => (
+              <motion.div key={stat.id || stat.label || i} variants={staggerItemScale}
+                className="text-center p-6 sm:p-8 rounded-2xl glass-card group hover:border-accent/20">
+                <AnimatedCounter value={stat.value} suffix={stat.suffix} label={stat.label} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   )

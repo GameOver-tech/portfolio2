@@ -20,6 +20,7 @@ const menuItems = [
   { path: '/admin/certifications', icon: FiAward, label: 'Certifications' },
   { path: '/admin/team', icon: FiUsers, label: 'Team' },
   { path: '/admin/faqs', icon: FiHelpCircle, label: 'FAQs' },
+  { path: '/admin/process', icon: FiTrendingUp, label: 'Process' },
   { path: '/admin/ai-providers', icon: FiCpu, label: 'AI Providers' },
   { path: '/admin/messages', icon: FiMail, label: 'Messages' },
   { path: '/admin/newsletter', icon: FiSend, label: 'Newsletter' },

@@ -10,6 +10,30 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Process Steps (My Development Process section - Services page)
+CREATE TABLE IF NOT EXISTS public.process_steps (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    step TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    "order" INTEGER DEFAULT 0,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.process_steps ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON public.process_steps FOR SELECT USING (true);
+CREATE POLICY "Admin all" ON public.process_steps FOR ALL USING (auth.role() = 'authenticated');
+
+-- Insert default process steps
+INSERT INTO public.process_steps (step, title, description, "order") VALUES
+  ('01', 'Discovery', 'Understanding your goals, requirements, and technical landscape.', 1),
+  ('02', 'Architecture', 'Designing the system architecture, data flow, and tech stack.', 2),
+  ('03', 'Build', 'Iterative development with continuous testing and refinement.', 3),
+  ('04', 'Deploy', 'Production deployment, monitoring, and ongoing optimization.', 4)
+ON CONFLICT DO NOTHING;
+
 -- Users (managed by Supabase Auth)
 CREATE TABLE IF NOT EXISTS public.users (
     id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,

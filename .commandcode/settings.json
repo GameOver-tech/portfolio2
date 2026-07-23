@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(npm:*)",
+      "Shell(npx --yes pkg -t node -c const { FiUpload, FiFile, FiX, FiImage } = require('react-icons/fi'); console.log('FiUpload:', !!FiUpload, 'FiFile:', !!FiFile, 'FiX:', !!FiX, 'FiImage:', !!FiImage) 2 >& 1)",
+      "Shell(npx vite build 2 >& 1)",
+      "powershell",
+      "Shell(node -e import('./api/index.js').then(() => console.log('Server syntax OK')).catch(e => console.error('Error:', e.message)) 2 >& 1)",
+      "Shell(node api/index.js)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

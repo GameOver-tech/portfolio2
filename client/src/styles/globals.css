@@ -14,7 +14,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body.no-scroll { overflow: hidden !important; position: fixed; width: 100%; top: 0; left: 0; right: 0; }
+body.no-scroll { overflow: hidden !important; position: fixed; width: 100%; }
 
 .safe-container {
   width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto;
@@ -41,14 +41,14 @@ body.no-scroll { overflow: hidden !important; position: fixed; width: 100%; top:
 }
 
 .text-gradient { background: linear-gradient(135deg, #00F0FF, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.text-gradient-pulse { background: linear-gradient(135deg, #FF3B6F, #7C3AED, #00F0FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 200%; animation: gradientMove 4s ease infinite; }
+.text-gradient-pulse { background: linear-gradient(135deg, #FF3B6F, #7C3AED, #00F0FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 200%; animation: gradientMove 2s ease infinite; }
 .text-gradient-cyber { background: linear-gradient(135deg, #00F0FF, #00E676); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
 @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
 .animated-grid {
   background-image: linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
-  background-size: 56px 56px; animation: gridFlow 30s linear infinite;
+  background-size: 56px 56px; animation: gridFlow 10s linear infinite;
 }
 
 .noise-overlay::after {
@@ -102,6 +102,12 @@ input:focus, textarea:focus, select:focus {
 .scrollbar-none::-webkit-scrollbar { display: none; }
 
 .shimmer { background: linear-gradient(90deg, transparent 0%, rgba(0,240,255,0.04) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 3s linear infinite; }
+
+.chatbot-scroll::-webkit-scrollbar { width: 4px; }
+.chatbot-scroll::-webkit-scrollbar-track { background: transparent; }
+.chatbot-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; transition: background 0.2s; }
+.chatbot-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+.chatbot-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
 
 .swiper-pagination-bullet { background: rgba(255,255,255,0.15) !important; opacity: 1 !important; width: 8px !important; height: 8px !important; }
 .swiper-pagination-bullet-active { background: #00F0FF !important; width: 24px !important; border-radius: 4px !important; }

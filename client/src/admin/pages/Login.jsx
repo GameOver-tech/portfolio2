@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { adminAPI } from '../../services/api'
 import { supabase } from '../../services/supabase'
 
 export default function AdminLogin() {
@@ -16,21 +17,21 @@ export default function AdminLogin() {
     setLoading(true)
 
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
+      // Get custom JWT from Express API (used by adminAPI axios calls)
+      const { data } = await adminAPI.login(email, password)
 
-      if (authError) throw authError
+      if (data?.token) {
+        localStorage.setItem('admin_token', data.token)
 
-      if (data?.session) {
-        localStorage.setItem('admin_token', data.session.access_token)
+        // Also sign in via Supabase SDK so direct Supabase calls work
+        await supabase.auth.signInWithPassword({ email, password }).catch(() => {})
+
         navigate('/admin')
       } else {
         throw new Error('Login failed')
       }
     } catch (err) {
-      setError(err.message || 'Invalid credentials')
+      setError(err.response?.data?.error || err.message || 'Invalid credentials')
     } finally {
       setLoading(false)
     }

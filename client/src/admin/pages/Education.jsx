@@ -53,7 +53,7 @@ export default function AdminEducation() {
       <DataTable columns={columns} data={items} onEdit={handleEdit} onDelete={handleDelete} searchPlaceholder="Search education..." />
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg bg-bg-surface border border-border-subtle rounded-2xl p-6">
+          <div className="w-full max-w-lg bg-bg-surface border border-border-subtle rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-heading font-bold mb-6">{editing ? 'Edit Education' : 'Add Education'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
               <input value={form.degree} onChange={(e) => setForm({ ...form, degree: e.target.value })} placeholder="Degree name" required className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30" />

@@ -68,7 +68,7 @@ export default function AdminStats() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg bg-card border border-white/10 rounded-2xl p-6">
+          <div className="w-full max-w-lg bg-card border border-white/10 rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-heading font-bold mb-6">{editing ? 'Edit Stat' : 'Add Stat'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
               <input value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} placeholder="Label (e.g. Years Experience)" required className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-white" />

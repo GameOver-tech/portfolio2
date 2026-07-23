@@ -10,6 +10,7 @@ import Services from './pages/Services'
 import Projects from './pages/Projects'
 import ProjectDetail from './pages/ProjectDetail'
 import PortfolioViewer from './pages/PortfolioViewer'
+import CertificateViewer from './pages/CertificateViewer'
 import Team from './pages/Team'
 import Contact from './pages/Contact'
 import AdminDashboard from './admin/pages/Dashboard'
@@ -33,6 +34,7 @@ import AdminExperience from './admin/pages/Experience'
 import AdminEducation from './admin/pages/Education'
 import AdminFAQs from './admin/pages/FAQs'
 import AdminCertifications from './admin/pages/Certifications'
+import AdminProcess from './admin/pages/Process'
 
 function BodyReset() {
   const { pathname } = useLocation()
@@ -109,6 +111,7 @@ export default function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
+        <Route path="/certificate/:id" element={<CertificateViewer />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
@@ -131,6 +134,7 @@ export default function App() {
           <Route path="education" element={<AdminEducation />} />
           <Route path="faqs" element={<AdminFAQs />} />
           <Route path="certifications" element={<AdminCertifications />} />
+          <Route path="process" element={<AdminProcess />} />
         </Route>
       </Routes>
     </>

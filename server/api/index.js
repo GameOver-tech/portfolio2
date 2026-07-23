@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
+import { fileURLToPath } from 'url'
+import { dirname, resolve } from 'path'
 import { config } from '../config/env.js'
 import authRoutes from '../routes/auth.js'
 import adminRoutes from '../routes/admin.js'
@@ -9,16 +11,24 @@ import contactRoutes from '../routes/contact.js'
 import newsletterRoutes from '../routes/newsletter.js'
 import chatRoutes from '../routes/chat.js'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
 const app = express()
 
 // Security
-app.use(helmet())
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}))
 app.use(cors({
   origin: config.corsOrigins.includes('*')
     ? (origin, cb) => cb(null, origin || true)
     : config.corsOrigins,
   credentials: true,
 }))
+
+// Serve uploaded files
+app.use('/uploads', express.static(resolve(__dirname, '../../public/uploads')))
 
 // Rate limiting
 const limiter = rateLimit({

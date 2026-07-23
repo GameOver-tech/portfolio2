@@ -5,12 +5,12 @@ import SectionReveal from '../components/ui/SectionReveal'
 import { staggerContainerFast, staggerItemScale } from '../animations/variants'
 import { useApp } from '../context/AppContext'
 
-const defaultTeam = [{ name: 'Ali Hassan', role: 'Founder & AI Engineer', photo_url: null, description: 'AI Engineer building production-grade intelligent systems.' }]
 const socialIconMap = { linkedin: FaLinkedin, twitter: FaTwitter, behance: FaBehance }
 
 export default function Team() {
-  const { team } = useApp()
-  const teamMembers = team?.length > 0 ? team : defaultTeam
+  const { team, siteSettings } = useApp()
+  const content = siteSettings?.section_titles || {}
+  const teamMembers = team || []
   return (
     <>
       <Helmet><title>Team | Ali Hassan</title></Helmet>
@@ -18,9 +18,9 @@ export default function Team() {
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal type="blur"><div className="text-center max-w-3xl mx-auto mb-16">
-            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">Team</motion.span>
-            <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">The People <span className="text-gradient">Behind the Code</span></h1>
-            <p className="leading-relaxed text-text-muted">Meet the team building world-class AI solutions.</p>
+            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">{content.team_subtitle || 'Team'}</motion.span>
+            <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">{content.team_heading || 'The People'} <span className="text-gradient">{content.team_heading_highlight || 'Behind the Code'}</span></h1>
+            <p className="leading-relaxed text-text-muted">{content.team_description || 'Meet the team building world-class AI solutions.'}</p>
           </div></SectionReveal>
           <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {teamMembers.map((member, i) => (

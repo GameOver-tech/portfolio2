@@ -91,7 +91,7 @@ export default function AdminAIProviders() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg bg-bg-surface border border-border-subtle rounded-2xl p-6">
+          <div className="w-full max-w-lg bg-bg-surface border border-border-subtle rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-heading font-bold mb-6">{editing ? 'Edit Provider' : 'Add Provider'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
               <select value={form.provider_name} onChange={(e) => handleProviderChange(e.target.value)} required

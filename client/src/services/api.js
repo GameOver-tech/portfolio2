@@ -126,6 +126,13 @@ export const adminAPI = {
   createCertification: (data) => api.post('/admin/certifications', data),
   updateCertification: (id, data) => api.put(`/admin/certifications/${id}`, data),
   deleteCertification: (id) => api.delete(`/admin/certifications/${id}`),
+  uploadCertificationFile: (file) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post('/admin/certifications/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
 
   // Contact Form
   submitContact: (data) => api.post('/contact', data),

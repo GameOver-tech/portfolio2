@@ -21,6 +21,7 @@ export function AppProvider({ children }) {
   const [education, setEducation] = useState([])
   const [faqs, setFAQs] = useState([])
   const [certifications, setCertifications] = useState([])
+  const [processSteps, setProcessSteps] = useState([])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const fetchSiteData = useCallback(async () => {
@@ -52,6 +53,7 @@ export function AppProvider({ children }) {
     const { data: educationRes } = await supabase.from('education').select('*').order('order')
     const { data: faqsRes } = await supabase.from('faqs').select('*').eq('active', true).order('order')
     const { data: certsRes } = await supabase.from('certifications').select('*').eq('active', true).order('order')
+    const { data: processStepsRes } = await supabase.from('process_steps').select('*').eq('active', true).order('order')
 
     if (settingsRes) setSiteSettings(settingsRes)
     if (socialRes) setSocialLinks(socialRes)
@@ -68,6 +70,7 @@ export function AppProvider({ children }) {
     if (educationRes) setEducation(educationRes)
     if (faqsRes) setFAQs(faqsRes)
     if (certsRes) setCertifications(certsRes)
+    if (processStepsRes) setProcessSteps(processStepsRes)
   }, [])
 
   const refetch = useCallback(async () => {
@@ -105,6 +108,7 @@ export function AppProvider({ children }) {
       education,
       faqs,
       certifications,
+      processSteps,
       isMobileMenuOpen,
       setIsMobileMenuOpen,
       refetch,

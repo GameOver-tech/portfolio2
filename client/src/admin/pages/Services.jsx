@@ -80,7 +80,7 @@ export default function AdminServices() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg bg-card border border-white/10 rounded-2xl p-6">
+          <div className="w-full max-w-lg bg-card border border-white/10 rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-heading font-bold mb-6">{editing ? 'Edit Service' : 'Add Service'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
               <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Service Title" required className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-colors" />

@@ -51,7 +51,7 @@ export default {
         'pulse-slow': 'pulseSlow 4s ease-in-out infinite',
         'pulse-fast': 'pulse 0.8s ease-in-out infinite',
         'scan-line': 'scanLine 4s linear infinite',
-        'grid-flow': 'gridFlow 20s linear infinite',
+        'grid-flow': 'gridFlow 10s linear infinite',
         'data-stream': 'dataStream 3s linear infinite',
         'glow-pulse': 'glowPulse 2s ease-in-out infinite',
         'orbit': 'orbit 20s linear infinite',

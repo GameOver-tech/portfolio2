@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
-import { supabase } from '../supabase/client.js'
+import { supabase, supabaseAnon } from '../supabase/client.js'
 import { config } from '../config/env.js'
 
 const router = Router()
@@ -14,7 +14,8 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' })
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    // Use the anon-key client for user sign-in (service-role may fail)
+    const { data, error } = await supabaseAnon.auth.signInWithPassword({
       email,
       password,
     })

@@ -14,6 +14,7 @@ function MagneticField({ children, className = '' }) {
 
 export default function Contact() {
   const { siteSettings } = useApp()
+  const content = siteSettings?.section_titles || {}
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [status, setStatus] = useState('')
   const contactEmail = siteSettings?.contact_email || 'alihassan.webstudio@gmail.com'
@@ -30,9 +31,9 @@ export default function Contact() {
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal type="blur"><div className="text-center max-w-3xl mx-auto mb-16">
-            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">Contact</motion.span>
-            <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">Get in <span className="text-gradient">Touch</span></h1>
-            <p className="leading-relaxed text-text-muted">Have an AI project in mind? Let's discuss how I can help.</p>
+            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">{content.contact_subtitle || 'Contact'}</motion.span>
+            <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">{content.contact_heading || 'Get in'} <span className="text-gradient">{content.contact_heading_highlight || 'Touch'}</span></h1>
+            <p className="leading-relaxed text-text-muted">{content.contact_description || "Have an AI project in mind? Let's discuss how I can help."}</p>
           </div></SectionReveal>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
             <div className="lg:col-span-3">
@@ -42,7 +43,7 @@ export default function Contact() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {['name', 'email'].map(field => (
                         <motion.div key={field} whileFocus={{ scale: 1.01 }} className="relative group">
-                          <input type={field === 'email' ? 'email' : 'text'} name={field} value={form[field]} onChange={handleChange} placeholder={field === 'name' ? 'Your Name' : 'Your Email'} required
+                          <input type={field === 'email' ? 'email' : 'text'} name={field} value={form[field]} onChange={handleChange} placeholder={content[`contact_${field}_placeholder`] || (field === 'name' ? 'Your Name' : 'Your Email')} required
                             className="w-full px-4 min-h-[48px] bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:border-accent/30 focus:outline-none focus:ring-0 transition-all duration-300 placeholder:text-text-muted peer" />
                           <motion.span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300" style={{ originX: '0' }} />
                         </motion.div>

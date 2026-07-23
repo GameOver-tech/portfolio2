@@ -41,7 +41,7 @@ export default function Home() {
   const t = siteSettings?.section_titles || {}
   return (
     <>
-      <Helmet><title>Ali Hassan | AI Engineer</title><meta name="description" content="AI Engineer building production-grade AI systems, web applications, and intelligent software." /></Helmet>
+      <Helmet><title>{t.home_title || 'Ali Hassan | AI Engineer'}</title><meta name="description" content={t.home_description || 'AI Engineer building production-grade AI systems, web applications, and intelligent software.'} /></Helmet>
       <HeroSection />
       <StatsSection />
 
@@ -49,15 +49,15 @@ export default function Home() {
         <div className="absolute inset-0 animated-grid opacity-15" /><div className="absolute inset-0 bg-gradient-soft" />
         <div className="relative max-w-7xl mx-auto">
           <SectionReveal type="scale"><div className="mb-14 text-center">
-            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted block">Portfolio</motion.span>
-            <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary">Selected <span className="text-gradient">Projects</span></h2>
+            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted block">{t.portfolio_subtitle || 'Portfolio'}</motion.span>
+            <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary">{t.portfolio_heading || 'Selected'} <span className="text-gradient">{t.portfolio_heading_highlight || 'Projects'}</span></h2>
           </div></SectionReveal>
           <Swiper modules={[Autoplay, Pagination]} spaceBetween={24} slidesPerView={1} breakpoints={{ 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }} autoplay={{ delay: 4000, disableOnInteraction: false }} pagination={{ clickable: true }} className="pb-14">
             {projects?.slice(0, 6).map(project => <SwiperSlide key={project.id}><HomeProjectCard project={project} /></SwiperSlide>)}
           </Swiper>
           <motion.div className="mt-10 text-center" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/projects" className="inline-flex items-center gap-2 rounded-full bg-accent px-6 sm:px-8 min-h-[48px] font-semibold text-sm sm:text-base text-background shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all duration-300"><span>View All Projects</span><FiArrowRight /></Link>
+              <Link to="/projects" className="inline-flex items-center gap-2 rounded-full bg-accent px-6 sm:px-8 min-h-[48px] font-semibold text-sm sm:text-base text-background shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all duration-300"><span>{t.projects_view_all || 'View All Projects'}</span><FiArrowRight /></Link>
             </motion.div>
           </motion.div>
         </div>
@@ -66,8 +66,8 @@ export default function Home() {
       <section className="section-padding relative">
         <div className="max-w-7xl mx-auto">
           <SectionReveal type="blur"><div className="mb-14 text-center">
-            <span className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted">Expertise</span>
-            <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary">Services & <span className="text-gradient">Capabilities</span></h2>
+            <span className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted">{t.services_subtitle || 'Expertise'}</span>
+            <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary">{t.services_heading || 'Services &'} <span className="text-gradient">{t.services_heading_highlight || 'Capabilities'}</span></h2>
           </div></SectionReveal>
           <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {services?.slice(0, 6).map((service, i) => (
@@ -94,8 +94,8 @@ export default function Home() {
           <div className="blob blob-1" /><div className="blob blob-2" />
           <div className="relative max-w-7xl mx-auto">
             <SectionReveal type="skew"><div className="mb-14 text-center">
-              <span className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted">Testimonials</span>
-              <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary">Client <span className="text-gradient">Feedback</span></h2>
+              <span className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted">{t.testimonials_subtitle || 'Testimonials'}</span>
+              <h2 className="mt-4 text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary">{t.testimonials_heading || 'Client'} <span className="text-gradient">{t.testimonials_heading_highlight || 'Feedback'}</span></h2>
             </div></SectionReveal>
             <Swiper modules={[Autoplay, Pagination]} spaceBetween={24} slidesPerView={1} breakpoints={{ 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }} autoplay={{ delay: 5000 }} pagination={{ clickable: true }} className="pb-14">
               {testimonials.map(t => (
@@ -119,14 +119,14 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <SectionReveal type="scale">
             <motion.div className="rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm p-10 sm:p-14 lg:p-16 shadow-card" whileHover={{ boxShadow: '0 0 60px rgba(0,240,255,0.08)' }}>
-              <h2 className="text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl font-heading font-semibold text-text-primary mb-6">Let's Build Something Great</h2>
-              <p className="mb-8 max-w-2xl mx-auto text-base sm:text-lg text-text-muted">Have a project in mind? Let's discuss how I can help bring your idea to life.</p>
+              <h2 className="text-[clamp(2rem,7vw,2.5rem)] sm:text-4xl md:text-5xl font-heading font-semibold text-text-primary mb-6">{t.cta_title || "Let's Build Something Great"}</h2>
+              <p className="mb-8 max-w-2xl mx-auto text-base sm:text-lg text-text-muted">{t.cta_subtitle || 'Have a project in mind? Let\'s discuss how I can help bring your idea to life.'}</p>
               <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Link to="/contact" className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 min-h-[50px] bg-accent text-background font-semibold rounded-full shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all duration-300"><span>Start a Project</span><FiArrowRight /></Link>
+                  <Link to="/contact" className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 min-h-[50px] bg-accent text-background font-semibold rounded-full shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all duration-300"><span>{t.cta_button || 'Start a Project'}</span><FiArrowRight /></Link>
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Link to="/projects" className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 min-h-[50px] border border-border-visible text-text-primary font-semibold rounded-full hover:bg-white/5 transition-all duration-300"><span>View Portfolio</span></Link>
+                  <Link to="/projects" className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 min-h-[50px] border border-border-visible text-text-primary font-semibold rounded-full hover:bg-white/5 transition-all duration-300"><span>{t.cta_button_secondary || 'View Portfolio'}</span></Link>
                 </motion.div>
               </div>
             </motion.div>

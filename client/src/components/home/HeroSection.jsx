@@ -9,7 +9,7 @@ import { useApp } from '../../context/AppContext'
 const Particles = memo(function Particles() {
   const particles = useMemo(() => Array.from({ length: 60 }, (_, i) => ({
     id: i, x: Math.random() * 100, y: Math.random() * 100,
-    size: Math.random() * 3 + 0.5, dur: Math.random() * 10 + 6, del: Math.random() * 8,
+    size: Math.random() * 3 + 0.5, dur: Math.random() * 3 + 2, del: Math.random() * 3,
     color: i % 4 === 0 ? 'rgba(0,240,255,0.5)' : i % 4 === 1 ? 'rgba(124,58,237,0.4)' : i % 4 === 2 ? 'rgba(255,59,111,0.3)' : 'rgba(255,255,255,0.2)',
     glow: i % 3 === 0 ? '0 0 8px rgba(0,240,255,0.3)' : 'none',
     xDrift: (Math.random() - 0.5) * 40,
@@ -24,27 +24,27 @@ const Particles = memo(function Particles() {
 // ── SVG Motherboard / Cybernetic Circuit Board ──
 const NeuralLines = memo(function NeuralLines() {
   const traces = useMemo(() => [
-    // Vertical bus lines
-    { d: 'M 80,0 L 80,200 L 160,280 L 160,700', dur: 5, del: 0 },
-    { d: 'M 240,100 L 240,300 L 180,360 L 180,700', dur: 4.5, del: 0.3 },
-    { d: 'M 400,0 L 400,120 L 320,200 L 320,500 L 400,580 L 400,700', dur: 6, del: 0.6 },
-    { d: 'M 560,0 L 560,180 L 480,260 L 480,700', dur: 5.5, del: 0.1 },
-    { d: 'M 720,0 L 720,220 L 640,300 L 640,700', dur: 4.8, del: 0.4 },
-    { d: 'M 880,0 L 880,140 L 800,220 L 800,700', dur: 5.2, del: 0.2 },
+    // Vertical bus lines — sped up 2-3x
+    { d: 'M 80,0 L 80,200 L 160,280 L 160,700', dur: 2, del: 0 },
+    { d: 'M 240,100 L 240,300 L 180,360 L 180,700', dur: 1.8, del: 0.15 },
+    { d: 'M 400,0 L 400,120 L 320,200 L 320,500 L 400,580 L 400,700', dur: 2.4, del: 0.3 },
+    { d: 'M 560,0 L 560,180 L 480,260 L 480,700', dur: 2.2, del: 0.05 },
+    { d: 'M 720,0 L 720,220 L 640,300 L 640,700', dur: 1.9, del: 0.2 },
+    { d: 'M 880,0 L 880,140 L 800,220 L 800,700', dur: 2.1, del: 0.1 },
     // Horizontal traces
-    { d: 'M 0,120 L 240,120 L 320,200', dur: 4, del: 0.7 },
-    { d: 'M 160,280 L 320,280 L 400,360 L 560,360', dur: 5, del: 0.5 },
-    { d: 'M 0,440 L 240,440 L 320,500', dur: 4.3, del: 0.8 },
-    { d: 'M 480,260 L 560,260 L 640,300', dur: 3.8, del: 0.9 },
-    { d: 'M 640,600 L 400,600 L 400,580', dur: 3.5, del: 1.0 },
-    { d: 'M 800,220 L 960,220 L 1040,300 L 1040,700', dur: 5.8, del: 0.3 },
+    { d: 'M 0,120 L 240,120 L 320,200', dur: 1.6, del: 0.35 },
+    { d: 'M 160,280 L 320,280 L 400,360 L 560,360', dur: 2, del: 0.25 },
+    { d: 'M 0,440 L 240,440 L 320,500', dur: 1.7, del: 0.4 },
+    { d: 'M 480,260 L 560,260 L 640,300', dur: 1.5, del: 0.45 },
+    { d: 'M 640,600 L 400,600 L 400,580', dur: 1.4, del: 0.5 },
+    { d: 'M 800,220 L 960,220 L 1040,300 L 1040,700', dur: 2.3, del: 0.15 },
     // Diagonal jump traces
-    { d: 'M 240,100 L 320,100 L 400,120', dur: 3.2, del: 1.1 },
-    { d: 'M 560,180 L 720,220', dur: 3, del: 1.2 },
+    { d: 'M 240,100 L 320,100 L 400,120', dur: 1.3, del: 0.55 },
+    { d: 'M 560,180 L 720,220', dur: 1.2, del: 0.6 },
     // Bottom dense routing
-    { d: 'M 80,600 L 160,600 L 240,500 L 320,500', dur: 4.2, del: 0.6 },
-    { d: 'M 480,600 L 640,600', dur: 2.5, del: 1.3 },
-    { d: 'M 800,600 L 960,600 L 1040,500 L 1200,500', dur: 4.7, del: 0.4 },
+    { d: 'M 80,600 L 160,600 L 240,500 L 320,500', dur: 1.7, del: 0.3 },
+    { d: 'M 480,600 L 640,600', dur: 1, del: 0.65 },
+    { d: 'M 800,600 L 960,600 L 1040,500 L 1200,500', dur: 1.9, del: 0.2 },
   ], [])
 
   // CPU / chip locations
@@ -86,7 +86,7 @@ const NeuralLines = memo(function NeuralLines() {
         <g key={`chip-${i}`}>
           <motion.rect x={c.x - c.w / 2} y={c.y - c.h / 2} width={c.w} height={c.h} rx="3" fill="none" stroke="#00F0FF" strokeWidth="1"
             animate={{ opacity: [0.3, 0.7, 0.3], stroke: ['#00F0FF', '#7C3AED', '#00F0FF'] }}
-            transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }} />
+            transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }} />
           {/* Chip pins (tiny lines) */}
           {[0, 1, 2, 3].map(pin => (
             <line key={`pin-${i}-${pin}`} x1={c.x - c.w / 2 - 3} y1={c.y - c.h / 2 + pin * 5 + 2} x2={c.x - c.w / 2} y2={c.y - c.h / 2 + pin * 5 + 2} stroke="#00F0FF" strokeWidth="0.6" opacity="0.4" />
@@ -103,7 +103,7 @@ const NeuralLines = memo(function NeuralLines() {
           <circle cx={cx} cy={cy} r="3" fill="none" stroke="#00F0FF" strokeWidth="0.8" opacity="0.4" />
           <motion.circle cx={cx} cy={cy} r="1.5" fill="#00F0FF"
             animate={{ opacity: [0.2, 0.9, 0.2], scale: [1, 1.6, 1] }}
-            transition={{ duration: 2, repeat: Infinity, delay: i * 0.15 }} />
+            transition={{ duration: 1, repeat: Infinity, delay: i * 0.08 }} />
         </g>
       ))}
     </svg>
@@ -199,14 +199,14 @@ const HeroPortrait = memo(function HeroPortrait({ photoUrl }) {
         <div className="relative flex h-[200px] w-[200px] items-center justify-center sm:h-[280px] sm:w-[280px] md:h-[340px] md:w-[340px] lg:h-[440px] lg:w-[440px]">
           {/* Glow layers */}
           <motion.div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(ellipse, rgba(0,240,255,0.15), transparent 70%)' }}
-            animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} />
+            animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }} />
           {/* Rotating rings */}
-          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
             className="absolute inset-[-8px] rounded-full border border-accent/20 sm:inset-[-14px]" />
-          <motion.div animate={{ rotate: -360 }} transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+          <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
             className="absolute inset-[-3px] rounded-full border border-accent-neural/20 sm:inset-[-8px]" />
           {/* Orbit ring with 4 data dots */}
-          <motion.div animate={{ rotate: 360 }} transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
             className="absolute inset-[-16px] sm:inset-[-26px]">
             {[{ color: '#00F0FF', shadow: 'rgba(0,240,255,0.6)', size: 'w-2 h-2' }, { color: '#FF3B6F', shadow: 'rgba(255,59,111,0.5)', size: 'w-1.5 h-1.5' }, { color: '#7C3AED', shadow: 'rgba(124,58,237,0.5)', size: 'w-1.5 h-1.5' }, { color: '#00E676', shadow: 'rgba(0,230,118,0.5)', size: 'w-1.5 h-1.5' }].map((dot, i) => (
               <div key={i} className={`absolute top-0 left-1/2 -translate-x-1/2 ${dot.size} rounded-full`} style={{ background: dot.color, boxShadow: `0 0 10px ${dot.shadow}` }} />
@@ -221,7 +221,7 @@ const HeroPortrait = memo(function HeroPortrait({ photoUrl }) {
           </div>
           {/* Status dot */}
           <motion.div className="absolute bottom-4 right-4 w-3 h-3 rounded-full shadow-[0_0_12px_rgba(0,230,118,0.6)]" style={{ background: '#00E676' }}
-            animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+            animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }} transition={{ duration: 1, repeat: Infinity }} />
         </div>
       </TiltContainer>
     </motion.div>
@@ -234,6 +234,9 @@ export default function HeroSection() {
 
   const badgeText = heroData?.badge_text || 'Systems Online'
   const introParagraph = heroData?.intro_paragraph || 'I build production-grade AI systems, robotics control software, and intelligent applications that power the next generation of autonomous technology.'
+  const heroName = heroData?.name || 'Ali Hassan'
+  const heroTitle = heroData?.title || 'Graphic Designer'
+  const heroSubtitle = heroData?.subtitle || ''
 
   return (
     <section className="relative min-h-[100dvh] pt-28 md:pt-32 flex items-center overflow-hidden scanlines" style={{ paddingBottom: 'max(5rem, env(safe-area-inset-bottom, 0px))' }}>
@@ -244,9 +247,9 @@ export default function HeroSection() {
 
       {/* Floating gradient orbs */}
       <motion.div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-accent/5 blur-[150px] pointer-events-none"
-        animate={{ scale: [1, 1.2, 1], rotate: [0, 20, 0] }} transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }} />
+        animate={{ scale: [1, 1.2, 1], rotate: [0, 20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} />
       <motion.div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-accent-neural/4 blur-[150px] pointer-events-none"
-        animate={{ scale: [1.2, 1, 1.2], rotate: [0, -20, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }} />
+        animate={{ scale: [1.2, 1, 1.2], rotate: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
 
       {/* Parallax blobs */}
       <div className="blob blob-1" style={{ transform: `translate(${(normalized.x - 0.5) * 24}px, ${(normalized.y - 0.5) * 24}px)`, willChange: 'transform' }} />
@@ -260,7 +263,7 @@ export default function HeroSection() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
               <motion.span className="inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/8 px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-accent backdrop-blur-sm"
                 animate={{ boxShadow: ['0 0 20px rgba(0,240,255,0.1)', '0 0 30px rgba(0,240,255,0.2)', '0 0 20px rgba(0,240,255,0.1)'] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+                transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse-slow" />
                 {badgeText}
               </motion.span>
@@ -269,7 +272,7 @@ export default function HeroSection() {
             {/* Headline with letter animation */}
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35 }}
               className="text-[clamp(2.2rem,7vw,3rem)] sm:text-5xl lg:text-7xl xl:text-[5.5rem] font-heading font-bold leading-[1.05] sm:leading-[1] lg:leading-[0.95] tracking-[-0.03em] text-text-primary">
-              Crafting Premium<br /><span className="text-gradient-pulse">Visual Identities</span><br />for Modern Brands.
+              {heroName}<br /><span className="text-gradient-pulse">{heroTitle}</span>{heroSubtitle && <><br />{heroSubtitle}</>}
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}
@@ -299,7 +302,7 @@ export default function HeroSection() {
         <span className="text-xs uppercase tracking-[0.3em] text-text-muted">Scroll</span>
         <motion.div className="h-10 w-px" style={{ background: 'linear-gradient(to bottom, #00F0FF, transparent)', willChange: 'transform' }}
           animate={{ scaleY: [1, 0.5, 1], y: [0, 4, 0], opacity: [1, 0.4, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
+          transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }} />
       </motion.div>
     </section>
   )
