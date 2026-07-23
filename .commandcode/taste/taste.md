@@ -13,6 +13,7 @@
 
 # communication
 - The user communicates via structured, numbered task bulletins with explicit role-playing ("Act as a Lead Full-Stack Developer") — each sub-task is a concrete, auditable deliverable specifying what to verify (backend audit), build (admin UI), and integrate (frontend binding). Respond with corresponding clear sub-tasks, progress tracking, and a summary of every file changed and why. Confidence: 0.80
+- When reporting production bugs, the user provides raw browser console log output (full stack traces, HTTP status codes, React error numbers) verbatim — not natural-language descriptions of symptoms. Respond by tracing the error from the stack trace/source maps, identifying the root cause, and fixing it systematically. Confidence: 0.85
 
 - When reporting debugging/fix results, deliver a structured audit report with: per-issue tables (File Name, Line Number, Problem, Reason, Old Code, New Code, Explanation), a complete z-index hierarchy table, a positions/overflow audit table, and a final checklist (✔ Layout Issues Found, ✔ Files Modified, ✔ Responsive Tests Passed, ✔ Overlapping Fixed, ✔ Blur Issues Fixed, ✔ Mobile Fixed, ✔ Desktop Fixed, ✔ No Console Errors, ✔ Production Ready). Confidence: 0.85
 
@@ -22,6 +23,9 @@
 # backend
 - All API routes should have robust try/catch error handling with proper HTTP status codes (400/500) and meaningful error messages returned in the response — never silently swallow errors or return null. Confidence: 0.80
 - API keys for external services (AI providers, etc.) should be configurable via a frontend admin UI dashboard, support multiple providers simultaneously, and allow seamless key rotation without system disruption when keys expire or hit rate limits. Confidence: 0.80
+
+# deployment
+- When deploying a Vite + Express app to Vercel (or similar serverless platforms), server runtime env vars must NOT use the `VITE_` prefix — that prefix is exclusively for Vite build-time client injection. The server config should check both the non-prefixed name (for Vercel/production) and the `VITE_` prefixed name (for local dev compatibility) as fallbacks, so the same code works in both environments without duplicate env var setup. Confidence: 0.85
 
 # content-management
 - Every visible piece of text across all pages (headings, paragraphs, button labels, CTAs, hero content, etc.) must be fetched dynamically from the database — absolutely zero hardcoded text in frontend layout files. The admin panel must give site administrators complete autonomy to edit all site copy, image references, and layouts without requiring code deployments. All CRUD workflows (create, read, update, delete) across admin modules must be fully functional, bug-free, and correctly mapped to their respective frontend views. Confidence: 0.80

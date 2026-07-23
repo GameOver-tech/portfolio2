@@ -22,9 +22,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('admin_token')
-      if (window.location.pathname.startsWith('/admin')) {
-        window.location.href = '/admin/login'
-      }
+      // Don't do a full page reload — let AdminLayout's verify() handle the redirect
+      // via React Router's <Navigate>, which avoids chunk loading race conditions.
     }
     return Promise.reject(error)
   }

@@ -39,7 +39,11 @@ router.post('/login', async (req, res) => {
       },
     })
   } catch (error) {
-    res.status(500).json({ error: 'Login failed' })
+    console.error('Login error:', error)
+    const message = error.message === 'fetch failed'
+      ? 'Cannot connect to Supabase. Check your environment variables.'
+      : 'Login failed'
+    res.status(500).json({ error: message })
   }
 })
 

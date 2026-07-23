@@ -124,9 +124,11 @@ export default function App() {
         </Route>
         <Route path="/certificate/:id" element={<CertificateViewer />} />
         <Route path="/admin/login" element={
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" /></div>}>
-            <AdminLogin />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" /></div>}>
+              <AdminLogin />
+            </Suspense>
+          </ErrorBoundary>
         } />
         <Route path="/admin" element={
           <ErrorBoundary>
