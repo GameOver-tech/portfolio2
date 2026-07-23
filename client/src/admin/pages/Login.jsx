@@ -34,7 +34,15 @@ export default function AdminLogin() {
         throw new Error('Login failed')
       }
     } catch (err) {
-      setError(err.response?.data?.error || err.message || 'Invalid credentials')
+      // Never pass a non-string to setError — React can't render objects as children
+      const raw = err.response?.data?.error || err.message || 'Invalid credentials'
+      if (err.response?.status === 500) {
+        setError('Server error. Check that environment variables are set on Vercel.')
+      } else if (err.code === 'ERR_NETWORK') {
+        setError('Cannot reach server. Is the API running?')
+      } else {
+        setError(typeof raw === 'string' ? raw : String(raw))
+      }
     } finally {
       setLoading(false)
     }

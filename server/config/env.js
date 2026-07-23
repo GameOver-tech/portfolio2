@@ -5,7 +5,8 @@ import { dirname, resolve } from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-dotenv.config({ path: resolve(__dirname, '../../.env') })
+// .env is optional — on Vercel env vars come from the platform
+try { dotenv.config({ path: resolve(__dirname, '../../.env') }) } catch {} 
 
 // VITE_ prefix is only available during Vite build (client builds).
 // At server runtime on Vercel, it reads regular env vars.

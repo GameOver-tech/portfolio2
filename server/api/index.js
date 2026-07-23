@@ -16,6 +16,15 @@ const __dirname = dirname(__filename)
 
 const app = express()
 
+// Debug: log env config on startup
+console.log('Server starting with config:', {
+  supabaseUrl: config.supabaseUrl ? '✓ set' : '✗ MISSING',
+  supabaseAnonKey: config.supabaseAnonKey ? '✓ set' : '✗ MISSING',
+  supabaseServiceRole: config.supabaseServiceRole ? '✓ set' : '✗ MISSING',
+  jwtSecret: config.jwtSecret ? '✓ set' : '✗ MISSING',
+  port: config.port,
+})
+
 // Security
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
