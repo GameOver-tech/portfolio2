@@ -5,12 +5,16 @@ import { dirname, resolve } from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-// .env is optional — on Vercel env vars come from the platform
-try { dotenv.config({ path: resolve(__dirname, '../../.env') }) } catch {} 
+// 1. Try the local .env file (development)
+try { dotenv.config({ path: resolve(__dirname, '../../.env') }) } catch {}
 
-// VITE_ prefix is only available during Vite build (client builds).
-// At server runtime on Vercel, it reads regular env vars.
-// Check both — SUPABASE_URL first (for Vercel), fall back to VITE_SUPABASE_URL (for local dev).
+// 2. Try the build-injected snapshot at api/server.env (Vercel deploy)
+try { dotenv.config({ path: resolve(__dirname, '../../api/server.env') }) } catch {}
+
+// 3. Check for the config keys in order of precedence:
+//    - actual env (Vercel dashboard or host)
+//    - VITE_ prefixed (from .env or build snapshot)
+//    - empty fallback
 const env = (key) => process.env[key] || process.env[`VITE_${key}`] || ''
 
 export const config = {
