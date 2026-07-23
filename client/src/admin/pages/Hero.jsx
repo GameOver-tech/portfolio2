@@ -117,7 +117,7 @@ export default function AdminHero() {
         </div>
 
         <div className="flex gap-4">
-          <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50">
+          <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300 disabled:opacity-50">
             {loading ? 'Saving...' : 'Save Changes'}
           </button>
         </div>

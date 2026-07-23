@@ -61,7 +61,7 @@ export default function AdminStats() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-heading font-bold">Stats Counters</h2>
-        <button onClick={() => { setForm(defaultForm); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl">Add Stat</button>
+        <button onClick={() => { setForm(defaultForm); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl">Add Stat</button>
       </div>
 
       <DataTable columns={columns} data={stats} onEdit={handleEdit} onDelete={handleDelete} searchPlaceholder="Search stats..." />
@@ -83,7 +83,7 @@ export default function AdminStats() {
               </label>
               <div className="flex justify-end space-x-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 border border-white/10 rounded-xl text-gray">Cancel</button>
-                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl disabled:opacity-50">{loading ? 'Saving...' : 'Save'}</button>
+                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl disabled:opacity-50">{loading ? 'Saving...' : 'Save'}</button>
               </div>
             </form>
           </div>

@@ -58,7 +58,7 @@ export default function AdminSkills() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-heading font-bold">Skills</h2>
-        <button onClick={() => { setForm({ name: '', level: 80, category: '', active: true }); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300">Add Skill</button>
+        <button onClick={() => { setForm({ name: '', level: 80, category: '', active: true }); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300">Add Skill</button>
       </div>
       <DataTable columns={columns} data={skills} onEdit={handleEdit} onDelete={handleDelete} searchPlaceholder="Search skills..." />
 
@@ -81,7 +81,7 @@ export default function AdminSkills() {
               </label>
               <div className="flex justify-end space-x-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 border border-white/10 rounded-xl text-gray hover:text-white transition-all">Cancel</button>
-                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50">{loading ? 'Saving...' : 'Save'}</button>
+                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300 disabled:opacity-50">{loading ? 'Saving...' : 'Save'}</button>
               </div>
             </form>
           </div>

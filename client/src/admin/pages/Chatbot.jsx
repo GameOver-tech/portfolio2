@@ -99,7 +99,7 @@ export default function AdminChatbot() {
           <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} className="rounded border-white/20" />
           <span>Enable Chatbot</span>
         </label>
-        <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">{loading ? 'Saving...' : 'Save Config'}</button>
+        <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] disabled:opacity-50">{loading ? 'Saving...' : 'Save Config'}</button>
       </form>
     </div>
   )

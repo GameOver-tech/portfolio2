@@ -26,21 +26,21 @@ export default function AdminHeader() {
   return (
     <header
       className={`fixed top-0 right-0 left-64 z-40 flex h-16 items-center justify-between px-6 transition-all duration-300 ${
-        isScrolled ? 'border-b border-[#EFE5DA] bg-[rgba(255,248,242,0.9)] backdrop-blur-xl' : 'bg-transparent'
+        isScrolled ? 'border-b border-border-subtle bg-bg-glass backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
       <div>
-        <nav className="mb-0.5 flex items-center space-x-2 text-sm text-[#4B5563]">
+        <nav className="mb-0.5 flex items-center space-x-2 text-sm text-text-secondary">
           <span>Admin</span>
           <span>/</span>
-          <span className="font-semibold text-[#1F1F1F]">{pageTitle}</span>
+          <span className="font-semibold text-white">{pageTitle}</span>
         </nav>
       </div>
       <a
         href="/"
         target="_blank"
         rel="noopener noreferrer"
-        className="rounded-full border border-primary/20 bg-[#FFF2E8] px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:bg-[#FFE7D0]"
+        className="rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-all duration-300 hover:bg-accent/20"
       >
         View Site
       </a>

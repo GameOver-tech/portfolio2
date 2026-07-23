@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import FloatingButtons from '../components/layout/FloatingButtons'
@@ -9,15 +10,17 @@ import { useApp } from '../context/AppContext'
 
 export default function MainLayout() {
   const { loading } = useApp()
-
+  const location = useLocation()
   if (loading) return <LoadingScreen />
-
   return (
-    <div className="min-h-screen bg-background text-[#1F2937]">
+    <div className="min-h-screen bg-background text-text-primary">
+      <div className="noise-overlay" />
       <CursorEffect />
       <Navbar />
       <main>
-        <Outlet />
+        <motion.div key={location.pathname} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+          <Outlet />
+        </motion.div>
       </main>
       <Footer />
       <FloatingButtons />

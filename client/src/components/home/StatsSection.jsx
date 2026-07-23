@@ -1,60 +1,56 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useApp } from '../../context/AppContext'
 import SectionReveal from '../ui/SectionReveal'
+import { staggerContainerFast, staggerItemScale } from '../../animations/variants'
 
-function AnimatedCounter({ value, suffix }) {
+function AnimatedCounter({ value, suffix, label }) {
   const [count, setCount] = useState(0)
   const [ref, inView] = useInView({ triggerOnce: true })
-
   useEffect(() => {
     if (!inView) return
-    let start = 0
-    const duration = 2000
-    const step = Math.ceil(value / (duration / 16))
-    const timer = setInterval(() => {
-      start += step
-      if (start >= value) {
-        setCount(value)
-        clearInterval(timer)
-      } else {
-        setCount(start)
-      }
-    }, 16)
+    let start = 0; const duration = 2000; const step = Math.ceil(value / (duration / 16))
+    const timer = setInterval(() => { start += step; if (start >= value) { setCount(value); clearInterval(timer) } else setCount(start) }, 16)
     return () => clearInterval(timer)
   }, [inView, value])
-
   return (
-    <span ref={ref} className="text-4xl md:text-5xl font-heading font-bold text-gradient">
-      {count}{suffix}
-    </span>
+    <div ref={ref} className="text-center">
+      <motion.span className="text-4xl md:text-5xl font-heading font-bold text-gradient block"
+        initial={{ scale: 0.3, opacity: 0 }} animate={inView ? { scale: 1, opacity: 1 } : {}}
+        transition={{ type: 'spring', stiffness: 150, damping: 12, delay: 0.2 }}>
+        {count}{suffix}
+      </motion.span>
+      <motion.p className="text-text-muted text-sm mt-2 font-medium tracking-wide"
+        initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.4, duration: 0.5 }}>
+        {label}
+      </motion.p>
+    </div>
   )
 }
 
 const fallbackStats = [
-  { label: 'Years Experience', value: 8, suffix: '+' },
-  { label: 'Projects Completed', value: 500, suffix: '+' },
-  { label: 'Happy Clients', value: 200, suffix: '+' },
-  { label: 'Design Awards', value: 15, suffix: '' },
+  { label: 'Years Experience', value: 6, suffix: '+' },
+  { label: 'Projects Delivered', value: 50, suffix: '+' },
+  { label: 'Happy Clients', value: 30, suffix: '+' },
+  { label: 'Technologies', value: 25, suffix: '+' },
 ]
 
 export default function StatsSection() {
   const { stats } = useApp()
   const displayStats = (stats && stats.length > 0) ? stats : fallbackStats
-
   return (
     <section className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {displayStats.map((stat, i) => (
-            <SectionReveal key={stat.id || stat.label} delay={i * 0.1}>
-              <div className="text-center p-8 rounded-2xl bg-card border border-white/5 hover:border-primary/20 transition-all duration-500">
-                <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                <p className="text-gray text-sm mt-2">{stat.label}</p>
-              </div>
-            </SectionReveal>
+            <motion.div key={stat.id || stat.label} variants={staggerItemScale}
+              className="text-center p-6 sm:p-8 rounded-2xl glass-card group hover:border-accent/20">
+              <AnimatedCounter value={stat.value} suffix={stat.suffix} label={stat.label} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

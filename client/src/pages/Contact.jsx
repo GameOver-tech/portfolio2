@@ -4,112 +4,93 @@ import { Helmet } from 'react-helmet-async'
 import { FiMail, FiPhone, FiMapPin, FiSend } from 'react-icons/fi'
 import { FaWhatsapp } from 'react-icons/fa'
 import SectionReveal from '../components/ui/SectionReveal'
+import { staggerContainerFast, staggerItemScale } from '../animations/variants'
 import { useApp } from '../context/AppContext'
 import { adminAPI } from '../services/api'
+
+function MagneticField({ children, className = '' }) {
+  return <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className={className}>{children}</motion.div>
+}
 
 export default function Contact() {
   const { siteSettings } = useApp()
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [status, setStatus] = useState('')
-
   const contactEmail = siteSettings?.contact_email || 'abdulwaheedgraphics097@gmail.com'
   const contactPhone = siteSettings?.phone || '+92 329 1966097'
   const contactAddress = siteSettings?.address || 'Lahore, Pakistan'
   const whatsappNumber = siteSettings?.whatsapp || '923291966097'
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setStatus('loading')
-    try {
-      await adminAPI.submitContact(form)
-      setStatus('success')
-      setForm({ name: '', email: '', subject: '', message: '' })
-      setTimeout(() => setStatus(''), 4000)
-    } catch {
-      setStatus('error')
-      setTimeout(() => setStatus(''), 4000)
-    }
-  }
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+  const handleSubmit = async e => { e.preventDefault(); setStatus('loading'); try { await adminAPI.submitContact(form); setStatus('success'); setForm({ name: '', email: '', subject: '', message: '' }); setTimeout(() => setStatus(''), 4000) } catch { setStatus('error'); setTimeout(() => setStatus(''), 4000) } }
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value })
 
   return (
     <>
-      <Helmet>
-        <title>Contact | Abdul Waheed - Graphic Designer</title>
-      </Helmet>
-
+      <Helmet><title>Contact | Abdul Waheed</title></Helmet>
       <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="text-primary text-sm font-semibold tracking-widest uppercase">Contact</span>
-              <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
-                Let's Work <span className="text-gradient">Together</span>
-              </h1>
-              <p className="leading-relaxed text-[#4B5563]">
-                Have a project in mind? I'd love to hear about it. Send me a message and let's
-                create something amazing together.
-              </p>
+          <SectionReveal type="blur"><div className="text-center max-w-3xl mx-auto mb-16">
+            <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">Contact</motion.span>
+            <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">Get in <span className="text-gradient">Touch</span></h1>
+            <p className="leading-relaxed text-text-muted">Have an AI project in mind? Let's discuss how I can help.</p>
+          </div></SectionReveal>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+            <div className="lg:col-span-3">
+              <SectionReveal type="scale">
+                <motion.div className="rounded-2xl border border-border-subtle bg-bg-card/50 backdrop-blur-sm p-8 shadow-card">
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {['name', 'email'].map(field => (
+                        <motion.div key={field} whileFocus={{ scale: 1.01 }} className="relative group">
+                          <input type={field === 'email' ? 'email' : 'text'} name={field} value={form[field]} onChange={handleChange} placeholder={field === 'name' ? 'Your Name' : 'Your Email'} required
+                            className="w-full px-4 min-h-[48px] bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:border-accent/30 focus:outline-none focus:ring-0 transition-all duration-300 placeholder:text-text-muted peer" />
+                          <motion.span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300" style={{ originX: '0' }} />
+                        </motion.div>
+                      ))}
+                    </div>
+                    {['subject', 'message'].map(field => (
+                      <motion.div key={field} whileFocus={{ scale: 1.01 }} className="relative group">
+                        {field === 'message' ? <textarea name={field} value={form[field]} onChange={handleChange} placeholder="Your Message" required rows={5}
+                          className="w-full px-4 py-3 min-h-[120px] bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:border-accent/30 focus:outline-none focus:ring-0 transition-all duration-300 placeholder:text-text-muted resize-none peer" />
+                          : <input type="text" name={field} value={form[field]} onChange={handleChange} placeholder="Subject" required
+                            className="w-full px-4 min-h-[48px] bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:border-accent/30 focus:outline-none focus:ring-0 transition-all duration-300 placeholder:text-text-muted peer" />}
+                        <motion.span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300" style={{ originX: '0' }} />
+                      </motion.div>
+                    ))}
+                    <MagneticField>
+                      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} type="submit" disabled={status === 'loading'}
+                        className="w-full px-6 min-h-[50px] bg-accent text-background font-semibold rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all duration-300 disabled:opacity-50">
+                        <motion.span animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><FiSend /></motion.span>
+                        <span>{status === 'loading' ? 'Sending...' : 'Send Message'}</span>
+                      </motion.button>
+                    </MagneticField>
+                    {status === 'success' && <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-accent text-sm text-center">Message sent successfully! I'll get back to you soon.</motion.p>}
+                    {status === 'error' && <p className="text-red-400 text-sm text-center">Something went wrong. Please try again.</p>}
+                  </form>
+                </motion.div>
+              </SectionReveal>
             </div>
-          </SectionReveal>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <SectionReveal>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your Name" required className="w-full px-4 min-h-[48px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
-                  <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Your Email" required className="w-full px-4 min-h-[48px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
-                </div>
-                <input type="text" name="subject" value={form.subject} onChange={handleChange} placeholder="Subject" required className="w-full px-4 min-h-[48px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF]" />
-                <textarea name="message" value={form.message} onChange={handleChange} placeholder="Your Message" required rows={5} className="w-full px-4 py-3 min-h-[120px] bg-card border border-white/10 rounded-xl text-[#1F2937] focus:outline-none focus:border-primary transition-colors placeholder:text-[#9CA3AF] resize-none" />
-                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} type="submit" disabled={status === 'loading'} className="w-full px-6 min-h-[48px] bg-gradient-primary text-background font-semibold rounded-xl flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50">
-                  <FiSend />
-                  <span>{status === 'loading' ? 'Sending...' : 'Send Message'}</span>
-                </motion.button>
-                {status === 'success' && <p className="text-primary text-sm text-center">Message sent successfully! I'll get back to you soon.</p>}
-                {status === 'error' && <p className="text-red-400 text-sm text-center">Something went wrong. Please try again.</p>}
-              </form>
-            </SectionReveal>
-
-            {/* Contact Info — values from settings */}
-            <SectionReveal delay={0.2}>
-              <div className="space-y-6">
-                <div className="p-6 rounded-2xl bg-card border border-white/5">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                    <FiMail className="text-primary" size={22} />
-                  </div>
-                  <h3 className="text-lg font-heading font-bold mb-1">Email</h3>
-                  <p className="text-[#4B5563]">{contactEmail}</p>
-                </div>
-                <div className="p-6 rounded-2xl bg-card border border-white/5">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                    <FiPhone className="text-primary" size={22} />
-                  </div>
-                  <h3 className="text-lg font-heading font-bold mb-1">Phone</h3>
-                  <p className="text-[#4B5563]">{contactPhone}</p>
-                </div>
-                <div className="p-6 rounded-2xl bg-card border border-white/5">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                    <FiMapPin className="text-primary" size={22} />
-                  </div>
-                  <h3 className="text-lg font-heading font-bold mb-1">Location</h3>
-                  <p className="text-[#4B5563]">{contactAddress}</p>
-                </div>
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-3 p-6 rounded-2xl bg-[#FFF2E8] border border-[#F47A20]/20 hover:bg-[#FFE7D0] transition-all duration-300"
-                >
-                  <FaWhatsapp className="text-[#F47A20] text-2xl" />
-                  <span className="font-semibold">Chat on WhatsApp</span>
-                </a>
-              </div>
-            </SectionReveal>
+            <div className="lg:col-span-2">
+              <SectionReveal type="right" delay={0.2}>
+                <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-4">
+                  {[{ icon: FiMail, label: 'Email', value: contactEmail }, { icon: FiPhone, label: 'Phone', value: contactPhone }, { icon: FiMapPin, label: 'Location', value: contactAddress }].map((item, i) => (
+                    <motion.div key={i} variants={staggerItemScale}>
+                      <motion.div whileHover={{ y: -3, x: 4 }} className="p-6 rounded-2xl border border-border-subtle bg-bg-card/50 backdrop-blur-sm shadow-card">
+                        <motion.div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center mb-3 shadow-[0_0_10px_rgba(0,240,255,0.1)]" animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 4, repeat: Infinity, delay: i * 0.3 }}><item.icon className="text-accent" size={18} /></motion.div>
+                        <h3 className="text-sm font-heading font-semibold text-text-primary mb-1">{item.label}</h3>
+                        <p className="text-sm text-text-muted break-all">{item.value}</p>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                  <motion.div variants={staggerItemScale}>
+                    <motion.a whileHover={{ scale: 1.02, x: 4 }} href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center justify-center space-x-3 p-6 rounded-2xl border border-accent/15 bg-accent/5 hover:bg-accent/10 transition-all duration-300 group">
+                      <FaWhatsapp className="text-accent text-lg" /><span className="font-medium text-text-primary group-hover:text-accent transition-colors">Chat on WhatsApp</span>
+                    </motion.a>
+                  </motion.div>
+                </motion.div>
+              </SectionReveal>
+            </div>
           </div>
         </div>
       </section>

@@ -63,7 +63,7 @@ export default function AdminServices() {
 
   const columns = [
     { key: 'title', label: 'Title' },
-    { key: 'status', label: 'Status', render: (v) => <span className={`px-2 py-1 rounded-full text-xs ${v === 'published' ? 'bg-[#FFF2E8] text-[#F47A20]' : 'bg-[#FFF8F2] text-[#6B7280]'}`}>{v}</span> },
+    { key: 'status', label: 'Status', render: (v) => <span className={`px-2 py-1 rounded-full text-xs ${v === 'published' ? 'bg-accent/10 text-accent' : 'bg-white/5 text-text-muted'}`}>{v}</span> },
     { key: 'order', label: 'Order' },
   ]
 
@@ -71,7 +71,7 @@ export default function AdminServices() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-heading font-bold">Services</h2>
-        <button onClick={() => { setForm(defaultForm); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300">
+        <button onClick={() => { setForm(defaultForm); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300">
           Add Service
         </button>
       </div>
@@ -95,7 +95,7 @@ export default function AdminServices() {
               </div>
               <div className="flex justify-end space-x-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 border border-white/10 rounded-xl text-gray hover:text-white transition-all">Cancel</button>
-                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50">
+                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300 disabled:opacity-50">
                   {loading ? 'Saving...' : 'Save'}
                 </button>
               </div>

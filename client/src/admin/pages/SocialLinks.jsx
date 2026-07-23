@@ -84,7 +84,7 @@ export default function AdminSocialLinks() {
         <h2 className="text-2xl font-heading font-bold">Social Links</h2>
         <button
           onClick={() => setShowAdd(!showAdd)}
-          className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300"
+          className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300"
         >
           <FiPlus />
           <span>Add New</span>
@@ -142,7 +142,7 @@ export default function AdminSocialLinks() {
             <button
               onClick={() => toggleActive(link)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                link.active ? 'bg-[#FFF2E8] text-[#F47A20]' : 'bg-[#FFF8F2] text-[#6B7280]'
+                link.active ? 'bg-accent/10 text-accent' : 'bg-white/5 text-text-muted'
               }`}
             >
               {link.active ? 'Active' : 'Inactive'}

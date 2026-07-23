@@ -54,7 +54,7 @@ export default function AdminCategories() {
       <h2 className="text-2xl font-heading font-bold mb-8">Categories</h2>
       <form onSubmit={handleAdd} className="flex space-x-4 mb-8">
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Category name" required className="flex-1 px-4 py-3 bg-card border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-colors" />
-        <button type="submit" disabled={loading} className="px-6 py-3 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50">Add</button>
+        <button type="submit" disabled={loading} className="px-6 py-3 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-300 disabled:opacity-50">Add</button>
       </form>
       <div className="flex flex-wrap gap-3">
         {categories.map((cat) => (

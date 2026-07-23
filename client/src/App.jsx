@@ -28,105 +28,101 @@ import AdminSocialLinks from './admin/pages/SocialLinks'
 import AdminChatbot from './admin/pages/Chatbot'
 import AdminSEO from './admin/pages/SEO'
 import AdminStats from './admin/pages/Stats'
-import { AnimatePresence } from 'framer-motion'
 
-function ScrollToTop() {
+function BodyReset() {
   const { pathname } = useLocation()
   useEffect(() => {
-    window.scrollTo(0, 0)
+    document.body.style.overflow = ''
+    document.body.style.opacity = ''
+    document.body.style.position = ''
+    document.body.style.width = ''
+    document.documentElement.style.overflow = ''
+    document.documentElement.style.opacity = ''
   }, [pathname])
   return null
 }
 
-function isAdminRoute(pathname) {
-  return pathname.startsWith('/admin')
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const lenis = window.__lenis
+    if (lenis) { lenis.scrollTo(0, { immediate: true, lock: true }) }
+    else { window.scrollTo(0, 0) }
+  }, [pathname])
+  return null
 }
+
+function isAdminRoute(pathname) { return pathname.startsWith('/admin') }
 
 export default function App() {
   const location = useLocation()
-  const lenisInstance = useRef(null)
+  const lenisRef = useRef(null)
   const rafId = useRef(null)
+  const prevIsAdmin = useRef(null)
 
+  // Share Lenis instance globally so ScrollToTop can use it
+  useEffect(() => {
+    window.__lenis = lenisRef.current
+    return () => { window.__lenis = null }
+  })
+
+  // Create Lenis once on mount for public pages; destroy only when entering admin
   useEffect(() => {
     const isAdmin = isAdminRoute(location.pathname)
+    const wasAdmin = prevIsAdmin.current
+    prevIsAdmin.current = isAdmin
 
-    // Clean up previous Lenis + RAF
-    if (rafId.current) {
-      cancelAnimationFrame(rafId.current)
-      rafId.current = null
-    }
-    if (lenisInstance.current) {
-      lenisInstance.current.destroy()
-      lenisInstance.current = null
+    const destroyLenis = () => {
+      if (rafId.current) { cancelAnimationFrame(rafId.current); rafId.current = null }
+      if (lenisRef.current) { lenisRef.current.destroy(); lenisRef.current = null }
+      window.__lenis = null
     }
 
-    // Only use smooth scroll on public (non-admin) routes
-    // Lenis causes severe input lag on admin forms
-    if (!isAdmin) {
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        wheelMultiplier: 1,
-      })
-      lenisInstance.current = lenis
-
-      function raf(time) {
-        lenis.raf(time)
-        rafId.current = requestAnimationFrame(raf)
-      }
+    if (isAdmin && !wasAdmin) { destroyLenis(); return }
+    if (!isAdmin && wasAdmin) { destroyLenis() }
+    if (!isAdmin && !lenisRef.current) {
+      const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, wheelMultiplier: 1 })
+      lenisRef.current = lenis
+      window.__lenis = lenis
+      function raf(time) { lenis.raf(time); rafId.current = requestAnimationFrame(raf) }
       rafId.current = requestAnimationFrame(raf)
-    }
-
-    return () => {
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current)
-        rafId.current = null
-      }
-      if (lenisInstance.current) {
-        lenisInstance.current.destroy()
-        lenisInstance.current = null
-      }
     }
   }, [location.pathname])
 
   return (
     <>
+      <BodyReset />
       <ScrollToTop />
-      <AnimatePresence mode="wait">
-        <Routes>
-          {/* Main Frontend Routes */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:slug" element={<ProjectDetail />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/contact" element={<Contact />} />
-          </Route>
-
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="hero" element={<AdminHero />} />
-            <Route path="about" element={<AdminAbout />} />
-            <Route path="services" element={<AdminServices />} />
-            <Route path="projects" element={<AdminProjects />} />
-            <Route path="stats" element={<AdminStats />} />
-            <Route path="categories" element={<AdminCategories />} />
-            <Route path="skills" element={<AdminSkills />} />
-            <Route path="team" element={<AdminTeam />} />
-            <Route path="messages" element={<AdminMessages />} />
-            <Route path="newsletter" element={<AdminNewsletter />} />
-            <Route path="settings" element={<AdminSettings />} />
-            <Route path="social-links" element={<AdminSocialLinks />} />
-            <Route path="chatbot" element={<AdminChatbot />} />
-            <Route path="seo" element={<AdminSEO />} />
-          </Route>
-        </Routes>
-      </AnimatePresence>
+      <Routes location={location}>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:slug" element={<ProjectDetail />} />
+          <Route path="/portfolio/:slug" element={<PortfolioViewer />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/contact" element={<Contact />} />
+        </Route>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="hero" element={<AdminHero />} />
+          <Route path="about" element={<AdminAbout />} />
+          <Route path="services" element={<AdminServices />} />
+          <Route path="projects" element={<AdminProjects />} />
+          <Route path="stats" element={<AdminStats />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="skills" element={<AdminSkills />} />
+          <Route path="team" element={<AdminTeam />} />
+          <Route path="messages" element={<AdminMessages />} />
+          <Route path="newsletter" element={<AdminNewsletter />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="social-links" element={<AdminSocialLinks />} />
+          <Route path="chatbot" element={<AdminChatbot />} />
+          <Route path="seo" element={<AdminSEO />} />
+        </Route>
+      </Routes>
     </>
   )
 }

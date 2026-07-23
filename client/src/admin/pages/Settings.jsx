@@ -29,9 +29,7 @@ export default function AdminSettings() {
 
   const getSectionTitles = () => {
     try {
-      return typeof form.section_titles === 'string'
-        ? JSON.parse(form.section_titles)
-        : form.section_titles
+      return typeof form.section_titles === 'string' ? JSON.parse(form.section_titles) : form.section_titles
     } catch { return defaultSectionTitles }
   }
 
@@ -60,9 +58,7 @@ export default function AdminSettings() {
         logo_image_url: data.logo_image_url || '',
         section_titles: data.section_titles ? JSON.stringify(data.section_titles) : JSON.stringify(defaultSectionTitles),
       })
-    } else if (error) {
-      console.error('Error loading settings:', error)
-    }
+    } else if (error) { console.error('Error loading settings:', error) }
   }
 
   const handleSave = async (e) => {
@@ -71,19 +67,11 @@ export default function AdminSettings() {
     try {
       const payload = {
         id: settingsId || undefined,
-        site_name: form.site_name,
-        site_description: form.site_description,
-        contact_email: form.contact_email,
-        phone: form.phone,
-        address: form.address,
-        whatsapp: form.whatsapp,
-        copyright_text: form.copyright_text,
-        logo_text: form.logo_text,
-        logo_image_url: form.logo_image_url,
-        section_titles: getSectionTitles(),
+        site_name: form.site_name, site_description: form.site_description, contact_email: form.contact_email,
+        phone: form.phone, address: form.address, whatsapp: form.whatsapp, copyright_text: form.copyright_text,
+        logo_text: form.logo_text, logo_image_url: form.logo_image_url, section_titles: getSectionTitles(),
         updated_at: new Date().toISOString(),
       }
-
       const { data, error } = await supabase.from('settings').upsert(payload).select()
       if (error) throw error
       if (data?.[0]?.id) setSettingsId(data[0].id)
@@ -97,84 +85,43 @@ export default function AdminSettings() {
 
   const titles = getSectionTitles()
 
+  const Input = (props) => <input {...props} className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary placeholder:text-text-muted focus:border-accent/30 focus:outline-none focus:ring-0 transition-colors" />
+  const TextArea = (props) => <textarea {...props} className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary placeholder:text-text-muted focus:border-accent/30 focus:outline-none focus:ring-0 transition-colors resize-none" />
+  const Label = ({ children }) => <label className="block text-xs text-text-muted mb-1">{children}</label>
+  const Section = ({ title, children }) => (
+    <div className="p-6 rounded-2xl bg-bg-card border border-border-subtle">
+      <h3 className="text-lg font-heading font-semibold mb-4 text-accent">{title}</h3>
+      <div className="space-y-4">{children}</div>
+    </div>
+  )
+
   return (
     <div>
-      <h2 className="text-2xl font-heading font-bold mb-8">Site Settings</h2>
-      <p className="text-sm mb-6 text-[#4B5563]">These values appear across your website — footer, contact page, homepage sections, and copyright.</p>
-
+      <h2 className="text-2xl font-heading font-bold text-white mb-8">Site Settings</h2>
+      <p className="text-sm mb-6 text-text-muted">These values appear across your website — footer, contact page, homepage sections, and copyright.</p>
       <form onSubmit={handleSave} className="max-w-2xl space-y-6">
-        {/* Brand */}
-        <div className="p-6 rounded-2xl bg-card border border-white/5">
-          <h3 className="text-lg font-heading font-semibold mb-4 text-primary">Brand</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Site Name</label>
-              <input value={form.site_name} onChange={(e) => setForm({ ...form, site_name: e.target.value })} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Site Description / Footer Bio</label>
-              <textarea value={form.site_description} onChange={(e) => setForm({ ...form, site_description: e.target.value })} rows={3} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937] resize-none" />
-            </div>
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Copyright Text</label>
-              <input value={form.copyright_text} onChange={(e) => setForm({ ...form, copyright_text: e.target.value })} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-          </div>
-        </div>
-
-        {/* Logo */}
-        <div className="p-6 rounded-2xl bg-card border border-white/5">
-          <h3 className="text-lg font-heading font-semibold mb-4 text-primary">Logo</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Logo Text (shown if no image)</label>
-              <input value={form.logo_text} onChange={(e) => setForm({ ...form, logo_text: e.target.value })} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Logo Image URL (overrides text)</label>
-              <input value={form.logo_image_url} onChange={(e) => setForm({ ...form, logo_image_url: e.target.value })} placeholder="https://..." className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-              {form.logo_image_url && <img src={form.logo_image_url} alt="logo preview" className="mt-2 h-10 w-auto" />}
-            </div>
-          </div>
-        </div>
-
-        {/* Contact */}
-        <div className="p-6 rounded-2xl bg-card border border-white/5">
-          <h3 className="text-lg font-heading font-semibold mb-4 text-primary">Contact Information</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Contact Email</label>
-              <input value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} type="email" className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Phone</label>
-              <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">Address</label>
-              <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-            <div>
-              <label className="block text-xs text-[#4B5563] mb-1">WhatsApp Number</label>
-              <input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-            </div>
-          </div>
-        </div>
-
-        {/* Section Titles */}
-        <div className="p-6 rounded-2xl bg-card border border-white/5">
-          <h3 className="text-lg font-heading font-semibold mb-4 text-primary">Homepage Section Titles</h3>
-          <div className="space-y-4">
-            {sectionTitleFields.map((key) => (
-              <div key={key}>
-                <label className="block text-xs text-[#4B5563] capitalize mb-1">{key.replace(/_/g, ' ')}</label>
-                <input value={titles[key] || ''} onChange={(e) => updateSectionTitle(key, e.target.value)} className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-[#1F2937]" />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">
+        <Section title="Brand">
+          <div><Label>Site Name</Label><Input value={form.site_name} onChange={e => setForm({ ...form, site_name: e.target.value })} /></div>
+          <div><Label>Site Description / Footer Bio</Label><TextArea value={form.site_description} onChange={e => setForm({ ...form, site_description: e.target.value })} rows={3} /></div>
+          <div><Label>Copyright Text</Label><Input value={form.copyright_text} onChange={e => setForm({ ...form, copyright_text: e.target.value })} /></div>
+        </Section>
+        <Section title="Logo">
+          <div><Label>Logo Text (shown if no image)</Label><Input value={form.logo_text} onChange={e => setForm({ ...form, logo_text: e.target.value })} /></div>
+          <div><Label>Logo Image URL (overrides text)</Label><Input value={form.logo_image_url} onChange={e => setForm({ ...form, logo_image_url: e.target.value })} placeholder="https://..." />{form.logo_image_url && <img src={form.logo_image_url} alt="logo preview" className="mt-2 h-10 w-auto" />}</div>
+        </Section>
+        <Section title="Contact Information">
+          <div><Label>Contact Email</Label><Input value={form.contact_email} onChange={e => setForm({ ...form, contact_email: e.target.value })} type="email" /></div>
+          <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
+          <div><Label>Address</Label><Input value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} /></div>
+          <div><Label>WhatsApp Number</Label><Input value={form.whatsapp} onChange={e => setForm({ ...form, whatsapp: e.target.value })} /></div>
+        </Section>
+        <Section title="Homepage Section Titles">
+          {sectionTitleFields.map(key => (
+            <div key={key}><Label>{key.replace(/_/g, ' ')}</Label><Input value={titles[key] || ''} onChange={e => updateSectionTitle(key, e.target.value)} /></div>
+          ))}
+        </Section>
+        <button type="submit" disabled={loading}
+          className="px-8 py-3 bg-gradient-primary text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:shadow-[0_0_40px_rgba(0,240,255,0.35)] transition-all duration-300 disabled:opacity-50">
           {loading ? 'Saving...' : 'Save All Settings'}
         </button>
       </form>

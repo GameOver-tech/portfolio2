@@ -1,200 +1,146 @@
-import { useState, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
-import { FiDownload, FiTarget, FiEye } from 'react-icons/fi'
+import { FiDownload, FiTarget, FiEye, FiCalendar } from 'react-icons/fi'
 import SectionReveal from '../components/ui/SectionReveal'
+import { staggerContainerFast, staggerItemScale, staggerItem } from '../animations/variants'
 import { useApp } from '../context/AppContext'
 
 const timeline = [
-  { year: '2024', event: 'Senior Brand Designer at Creative Agency', desc: 'Leading design team for major brand projects.' },
-  { year: '2022', event: 'Launched Independent Studio', desc: 'Started freelance practice serving global clients.' },
-  { year: '2020', event: 'UI/UX Design Lead', desc: 'Transitioned into digital product design.' },
-  { year: '2018', event: 'Started Design Career', desc: 'Began professional journey in graphic design.' },
+  { year: '2024', event: 'Senior AI Engineer at DeepTech', desc: 'Leading AI product development for enterprise clients.' },
+  { year: '2023', event: 'Launched AI Consultancy', desc: 'Started independent practice serving global startups.' },
+  { year: '2021', event: 'ML Engineering Lead', desc: 'Built production ML pipelines and AI systems.' },
+  { year: '2019', event: 'Started AI Career', desc: 'Began professional journey in machine learning and full-stack development.' },
 ]
+
+const tabVariants = {
+  enter: { opacity: 0, y: 20, scale: 0.95 },
+  center: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] } },
+}
 
 export default function About() {
   const { aboutData, skills } = useApp()
   const [activeTab, setActiveTab] = useState('experience')
-
   return (
     <>
-      <Helmet>
-        <title>About | Abdul Waheed - Graphic Designer</title>
-      </Helmet>
-
-      {/* Hero */}
+      <Helmet><title>About | Abdul Waheed</title></Helmet>
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="blob blob-1" />
+        <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <SectionReveal>
+            <SectionReveal type="left">
               <div>
-                <span className="text-primary text-sm font-semibold tracking-widest uppercase">About Me</span>
-                <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6">
-                  The Story Behind the <span className="text-gradient">Design</span>
-                </h1>
-                <p className="leading-relaxed mb-6 text-[#4B5563]">
-                  {aboutData?.bio?.split('\n')[0] || "I'm a passionate graphic designer with over 8 years of experience creating visual identities that resonate. My approach combines strategic thinking with creative execution to deliver designs that not only look beautiful but achieve real results."}
-                </p>
-                <p className="leading-relaxed mb-8 text-[#4B5563]">
-                  {aboutData?.bio?.split('\n')[1] || "Specializing in brand identity, logo design, and visual communication, I've had the privilege of working with 200+ clients worldwide, from startups to established enterprises."}
-                </p>
+                <span className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">About</span>
+                <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">The Work Behind the <span className="text-gradient">Systems</span></h1>
+                <p className="leading-relaxed mb-6 text-text-muted">{aboutData?.bio?.split('\n')[0] || "I'm an AI Engineer and Full-Stack Developer focused on building production-grade intelligent systems."}</p>
+                <p className="leading-relaxed mb-8 text-text-muted">{aboutData?.bio?.split('\n')[1] || "Specializing in AI/ML systems, LLM applications, and scalable full-stack platforms."}</p>
                 {aboutData?.cv_url && (
-                  <a
-                    href={aboutData.cv_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] bg-gradient-primary text-background font-semibold rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 active:scale-95"
-                  >
-                    <FiDownload />
-                    <span>Download CV</span>
-                  </a>
+                  <motion.a href={aboutData.cv_url} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] bg-accent text-background font-semibold rounded-full shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all duration-300">
+                    <FiDownload /><span>Download CV</span>
+                  </motion.a>
                 )}
               </div>
             </SectionReveal>
-
-            <SectionReveal delay={0.2}>
+            <SectionReveal type="right" delay={0.1}>
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-3xl blur-3xl" />
-                <div className="relative aspect-square rounded-3xl bg-card border border-white/10 overflow-hidden">
-                  {aboutData?.photo_url ? (
-                    <img src={aboutData.photo_url} alt="About" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-8xl font-heading font-bold text-gradient">AW</span>
-                    </div>
-                  )}
-                </div>
+                <div className="absolute inset-0 bg-gradient-accent rounded-3xl blur-3xl opacity-30" />
+                <motion.div className="relative aspect-square rounded-2xl border border-border-subtle overflow-hidden bg-bg-surface shadow-elevated" whileHover={{ scale: 1.01 }}>
+                  {aboutData?.photo_url ? <img src={aboutData.photo_url} alt="About" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><span className="text-8xl font-heading font-bold text-gradient">AW</span></div>}
+                </motion.div>
               </div>
             </SectionReveal>
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
       <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <SectionReveal>
-              <motion.div
-                whileHover={{ y: -5 }}
-                className="p-8 rounded-2xl bg-card border border-white/5 group hover:border-primary/20 transition-all duration-500"
-              >
-                <FiTarget className="text-primary text-3xl mb-4" />
-                <h3 className="text-2xl font-heading font-bold mb-3">My Mission</h3>
-                <p className="leading-relaxed text-[#4B5563]">
-                  {aboutData?.mission || 'To empower brands with compelling visual identities that communicate their unique story and connect with their audience on a deeper level.'}
-                </p>
+          <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[{ icon: FiTarget, title: 'My Mission', desc: aboutData?.mission || 'To build intelligent systems that empower businesses.' }, { icon: FiEye, title: 'My Vision', desc: aboutData?.vision || 'To be at the forefront of AI innovation.' }].map((item, i) => (
+              <motion.div key={i} variants={staggerItemScale}>
+                <motion.div whileHover={{ y: -4 }} className="p-8 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/15 transition-all duration-500">
+                  <motion.div className="text-accent text-xl mb-4" animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }}><item.icon /></motion.div>
+                  <h3 className="text-lg font-heading font-semibold mb-3 text-text-primary">{item.title}</h3>
+                  <p className="leading-relaxed text-text-muted">{item.desc}</p>
+                </motion.div>
               </motion.div>
-            </SectionReveal>
-
-            <SectionReveal delay={0.1}>
-              <motion.div
-                whileHover={{ y: -5 }}
-                className="p-8 rounded-2xl bg-card border border-white/5 group hover:border-primary/20 transition-all duration-500"
-              >
-                <FiEye className="text-primary text-3xl mb-4" />
-                <h3 className="text-2xl font-heading font-bold mb-3">My Vision</h3>
-                <p className="leading-relaxed text-[#4B5563]">
-                  {aboutData?.vision || 'To be the most sought-after design studio known for creating iconic brands that shape industries and inspire the next generation of designers.'}
-                </p>
-              </motion.div>
-            </SectionReveal>
-          </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* Experience & Skills Tabs */}
       <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
-              {['experience', 'skills', 'education'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-5 sm:px-6 min-h-[44px] rounded-full text-sm font-semibold transition-all duration-300 active:scale-95 ${
-                    activeTab === tab
-                      ? 'bg-gradient-primary text-background'
-                      : 'bg-white/5 text-[#4B5563] hover:text-[#1F2937] border border-[#EFE5DA]'
-                  }`}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-          </SectionReveal>
+          <SectionReveal><div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
+            {['experience', 'skills', 'education'].map(tab => (
+              <motion.button key={tab} onClick={() => setActiveTab(tab)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }}
+                className={`px-5 sm:px-6 min-h-[44px] rounded-full text-sm font-medium transition-all duration-300 ${activeTab === tab ? 'bg-accent text-background shadow-[0_0_20px_rgba(0,240,255,0.2)]' : 'border border-border-subtle text-text-muted hover:text-text-primary hover:border-border-visible'}`}>
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </motion.button>
+            ))}
+          </div></SectionReveal>
 
-          {activeTab === 'experience' && (
-            <div className="relative">
-              <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block" />
-              <div className="space-y-6 sm:space-y-12">
-                {timeline.map((item, i) => (
-                  <SectionReveal key={i} delay={i * 0.1}>
-                    <div className={`relative flex items-center ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                      <div className="hidden md:block flex-1" />
-                      <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50" />
-                      <div className="flex-1 p-5 sm:p-6 rounded-2xl bg-card border border-white/5">
-                        <span className="text-primary font-bold text-sm">{item.year}</span>
-                        <h3 className="text-lg font-heading font-bold mt-1">{item.event}</h3>
-                        <p className="mt-2 text-sm text-[#4B5563]">{item.desc}</p>
-                      </div>
-                    </div>
-                  </SectionReveal>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'skills' && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {(skills?.length > 0
-                ? skills
-                : [
-                    { name: 'Adobe Photoshop', level: 95 },
-                    { name: 'Adobe Illustrator', level: 92 },
-                    { name: 'Figma', level: 88 },
-                    { name: 'Brand Strategy', level: 90 },
-                  ]
-              ).map((skill, i) => (
-                <SectionReveal key={skill.id || i} delay={i * 0.05}>
-                  <motion.div
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    className="p-6 rounded-2xl bg-card border border-white/5 group hover:border-primary/20 transition-all duration-500"
-                  >
-                    <h4 className="font-semibold mb-3">{skill.name}</h4>
-                    <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level || 80}%` }}
-                        transition={{ duration: 1.5, delay: i * 0.1, ease: 'easeOut' }}
-                        className="h-full bg-gradient-primary rounded-full"
-                      />
-                    </div>
-                    <span className="mt-1 block text-xs text-[#6B7280]">{skill.level || 80}%</span>
-                  </motion.div>
-                </SectionReveal>
-              ))}
-            </div>
-          )}
-
-          {activeTab === 'education' && (
-            <div className="space-y-6">
-              {[
-                { degree: 'Matriculation', school: 'Government High school', year: '2021 – 2022' },
-                { degree: 'Intermediate', school: 'Quaid-e-Azam Collage Gojra', year: '2023 – 2024' },
-                { degree: 'BSCS(3rd semester)', school: '(LIMS) Gojra', year: '2025 – Present' },
-              ].map((edu, i) => (
-                <SectionReveal key={i} delay={i * 0.1}>
-                  <div className="p-6 rounded-2xl bg-card border border-white/5">
-                    <span className="text-primary text-sm font-semibold">{edu.year}</span>
-                    <h3 className="text-xl font-heading font-bold mt-1">{edu.degree}</h3>
-                    <p className="mt-1 text-sm text-[#4B5563]">{edu.school}</p>
+          <AnimatePresence mode="wait">
+            <motion.div key={activeTab} variants={tabVariants} initial="enter" animate="center" exit="exit">
+              {activeTab === 'experience' && (
+                <div className="relative">
+                  <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-neural/30 to-transparent hidden md:block" />
+                  <div className="space-y-6 sm:space-y-10">
+                    {timeline.map((item, i) => (
+                      <SectionReveal key={i} delay={i * 0.1} type={i % 2 === 0 ? 'left' : 'right'}>
+                        <div className={`relative flex items-center ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                          <div className="hidden md:block flex-1" />
+                          <motion.div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-accent shadow-[0_0_12px_rgba(0,240,255,0.5)]" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }} />
+                          <motion.div whileHover={{ x: i % 2 === 0 ? 5 : -5 }} className="flex-1 p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
+                            <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2"><FiCalendar size={14} /><span>{item.year}</span></div>
+                            <h3 className="text-lg font-heading font-semibold text-text-primary">{item.event}</h3>
+                            <p className="mt-2 text-sm text-text-muted">{item.desc}</p>
+                          </motion.div>
+                        </div>
+                      </SectionReveal>
+                    ))}
                   </div>
-                </SectionReveal>
-              ))}
-            </div>
-          )}
+                </div>
+              )}
+
+              {activeTab === 'skills' && (
+                <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {(skills?.length > 0 ? skills : [
+                    { name: 'Python / ML', level: 95 }, { name: 'React / Next.js', level: 92 }, { name: 'TensorFlow / PyTorch', level: 88 },
+                    { name: 'Node.js / Express', level: 90 }, { name: 'LLM / RAG Systems', level: 93 }, { name: 'Cloud (AWS/GCP)', level: 85 },
+                    { name: 'Databases / SQL', level: 88 }, { name: 'DevOps / Docker', level: 82 },
+                  ]).map((skill, i) => (
+                    <motion.div key={skill.id || i} variants={staggerItemScale}>
+                      <motion.div whileHover={{ y: -4, scale: 1.02 }} className="p-5 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/15 transition-all duration-500">
+                        <h4 className="font-medium text-sm text-text-primary mb-3">{skill.name}</h4>
+                        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <motion.div initial={{ width: 0 }} whileInView={{ width: `${skill.level || 80}%` }} transition={{ duration: 1.5, delay: i * 0.1, ease: 'easeOut' }}
+                            className="h-full bg-gradient-accent rounded-full shadow-[0_0_8px_rgba(0,240,255,0.3)]" />
+                        </div>
+                        <span className="mt-1 block text-xs text-text-muted">{skill.level || 80}%</span>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+
+              {activeTab === 'education' && (
+                <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="space-y-4">
+                  {[{ degree: 'BSCS (3rd Semester)', school: '(LIMS) Gojra', year: '2025 \u2013 Present' }, { degree: 'Intermediate', school: 'Quaid-e-Azam College Gojra', year: '2023 \u2013 2024' }, { degree: 'Matriculation', school: 'Government High School', year: '2021 \u2013 2022' }].map((edu, i) => (
+                    <motion.div key={i} variants={staggerItem}>
+                      <motion.div whileHover={{ y: -2, x: 4 }} className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
+                        <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2"><FiCalendar size={14} /><span>{edu.year}</span></div>
+                        <h3 className="text-lg font-heading font-semibold text-text-primary">{edu.degree}</h3>
+                        <p className="mt-1 text-sm text-text-muted">{edu.school}</p>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
     </>

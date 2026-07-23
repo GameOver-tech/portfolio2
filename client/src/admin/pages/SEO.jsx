@@ -34,7 +34,7 @@ export default function AdminSEO() {
         </div>
         <textarea value={form.og_description} onChange={(e) => setForm({ ...form, og_description: e.target.value })} placeholder="OG Description" rows={2} className="w-full px-4 py-3 bg-card border border-white/10 rounded-xl text-white resize-none" />
         <input value={form.keywords} onChange={(e) => setForm({ ...form, keywords: e.target.value })} placeholder="Keywords (comma separated)" className="w-full px-4 py-3 bg-card border border-white/10 rounded-xl text-white" />
-        <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">{loading ? 'Saving...' : 'Save SEO'}</button>
+        <button type="submit" disabled={loading} className="px-8 py-3 bg-gradient-primary text-white font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] disabled:opacity-50">{loading ? 'Saving...' : 'Save SEO'}</button>
       </form>
     </div>
   )

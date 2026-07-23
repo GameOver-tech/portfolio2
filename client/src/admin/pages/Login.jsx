@@ -45,30 +45,18 @@ export default function AdminLogin() {
       >
         <div className="text-center mb-8">
           <h1 className="text-4xl font-heading font-bold text-gradient">AW</h1>
-          <h2 className="text-2xl font-heading font-bold mt-4">Admin Login</h2>
-          <p className="text-sm mt-2 text-[#4B5563]">Sign in to manage your portfolio</p>
+          <h2 className="text-2xl font-heading font-bold mt-4 text-white">Admin Login</h2>
+          <p className="text-sm mt-2 text-text-secondary">Sign in to manage your portfolio</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-              className="w-full px-4 py-3 bg-card border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-colors placeholder:text-gray/50"
-            />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required
+              className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors placeholder:text-text-muted" />
           </div>
           <div>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              className="w-full px-4 py-3 bg-card border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-colors placeholder:text-gray/50"
-            />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required
+              className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors placeholder:text-text-muted" />
           </div>
 
           {error && (
@@ -80,7 +68,7 @@ export default function AdminLogin() {
             whileTap={{ scale: 0.99 }}
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-primary text-background font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50"
+            className="w-full py-3 bg-accent text-background font-semibold rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:shadow-[0_0_40px_rgba(0,240,255,0.35)] transition-all duration-300 disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </motion.button>
