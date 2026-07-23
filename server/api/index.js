@@ -30,10 +30,10 @@ app.use(cors({
 // Serve uploaded files
 app.use('/uploads', express.static(resolve(__dirname, '../../public/uploads')))
 
-// Rate limiting
+// Rate limiting — more generous for admin panel (200 req / 15 min)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 200,
   standardHeaders: true,
   legacyHeaders: false,
 })

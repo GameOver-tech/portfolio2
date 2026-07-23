@@ -3,13 +3,25 @@ import { useState, useEffect } from 'react'
 import AdminSidebar from '../admin/components/Sidebar'
 import AdminHeader from '../admin/components/Header'
 import Toast from '../components/ui/Toast'
+import { adminAPI } from '../services/api'
 
 export default function AdminLayout() {
   const [authState, setAuthState] = useState('loading')
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token')
-    setAuthState(token ? 'authenticated' : 'unauthenticated')
+    if (!token) {
+      setAuthState('unauthenticated')
+      return
+    }
+
+    // Verify the token is still valid by calling the server
+    adminAPI.verify().then(() => {
+      setAuthState('authenticated')
+    }).catch(() => {
+      localStorage.removeItem('admin_token')
+      setAuthState('unauthenticated')
+    })
   }, [])
 
   if (authState === 'loading') {

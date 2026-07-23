@@ -1,6 +1,6 @@
-import { Routes, Route } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 import MainLayout from './layouts/MainLayout'
 import AdminLayout from './layouts/AdminLayout'
@@ -13,28 +13,31 @@ import PortfolioViewer from './pages/PortfolioViewer'
 import CertificateViewer from './pages/CertificateViewer'
 import Team from './pages/Team'
 import Contact from './pages/Contact'
-import AdminDashboard from './admin/pages/Dashboard'
-import AdminLogin from './admin/pages/Login'
-import AdminHero from './admin/pages/Hero'
-import AdminAbout from './admin/pages/About'
-import AdminServices from './admin/pages/Services'
-import AdminProjects from './admin/pages/Projects'
-import AdminCategories from './admin/pages/Categories'
-import AdminSkills from './admin/pages/Skills'
-import AdminTeam from './admin/pages/Team'
-import AdminMessages from './admin/pages/Messages'
-import AdminNewsletter from './admin/pages/Newsletter'
-import AdminSettings from './admin/pages/Settings'
-import AdminSocialLinks from './admin/pages/SocialLinks'
-import AdminChatbot from './admin/pages/Chatbot'
-import AdminSEO from './admin/pages/SEO'
-import AdminStats from './admin/pages/Stats'
-import AdminAIProviders from './admin/pages/AIProviders'
-import AdminExperience from './admin/pages/Experience'
-import AdminEducation from './admin/pages/Education'
-import AdminFAQs from './admin/pages/FAQs'
-import AdminCertifications from './admin/pages/Certifications'
-import AdminProcess from './admin/pages/Process'
+import ErrorBoundary from './components/ErrorBoundary'
+
+// Code-split all 22 admin pages — loaded only when navigating to /admin/*
+const AdminDashboard = lazy(() => import('./admin/pages/Dashboard'))
+const AdminLogin = lazy(() => import('./admin/pages/Login'))
+const AdminHero = lazy(() => import('./admin/pages/Hero'))
+const AdminAbout = lazy(() => import('./admin/pages/About'))
+const AdminServices = lazy(() => import('./admin/pages/Services'))
+const AdminProjects = lazy(() => import('./admin/pages/Projects'))
+const AdminCategories = lazy(() => import('./admin/pages/Categories'))
+const AdminSkills = lazy(() => import('./admin/pages/Skills'))
+const AdminTeam = lazy(() => import('./admin/pages/Team'))
+const AdminMessages = lazy(() => import('./admin/pages/Messages'))
+const AdminNewsletter = lazy(() => import('./admin/pages/Newsletter'))
+const AdminSettings = lazy(() => import('./admin/pages/Settings'))
+const AdminSocialLinks = lazy(() => import('./admin/pages/SocialLinks'))
+const AdminChatbot = lazy(() => import('./admin/pages/Chatbot'))
+const AdminSEO = lazy(() => import('./admin/pages/SEO'))
+const AdminStats = lazy(() => import('./admin/pages/Stats'))
+const AdminAIProviders = lazy(() => import('./admin/pages/AIProviders'))
+const AdminExperience = lazy(() => import('./admin/pages/Experience'))
+const AdminEducation = lazy(() => import('./admin/pages/Education'))
+const AdminFAQs = lazy(() => import('./admin/pages/FAQs'))
+const AdminCertifications = lazy(() => import('./admin/pages/Certifications'))
+const AdminProcess = lazy(() => import('./admin/pages/Process'))
 
 function BodyReset() {
   const { pathname } = useLocation()
@@ -60,6 +63,14 @@ function ScrollToTop() {
 }
 
 function isAdminRoute(pathname) { return pathname.startsWith('/admin') }
+
+function AdminPageLoader() {
+  return (
+    <div className="flex items-center justify-center py-20">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+    </div>
+  )
+}
 
 export default function App() {
   const location = useLocation()
@@ -112,29 +123,37 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
         <Route path="/certificate/:id" element={<CertificateViewer />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="hero" element={<AdminHero />} />
-          <Route path="about" element={<AdminAbout />} />
-          <Route path="services" element={<AdminServices />} />
-          <Route path="projects" element={<AdminProjects />} />
-          <Route path="stats" element={<AdminStats />} />
-          <Route path="categories" element={<AdminCategories />} />
-          <Route path="skills" element={<AdminSkills />} />
-          <Route path="team" element={<AdminTeam />} />
-          <Route path="messages" element={<AdminMessages />} />
-          <Route path="newsletter" element={<AdminNewsletter />} />
-          <Route path="settings" element={<AdminSettings />} />
-          <Route path="social-links" element={<AdminSocialLinks />} />
-          <Route path="chatbot" element={<AdminChatbot />} />
-          <Route path="seo" element={<AdminSEO />} />
-          <Route path="ai-providers" element={<AdminAIProviders />} />
-          <Route path="experience" element={<AdminExperience />} />
-          <Route path="education" element={<AdminEducation />} />
-          <Route path="faqs" element={<AdminFAQs />} />
-          <Route path="certifications" element={<AdminCertifications />} />
-          <Route path="process" element={<AdminProcess />} />
+        <Route path="/admin/login" element={
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" /></div>}>
+            <AdminLogin />
+          </Suspense>
+        } />
+        <Route path="/admin" element={
+          <ErrorBoundary>
+            <AdminLayout />
+          </ErrorBoundary>
+        }>
+          <Route index element={<Suspense fallback={<AdminPageLoader />}><AdminDashboard /></Suspense>} />
+          <Route path="hero" element={<Suspense fallback={<AdminPageLoader />}><AdminHero /></Suspense>} />
+          <Route path="about" element={<Suspense fallback={<AdminPageLoader />}><AdminAbout /></Suspense>} />
+          <Route path="services" element={<Suspense fallback={<AdminPageLoader />}><AdminServices /></Suspense>} />
+          <Route path="projects" element={<Suspense fallback={<AdminPageLoader />}><AdminProjects /></Suspense>} />
+          <Route path="stats" element={<Suspense fallback={<AdminPageLoader />}><AdminStats /></Suspense>} />
+          <Route path="categories" element={<Suspense fallback={<AdminPageLoader />}><AdminCategories /></Suspense>} />
+          <Route path="skills" element={<Suspense fallback={<AdminPageLoader />}><AdminSkills /></Suspense>} />
+          <Route path="team" element={<Suspense fallback={<AdminPageLoader />}><AdminTeam /></Suspense>} />
+          <Route path="messages" element={<Suspense fallback={<AdminPageLoader />}><AdminMessages /></Suspense>} />
+          <Route path="newsletter" element={<Suspense fallback={<AdminPageLoader />}><AdminNewsletter /></Suspense>} />
+          <Route path="settings" element={<Suspense fallback={<AdminPageLoader />}><AdminSettings /></Suspense>} />
+          <Route path="social-links" element={<Suspense fallback={<AdminPageLoader />}><AdminSocialLinks /></Suspense>} />
+          <Route path="chatbot" element={<Suspense fallback={<AdminPageLoader />}><AdminChatbot /></Suspense>} />
+          <Route path="seo" element={<Suspense fallback={<AdminPageLoader />}><AdminSEO /></Suspense>} />
+          <Route path="ai-providers" element={<Suspense fallback={<AdminPageLoader />}><AdminAIProviders /></Suspense>} />
+          <Route path="experience" element={<Suspense fallback={<AdminPageLoader />}><AdminExperience /></Suspense>} />
+          <Route path="education" element={<Suspense fallback={<AdminPageLoader />}><AdminEducation /></Suspense>} />
+          <Route path="faqs" element={<Suspense fallback={<AdminPageLoader />}><AdminFAQs /></Suspense>} />
+          <Route path="certifications" element={<Suspense fallback={<AdminPageLoader />}><AdminCertifications /></Suspense>} />
+          <Route path="process" element={<Suspense fallback={<AdminPageLoader />}><AdminProcess /></Suspense>} />
         </Route>
       </Routes>
     </>

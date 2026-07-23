@@ -14,18 +14,25 @@ export default function AdminDashboard() {
   useEffect(() => { fetchStats() }, [])
 
   const fetchStats = async () => {
-    const [projectsRes, servicesRes, messagesRes, newsletterRes] = await Promise.all([
-      supabase.from('projects').select('*', { count: 'exact', head: true }),
-      supabase.from('services').select('*', { count: 'exact', head: true }),
-      supabase.from('messages').select('*', { count: 'exact', head: true }),
-      supabase.from('newsletter').select('*', { count: 'exact', head: true }),
+    // Use select('id') + .then(res => res.data.length) instead of count: 'exact'
+    // because Supabase anon key returns null count on free tier / RLS
+    const countRows = async (table) => {
+      try {
+        const { data, error } = await supabase.from(table).select('id')
+        if (error) return 0
+        return data?.length || 0
+      } catch {
+        return 0
+      }
+    }
+
+    const [projects, services, messages, subscribers] = await Promise.all([
+      countRows('projects'),
+      countRows('services'),
+      countRows('messages'),
+      countRows('newsletter'),
     ])
-    setStats({
-      projects: projectsRes.count || 0,
-      services: servicesRes.count || 0,
-      messages: messagesRes.count || 0,
-      subscribers: newsletterRes.count || 0,
-    })
+    setStats({ projects, services, messages, subscribers })
   }
 
   const statCards = [

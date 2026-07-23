@@ -24,7 +24,10 @@ export default function AdminLogin() {
         localStorage.setItem('admin_token', data.token)
 
         // Also sign in via Supabase SDK so direct Supabase calls work
-        await supabase.auth.signInWithPassword({ email, password }).catch(() => {})
+        const supabaseResult = await supabase.auth.signInWithPassword({ email, password })
+        if (supabaseResult.error) {
+          console.warn('Supabase sign-in failed (admin panel may show no data):', supabaseResult.error.message)
+        }
 
         navigate('/admin')
       } else {

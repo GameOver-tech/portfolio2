@@ -32,6 +32,7 @@ api.interceptors.response.use(
 
 export const adminAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
+  verify: () => api.get('/auth/verify'),
   getDashboard: () => api.get('/admin/dashboard'),
   
   // Hero

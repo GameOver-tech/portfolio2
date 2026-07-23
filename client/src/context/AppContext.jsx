@@ -1,10 +1,14 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 
 const AppContext = createContext()
 
+function isAdminRoute(pathname) { return pathname.startsWith('/admin') }
+
 export function AppProvider({ children }) {
-  const [loading, setLoading] = useState(true)
+  const location = useLocation()
+  const [loading, setLoading] = useState(!isAdminRoute(location.pathname))
   const [refreshing, setRefreshing] = useState(false)
   const [siteSettings, setSiteSettings] = useState(null)
   const [chatbotConfig, setChatbotConfig] = useState(null)
@@ -23,18 +27,15 @@ export function AppProvider({ children }) {
   const [certifications, setCertifications] = useState([])
   const [processSteps, setProcessSteps] = useState([])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const fetched = useRef(false)
 
   const fetchSiteData = useCallback(async () => {
-    // Fire all queries in parallel but catch each individually
-    // This way one empty table or error doesn't break the entire site
+    // Skip massive data fetch on admin routes — admin pages fetch their own data
+    if (isAdminRoute(location.pathname)) return
+
     const safeSingle = async (table) => {
       const { data } = await supabase.from(table).select('*').limit(1).maybeSingle()
       return data || null
-    }
-
-    const safeList = async (table, field, value) => {
-      const { data } = await supabase.from(table).select('*').eq(field, value)
-      return data || []
     }
 
     const settingsRes = await safeSingle('settings')
@@ -71,7 +72,7 @@ export function AppProvider({ children }) {
     if (faqsRes) setFAQs(faqsRes)
     if (certsRes) setCertifications(certsRes)
     if (processStepsRes) setProcessSteps(processStepsRes)
-  }, [])
+  }, [location.pathname])
 
   const refetch = useCallback(async () => {
     setRefreshing(true)
@@ -80,8 +81,14 @@ export function AppProvider({ children }) {
   }, [fetchSiteData])
 
   useEffect(() => {
-    fetchSiteData().finally(() => setLoading(false))
-  }, [fetchSiteData])
+    // Only fetch on non-admin routes, and only once
+    if (!isAdminRoute(location.pathname) && !fetched.current) {
+      fetched.current = true
+      fetchSiteData().finally(() => setLoading(false))
+    } else if (isAdminRoute(location.pathname)) {
+      setLoading(false)
+    }
+  }, [fetchSiteData, location.pathname])
 
   // Expose refetch globally for admin pages to trigger frontend refresh
   useEffect(() => {
