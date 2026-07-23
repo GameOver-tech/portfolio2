@@ -13,14 +13,14 @@ const defaultSectionTitles = {
 
 export default function AdminSettings() {
   const [form, setForm] = useState({
-    site_name: 'Abdul Waheed',
+    site_name: 'Ali Hassan',
     site_description: '',
     contact_email: '',
     phone: '',
     address: '',
     whatsapp: '',
     copyright_text: '',
-    logo_text: 'AW',
+    logo_text: 'AH',
     logo_image_url: '',
     section_titles: JSON.stringify(defaultSectionTitles),
   })
@@ -47,14 +47,14 @@ export default function AdminSettings() {
     if (data) {
       setSettingsId(data.id)
       setForm({
-        site_name: data.site_name || 'Abdul Waheed',
+        site_name: data.site_name || 'Ali Hassan',
         site_description: data.site_description || '',
         contact_email: data.contact_email || '',
         phone: data.phone || '',
         address: data.address || '',
         whatsapp: data.whatsapp || '',
         copyright_text: data.copyright_text || '',
-        logo_text: data.logo_text || 'AW',
+        logo_text: data.logo_text || 'AH',
         logo_image_url: data.logo_image_url || '',
         section_titles: data.section_titles ? JSON.stringify(data.section_titles) : JSON.stringify(defaultSectionTitles),
       })

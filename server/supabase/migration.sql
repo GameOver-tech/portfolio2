@@ -3,8 +3,8 @@
 --
 -- AFTER running this migration, create an admin user:
 -- 1. Go to Supabase Dashboard → Authentication → Users → Add User
--- 2. Email: admin@abdulwaheed.design
--- 3. Password: Admin@786
+-- 2. Email: alihassan.webstudio@gmail.com
+-- 3. Password: Ah_786@11122
 -- 4. Or run: node server/scripts/create-admin.js
 
 -- Enable UUID extension
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS public.users (
 -- Hero Section
 CREATE TABLE IF NOT EXISTS public.hero (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT DEFAULT 'Abdul Waheed',
+    name TEXT DEFAULT 'Ali Hassan',
     title TEXT DEFAULT 'Graphic Designer',
     subtitle TEXT,
     badge_text TEXT DEFAULT 'Available for Freelance Projects',
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS public.faqs (
 -- Site Settings
 CREATE TABLE IF NOT EXISTS public.settings (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    site_name TEXT DEFAULT 'Abdul Waheed',
+    site_name TEXT DEFAULT 'Ali Hassan',
     site_description TEXT,
     contact_email TEXT,
     phone TEXT,
@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS public.settings (
     whatsapp TEXT,
     copyright_text TEXT,
     section_titles JSONB DEFAULT '{"featured_projects":"Featured Projects","services":"Services & Expertise","testimonials":"What Clients Say","cta_title":"Let''s Create Something Amazing","cta_subtitle":"Ready to elevate your brand?"}',
-    logo_text TEXT DEFAULT 'AW',
+    logo_text TEXT DEFAULT 'AH',
     logo_image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS public.settings (
 DO $$ BEGIN
     ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS copyright_text TEXT;
     ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS section_titles JSONB DEFAULT '{"featured_projects":"Featured Projects","services":"Services & Expertise","testimonials":"What Clients Say","cta_title":"Let''s Create Something Amazing","cta_subtitle":"Ready to elevate your brand?"}';
-    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS logo_text TEXT DEFAULT 'AW';
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS logo_text TEXT DEFAULT 'AH';
     ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS logo_image_url TEXT;
 EXCEPTION WHEN duplicate_column THEN NULL;
 END $$;
@@ -313,6 +313,84 @@ CREATE TABLE IF NOT EXISTS public.analytics (
     ip_hash TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- AI Providers (dynamic multi-provider support)
+CREATE TABLE IF NOT EXISTS public.ai_providers (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    provider_name TEXT NOT NULL UNIQUE,
+    api_key TEXT NOT NULL,
+    model TEXT NOT NULL DEFAULT 'llama-3.3-70b-versatile',
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    priority INTEGER DEFAULT 0,
+    is_default BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Certifications
+CREATE TABLE IF NOT EXISTS public.certifications (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    title TEXT NOT NULL,
+    issuer TEXT,
+    credential_url TEXT,
+    issue_date DATE,
+    expiry_date DATE,
+    description TEXT,
+    image_url TEXT,
+    "order" INTEGER DEFAULT 0,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Add missing columns to settings for full dynamic control
+DO $$ BEGIN
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS favicon TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS theme_color TEXT DEFAULT '#00F0FF';
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS secondary_color TEXT DEFAULT '#7C3AED';
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS accent_color TEXT DEFAULT '#00F0FF';
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS loader_enabled BOOLEAN DEFAULT true;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS animations_enabled BOOLEAN DEFAULT true;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS google_map TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS working_hours TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS github TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS facebook TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS instagram TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS twitter TEXT;
+    ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS linkedin TEXT;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add missing columns to education
+DO $$ BEGIN
+    ALTER TABLE public.education ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE public.education ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active';
+    ALTER TABLE public.education ADD COLUMN IF NOT EXISTS "order" INTEGER DEFAULT 0;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add icons to skills  
+DO $$ BEGIN
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS icon TEXT;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add price/features to services
+DO $$ BEGIN
+    ALTER TABLE public.services ADD COLUMN IF NOT EXISTS price TEXT;
+    ALTER TABLE public.services ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]';
+    ALTER TABLE public.services ADD COLUMN IF NOT EXISTS image TEXT;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add hidden tables RLS
+ALTER TABLE public.ai_providers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.experience ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.education ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.faqs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.blogs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.certifications ENABLE ROW LEVEL SECURITY;
 
 -- Enable Row Level Security (safe to re-run, does nothing if already enabled)
 ALTER TABLE public.hero ENABLE ROW LEVEL SECURITY;
@@ -365,6 +443,17 @@ DROP POLICY IF EXISTS "Admin full access" ON public.chatbot_config;
 DROP POLICY IF EXISTS "Admin full access" ON public.categories;
 DROP POLICY IF EXISTS "Public read access" ON public.stats;
 DROP POLICY IF EXISTS "Admin full access" ON public.stats;
+DROP POLICY IF EXISTS "Public read access" ON public.experience;
+DROP POLICY IF EXISTS "Admin full access" ON public.experience;
+DROP POLICY IF EXISTS "Public read access" ON public.education;
+DROP POLICY IF EXISTS "Admin full access" ON public.education;
+DROP POLICY IF EXISTS "Public read access" ON public.faqs;
+DROP POLICY IF EXISTS "Admin full access" ON public.faqs;
+DROP POLICY IF EXISTS "Public read access" ON public.blogs;
+DROP POLICY IF EXISTS "Admin full access" ON public.blogs;
+DROP POLICY IF EXISTS "Admin full access" ON public.ai_providers;
+DROP POLICY IF EXISTS "Public read access" ON public.certifications;
+DROP POLICY IF EXISTS "Admin full access" ON public.certifications;
 
 -- Public read access for published data
 CREATE POLICY "Public read access" ON public.hero FOR SELECT USING (true);
@@ -403,14 +492,34 @@ CREATE POLICY "Admin full access" ON public.chatbot_config FOR ALL USING (auth.r
 CREATE POLICY "Admin full access" ON public.categories FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Public read access" ON public.stats FOR SELECT USING (active = true);
 CREATE POLICY "Admin full access" ON public.stats FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Public read access" ON public.experience FOR SELECT USING (true);
+CREATE POLICY "Admin full access" ON public.experience FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Public read access" ON public.education FOR SELECT USING (true);
+CREATE POLICY "Admin full access" ON public.education FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Public read access" ON public.faqs FOR SELECT USING (active = true);
+CREATE POLICY "Admin full access" ON public.faqs FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Public read access" ON public.blogs FOR SELECT USING (status = 'published');
+CREATE POLICY "Admin full access" ON public.blogs FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin full access" ON public.ai_providers FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Public read access" ON public.certifications FOR SELECT USING (active = true);
+CREATE POLICY "Admin full access" ON public.certifications FOR ALL USING (auth.role() = 'authenticated');
 
 -- Insert default social links
 INSERT INTO public.social_links (platform, url) VALUES
-    ('behance', 'https://behance.net/abdulwaheed'),
-    ('linkedin', 'https://linkedin.com/in/abdulwaheed'),
-    ('dribbble', 'https://dribbble.com/abdulwaheed'),
-    ('whatsapp', 'https://wa.me/923291966097')
+    ('github', 'https://github.com/alihassan'),
+    ('linkedin', 'https://linkedin.com/in/alihassan'),
+    ('whatsapp', 'https://wa.me/923102850365')
 ON CONFLICT (platform) DO NOTHING;
+
+-- Insert sample certifications
+INSERT INTO public.certifications (title, issuer, credential_url, issue_date, description, "order", active) VALUES
+  ('Adobe Certified Professional – Visual Design', 'Adobe', 'https://www.credly.com/org/adobe', '2025-01-15', 'Professional certification in visual design using Adobe Photoshop, Illustrator, and InDesign.', 1, true),
+  ('Google UX Design Professional', 'Google (Coursera)', 'https://www.coursera.org/professional-certificates/google-ux-design', '2024-08-20', 'Comprehensive certification in UX research, wireframing, prototyping, and design thinking.', 2, true),
+  ('Meta Front-End Developer', 'Meta (Coursera)', 'https://www.coursera.org/professional-certificates/meta-front-end-developer', '2024-03-10', 'Professional certificate in modern front-end development with React and responsive design.', 3, true),
+  ('Graphic Design Specialization', 'California Institute of the Arts', 'https://www.coursera.org/specializations/graphic-design', '2025-05-01', 'Advanced training in typography, branding, image-making, and visual communication.', 4, true),
+  ('HubSpot Content Marketing', 'HubSpot Academy', 'https://academy.hubspot.com/courses/content-marketing', '2024-11-20', 'Certification in content strategy, social media marketing, and brand storytelling.', 5, true),
+  ('UI/UX Design Bootcamp', 'Designlab', 'https://designlab.com/', '2024-06-15', 'Hands-on certification in user interface design, prototyping with Figma, and user testing.', 6, true)
+ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- SINGLE-ROW SEED DATA (settings, hero, about, seo, chatbot_config)
@@ -430,21 +539,21 @@ DELETE FROM public.chatbot_config WHERE id NOT IN (SELECT id FROM public.chatbot
 INSERT INTO public.settings (id, site_name, site_description, contact_email, phone, address, whatsapp, copyright_text)
 VALUES (
     '00000000-0000-0000-0000-000000000001',
-    'Abdul Waheed',
-    'Professional Graphic Designer & Brand Identity Designer — crafting premium visual identities and brand experiences for businesses worldwide.',
-    'abdulwaheedgraphics097@gmail.com',
-    '+923291966097',
-    'Lahore, Pakistan',
-    '923291966097',
-    '© 2026 Abdul Waheed. Crafting brands that matter.'
+    'Ali Hassan',
+    'Full-Stack AI Engineer & Web Developer — building intelligent systems, web applications, and digital experiences that drive business growth.',
+    'alihassan.webstudio@gmail.com',
+    '+923102850365',
+    'Gojra, Punjab, Pakistan',
+    '923102850365',
+    '© 2026 Ali Hassan. All rights reserved.'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Insert default chatbot config
 INSERT INTO public.chatbot_config (id, greeting, system_prompt, enabled)
 VALUES (
     '00000000-0000-0000-0000-000000000002',
-    '👋 Hi! I''m Abdul''s AI assistant. Ask me about his work, skills, or how to get started!',
-    'You are a professional portfolio assistant for Abdul Waheed, a senior Graphic Designer.',
+    '👋 Hi! I''m Ali''s AI assistant. Ask me about his skills, projects, experience, or how to get in touch!',
+    'You are a professional portfolio assistant for Ali Hassan, a Full-Stack AI Engineer and Web Developer.',
     true
 ) ON CONFLICT (id) DO NOTHING;
 
@@ -452,173 +561,200 @@ VALUES (
 INSERT INTO public.seo (id, meta_title, meta_description, keywords)
 VALUES (
     '00000000-0000-0000-0000-000000000003',
-    'Abdul Waheed | Graphic Designer - Brand Identity Designer',
-    'Professional Graphic Designer specializing in brand identity, logo design, and visual communication.',
-    'graphic designer, brand identity, logo design, UI design, Pakistan'
+    'Ali Hassan | Full-Stack AI Engineer & Web Developer',
+    'Professional Full-Stack AI Engineer specializing in AI systems, web development, and intelligent applications.',
+    'AI engineer, web developer, full-stack, React, Node.js, Pakistan'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Insert default hero
 INSERT INTO public.hero (id, name, title, subtitle, photo_url, resume_url)
 VALUES (
     '00000000-0000-0000-0000-000000000004',
-    'Abdul Waheed',
-    'Graphic Designer',
-    'Crafting premium visual identities and digital experiences',
-    NULL, NULL
+    'Ali Hassan',
+    'Full-Stack AI Engineer',
+    'Crafting premium digital experiences and AI-powered solutions',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80', NULL
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Insert default about
 INSERT INTO public.about (id, bio, mission, vision, photo_url, cv_url)
 VALUES (
     '00000000-0000-0000-0000-000000000005',
-    'I''m a passionate graphic designer with over 8 years of experience creating visual identities that resonate. My approach combines strategic thinking with creative execution to deliver designs that not only look beautiful but achieve real results.',
-    'To empower brands with compelling visual identities that communicate their unique story and connect with their audience on a deeper level.',
-    'To be the most sought-after design studio known for creating iconic brands that shape industries.',
-    NULL, NULL
+    'I''m a passionate Full-Stack AI Engineer with expertise in building intelligent systems, web applications, and AI-powered solutions. My approach combines cutting-edge AI technology with robust software engineering to deliver products that solve real-world problems.',
+    'To democratize AI technology by building accessible, intelligent solutions that empower businesses and individuals to achieve more.',
+    'To be at the forefront of AI innovation, creating systems that seamlessly integrate intelligence into everyday applications.',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80', NULL
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Insert default stats
 INSERT INTO public.stats (label, value, suffix, "order", active) VALUES
-  ('Years Experience', 8, '+', 1, true),
-  ('Projects Completed', 500, '+', 2, true),
-  ('Happy Clients', 200, '+', 3, true),
-  ('Design Awards', 15, '', 4, true)
+  ('Years Experience', 3, '+', 1, true),
+  ('Projects Completed', 50, '+', 2, true),
+  ('Technologies', 25, '+', 3, true),
+  ('Happy Clients', 30, '+', 4, true)
 ON CONFLICT DO NOTHING;
 
 -- Insert sample categories
 INSERT INTO public.categories (name) VALUES
-  ('Branding'), ('Logo'), ('Social Media'), ('Packaging'), ('Print'), ('UI')
+  ('Web App'), ('AI/ML'), ('API'), ('Dashboard'), ('Mobile'), ('Full-Stack')
 ON CONFLICT (name) DO NOTHING;
 
 -- Insert sample services
 INSERT INTO public.services (title, description, icon, status, "order") VALUES
-  ('Graphic Design', 'Eye-catching visual designs that communicate your brand message effectively and leave a lasting impression on your audience.', 'FiPenTool', 'published', 1),
-  ('Brand Identity', 'Complete brand identity systems including logos, colors, typography, and comprehensive brand guidelines.', 'FiLayers', 'published', 2),
-  ('Logo Design', 'Unique, memorable logos that capture the essence of your brand and make you instantly recognizable.', 'FiTrendingUp', 'published', 3),
-  ('Social Media Design', 'Engaging social media graphics that stop the scroll, drive engagement, and grow your following.', 'FiSmartphone', 'published', 4),
-  ('UI Design', 'Beautiful, intuitive user interfaces for web and mobile applications that users love to interact with.', 'FiMonitor', 'published', 5),
-  ('Print Design', 'Professional print materials from business cards to billboards that make a tangible impact.', 'FiPrinter', 'published', 6)
+  ('Full-Stack Web Development', 'End-to-end web applications built with React, Node.js, and modern frameworks. Responsive, fast, and scalable.', 'FiMonitor', 'published', 1),
+  ('AI & Machine Learning', 'Intelligent systems including LLM integration, chatbots, RAG pipelines, and predictive models powered by cutting-edge AI.', 'FiCpu', 'published', 2),
+  ('API Development', 'RESTful and GraphQL API design, development, and deployment. Secure, documented, and performance-optimized.', 'FiCode', 'published', 3),
+  ('Database Architecture', 'Scalable database design with Supabase, PostgreSQL, and optimized query patterns for high-performance applications.', 'FiDatabase', 'published', 4),
+  ('Cloud & DevOps', 'Deployment automation, CI/CD pipelines, containerization, and cloud infrastructure on Vercel, AWS, and DigitalOcean.', 'FiCloud', 'published', 5),
+  ('UI/UX Design', 'Beautiful, intuitive interfaces designed with user-centered principles. From wireframes to pixel-perfect implementations.', 'FiPenTool', 'published', 6)
 ON CONFLICT DO NOTHING;
 
 -- Insert sample skills
-INSERT INTO public.skills (name, level, category, active) VALUES
-  ('Adobe Photoshop', 95, 'Design', true),
-  ('Adobe Illustrator', 92, 'Design', true),
-  ('Figma', 88, 'Design', true),
-  ('After Effects', 75, 'Motion', true),
-  ('Brand Strategy', 90, 'Strategy', true),
-  ('Typography', 85, 'Design', true),
-  ('Logo Design', 93, 'Design', true),
-  ('Packaging Design', 80, 'Design', true)
+INSERT INTO public.skills (name, level, category, icon, active) VALUES
+  ('React.js', 95, 'Frontend', 'FiCode', true),
+  ('Node.js', 90, 'Backend', 'FiServer', true),
+  ('TypeScript', 88, 'Languages', 'FiFileText', true),
+  ('Python', 85, 'Languages', 'FiTerminal', true),
+  ('PostgreSQL', 82, 'Database', 'FiDatabase', true),
+  ('Supabase', 88, 'Database', 'FiCloud', true),
+  ('Express.js', 90, 'Backend', 'FiCode', true),
+  ('Framer Motion', 80, 'Frontend', 'FiMove', true),
+  ('Tailwind CSS', 92, 'Frontend', 'FiLayout', true),
+  ('Git', 85, 'DevOps', 'FiGitBranch', true),
+  ('Docker', 70, 'DevOps', 'FiBox', true),
+  ('AI/LLM Integration', 90, 'AI', 'FiCpu', true),
+  ('REST API Design', 88, 'Backend', 'FiLink', true),
+  ('Vercel Deployment', 85, 'DevOps', 'FiCloud', true)
 ON CONFLICT DO NOTHING;
 
--- Insert sample projects (using high-quality 4K Unsplash images)
+-- Insert sample projects
 INSERT INTO public.projects (title, slug, description, category, client, duration, software, thumbnail_url, problem, solution, status, featured) VALUES
   (
-    'Luxury Brand Identity',
-    'luxury-brand-identity',
-    'Complete brand identity overhaul for a premium luxury fashion label. The project encompassed everything from logo design to packaging and digital presence.',
-    'Branding',
-    'Velora Fashion House',
-    '3 months',
-    'Photoshop, Illustrator, Figma',
-    'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-    'The client had an outdated brand identity that no longer reflected their premium positioning in the luxury market. Their existing visuals were inconsistent across all touchpoints.',
-    'Developed a comprehensive brand system with a refined logo, custom typography, curated color palette, and detailed brand guidelines. The result was a cohesive, sophisticated identity that elevated their market position.',
-    'published', true
-  ),
-  (
-    'Modern Tech Logo',
-    'modern-tech-logo',
-    'Minimalist, futuristic logo design for an AI-driven SaaS startup targeting enterprise clients.',
-    'Logo',
-    'NexMind AI',
+    'AI-Powered Portfolio CMS',
+    'ai-portfolio-cms',
+    'A fully dynamic portfolio management system with AI chatbot, admin panel, and multi-provider AI support. Built with React, Node.js, Express, and Supabase.',
+    'Full-Stack',
+    'Personal Project',
     '2 weeks',
-    'Illustrator',
-    'https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-    'The startup needed a logo that communicated cutting-edge AI technology while remaining approachable and professional for enterprise sales.',
-    'Created a geometric mark combining neural network patterns with a human-centric approach. The final logo used a custom gradient and clean sans-serif wordmark.',
+    'React, Node.js, Express, Supabase, Groq, Gemini, OpenRouter',
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    'Managing portfolio content required editing source code. No dynamic content management or AI-powered visitor engagement existed.',
+    'Built a complete CMS with admin panel, dynamic database-driven content, multi-provider AI chatbot, and seamless Vercel deployment.',
     'published', true
   ),
   (
-    'Organic Product Packaging',
-    'organic-product-packaging',
-    'Sustainable packaging design for an organic skincare line, using eco-friendly materials and natural aesthetics.',
-    'Packaging',
-    'PureGlow Organics',
-    '6 weeks',
-    'Photoshop, Illustrator, Cinema 4D',
-    'https://images.unsplash.com/photo-1541873676-a18131494184?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-    'The client wanted packaging that reflected their commitment to sustainability while standing out on crowded retail shelves.',
-    'Designed a series of minimalist packages using kraft paper textures, botanical illustrations, and a warm earth-toned color palette. Each package included seed-embedded paper for planting.',
+    'Intelligent Chatbot System',
+    'intelligent-chatbot-system',
+    'Multi-provider AI chatbot supporting Groq, Google Gemini, and OpenRouter with automatic failover. Reads portfolio data from database for contextual responses.',
+    'AI/ML',
+    'Personal Project',
+    '1 week',
+    'Node.js, Express, Groq SDK, Google AI SDK, OpenRouter, Supabase',
+    'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    'Chatbots were hardcoded with single provider API keys and static information that required code changes to update.',
+    'Created an agentic chatbot with dynamic provider switching, database-powered knowledge, and automatic failover between AI providers.',
     'published', true
   ),
   (
-    'Social Media Campaign',
-    'social-media-campaign',
-    'Comprehensive social media design system for a fitness brand targeting Gen Z audiences across Instagram, TikTok, and LinkedIn.',
-    'Social Media',
-    'FitPulse',
-    '1 month',
-    'Photoshop, After Effects',
-    'https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-    'The brand had no cohesive social media presence. Posts were inconsistent in style, quality, and messaging across platforms.',
-    'Created a versatile template system with modular carousel designs, animated stories, and platform-specific optimizations. Engagement increased by 340% in the first month.',
-    'published', false
+    'E-Commerce Platform API',
+    'ecommerce-api',
+    'Comprehensive REST API for an e-commerce platform with authentication, product management, order processing, and payment integration.',
+    'API',
+    'ShopSwift',
+    '3 weeks',
+    'Node.js, Express, PostgreSQL, JWT, Stripe, Redis',
+    'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    'The client needed a scalable backend for their growing e-commerce platform with complex product catalog and real-time inventory management.',
+    'Designed and implemented a modular API with rate limiting, caching, webhook support, and comprehensive error handling serving 10K+ daily requests.',
+    'published', true
   ),
   (
-    'Restaurant Brand & Menu',
-    'restaurant-brand-menu',
-    'Full brand identity and menu design for a contemporary Mediterranean restaurant in downtown Dubai.',
-    'Print',
-    'Oliva Restaurant',
-    '2 months',
-    'Illustrator, InDesign, Photoshop',
-    'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-    'The restaurant was opening a new location and needed everything from the logo to menu design, signage, and promotional materials.',
-    'Developed a warm, inviting brand inspired by Mediterranean coastlines. The menu featured hand-drawn illustrations of signature dishes, textured paper stocks, and elegant typography.',
-    'published', false
-  ),
-  (
-    'Fintech App UI Design',
-    'fintech-app-ui',
-    'End-to-end UI/UX design for a mobile banking app focused on financial literacy for young adults.',
-    'UI',
-    'CoinWise',
-    '3 months',
-    'Figma, Protopie',
+    'Real-Time Dashboard',
+    'real-time-dashboard',
+    'Interactive real-time analytics dashboard with live data updates, charts, and collaborative features for business intelligence.',
+    'Dashboard',
+    'DataViz Corp',
+    '4 weeks',
+    'React, D3.js, WebSocket, Node.js, PostgreSQL, Redis',
     'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-    'The app needed to make complex financial concepts accessible and engaging for users aged 18-25 who found traditional banking apps intimidating.',
-    'Designed a playful, gamified interface with educational micro-interactions, spending visualizations, and achievement badges. User testing showed a 92% satisfaction rate.',
+    'Business teams needed real-time visibility into KPIs but existing tools had 15+ minute data latency.',
+    'Built a real-time dashboard with sub-second data refresh, customizable widgets, export capabilities, and role-based access controls.',
+    'published', false
+  ),
+  (
+    'RAG-Based Document System',
+    'rag-document-system',
+    'Retrieval-Augmented Generation system for intelligent document querying. Users can upload documents and ask natural language questions.',
+    'AI/ML',
+    'LegalTech Solutions',
+    '2 weeks',
+    'Python, LangChain, Pinecone, OpenAI, FastAPI, React',
+    'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    'A law firm needed to quickly search and extract information from thousands of legal documents without manual review.',
+    'Implemented RAG pipeline with vector embeddings, semantic search, and LLM-powered answer generation achieving 95% accuracy on legal queries.',
     'published', true
+  ),
+  (
+    'Task Management App',
+    'task-management-app',
+    'Full-stack task management application with real-time collaboration, drag-drop boards, and team workflow automation.',
+    'Full-Stack',
+    'StartupHub',
+    '3 weeks',
+    'React, Node.js, Socket.io, PostgreSQL, Redis, Docker',
+    'https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    'Remote teams struggled with fragmented communication and task tracking across multiple tools.',
+    'Developed an integrated platform with Kanban boards, real-time updates, automated notifications, and third-party integrations.',
+    'published', false
   )
 ON CONFLICT DO NOTHING;
 
 -- Insert sample project images
 INSERT INTO public.project_images (project_id, url, "order") 
-SELECT id, thumbnail_url, 0 FROM public.projects WHERE slug = 'luxury-brand-identity'
+SELECT id, thumbnail_url, 0 FROM public.projects WHERE slug = 'ai-portfolio-cms'
 UNION ALL
-SELECT id, 'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', 1 FROM public.projects WHERE slug = 'luxury-brand-identity'
+SELECT id, 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', 1 FROM public.projects WHERE slug = 'ai-portfolio-cms'
 UNION ALL
-SELECT id, 'https://images.unsplash.com/photo-1534670007418-fbb7f6cf1673?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', 2 FROM public.projects WHERE slug = 'luxury-brand-identity'
+SELECT id, 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', 2 FROM public.projects WHERE slug = 'ai-portfolio-cms'
 ON CONFLICT DO NOTHING;
 
 -- Insert sample testimonials
 INSERT INTO public.testimonials (name, role, company, content, rating, status) VALUES
-  ('Sarah Mitchell', 'CEO', 'Velora Fashion House', 'Abdul completely transformed our brand identity. The attention to detail and strategic thinking behind every design decision was remarkable. Our sales increased by 45% after the rebrand.', 5, 'published'),
-  ('James Chen', 'Founder', 'NexMind AI', 'Working with Abdul was a game-changer for our startup. He understood our complex technology and translated it into a visual identity that resonates with enterprise clients.', 5, 'published'),
-  ('Priya Sharma', 'Marketing Director', 'PureGlow Organics', 'The packaging design exceeded our expectations. Our customers constantly compliment the beautiful, sustainable packaging. Abdul is a true artist.', 5, 'published'),
-  ('Ahmed Al-Rashid', 'Owner', 'Oliva Restaurant', 'From the logo to the menu design, everything was perfect. Our restaurant has a distinct personality thanks to Abdul''s incredible work.', 4, 'published')
+  ('Ahmed Khan', 'CTO', 'TechVentures', 'Ali built our entire backend infrastructure. The system handles millions of requests with zero downtime. Exceptional engineering work.', 5, 'published'),
+  ('Sarah Ali', 'Product Manager', 'DataViz Corp', 'The real-time dashboard Ali created transformed how our team makes decisions. Data latency dropped from 15 minutes to under a second.', 5, 'published'),
+  ('Usman Malik', 'Founder', 'LegalTech Solutions', 'The RAG document system saved our team hundreds of hours. What used to take days of manual review now takes seconds.', 5, 'published'),
+  ('Fatima Ahmed', 'CEO', 'ShopSwift', 'Ali delivered our e-commerce API ahead of schedule. The documentation was superb and the system has been rock solid in production.', 4, 'published')
 ON CONFLICT DO NOTHING;
 
 -- Insert sample FAQs
 INSERT INTO public.faqs (question, answer, category, "order", active) VALUES
-  ('What is your design process?', 'I start with a discovery phase to understand your brand, followed by research, concept development, refinement, and final delivery. Each project is tailored to your specific needs.', 'Process', 1, true),
-  ('How long does a typical project take?', 'Timelines vary by project scope. A logo design typically takes 1-2 weeks, while a full brand identity can take 4-6 weeks. I''ll provide a detailed timeline during our initial consultation.', 'Timeline', 2, true),
-  ('What software do you use?', 'I primarily work with Adobe Creative Suite (Photoshop, Illustrator, InDesign, After Effects) and Figma for UI/UX projects.', 'Tools', 3, true),
-  ('Do you offer revisions?', 'Yes! My process includes structured revision rounds to ensure you''re completely satisfied with the final deliverables.', 'Process', 4, true),
-  ('How do I get started?', 'Simply reach out through the contact form or send an email to abdulwaheedgraphics097@gmail.com. We''ll schedule a free consultation to discuss your project.', 'General', 5, true)
+  ('What technologies do you specialize in?', 'I specialize in React.js, Node.js, TypeScript, Python, Supabase, PostgreSQL, and AI/LLM integration. I build full-stack applications with modern architectures.', 'Skills', 1, true),
+  ('What is your development process?', 'I follow an agile methodology: discovery & requirements → architecture design → development with iterative reviews → testing → deployment → ongoing support.', 'Process', 2, true),
+  ('How long does a typical project take?', 'Timelines vary by scope. A typical web application takes 2-4 weeks, while complex AI systems can take 4-8 weeks. I provide detailed timelines during consultation.', 'Timeline', 3, true),
+  ('Do you offer post-launch support?', 'Yes! I provide ongoing maintenance, updates, and feature additions for all projects. Support packages are available on monthly or project basis.', 'Support', 4, true),
+  ('How do I get started working with you?', 'Simply reach out through the contact form or email alihassan.webstudio@gmail.com. We''ll schedule a free consultation to discuss your project requirements.', 'General', 5, true)
 ON CONFLICT DO NOTHING;
+
+-- Insert sample experience
+INSERT INTO public.experience (title, company, location, start_date, end_date, description, current, "order") VALUES
+  ('Full-Stack Developer', 'Freelance', 'Gojra, Pakistan', '2024-01-01', NULL, 'Building custom web applications, AI systems, and APIs for clients worldwide. Specializing in React, Node.js, and AI integration.', true, 1),
+  ('AI Engineer Intern', 'Tech Solutions Ltd', 'Faisalabad, Pakistan', '2023-06-01', '2024-01-01', 'Developed AI-powered chatbots and RAG systems. Worked on LLM integration, prompt engineering, and database optimization.', false, 2),
+  ('Junior Web Developer', 'WebCraft Agency', 'Gojra, Pakistan', '2022-01-01', '2023-06-01', 'Built responsive web applications using React, Node.js, and PostgreSQL. Collaborated on 15+ client projects.', false, 3)
+ON CONFLICT DO NOTHING;
+
+-- Insert sample education
+INSERT INTO public.education (degree, institution, year, description, status, "order") VALUES
+  ('BS Information Technology', 'Akhuwat University', '2024 - Present', 'Currently pursuing a Bachelor''s degree in Information Technology with focus on AI, software engineering, and database systems.', 'active', 1),
+  ('ICS (Intermediate)', 'Punjab College', '2022 - 2024', 'Completed Intermediate in Computer Science with distinction. Developed foundation in programming and mathematics.', 'completed', 2),
+  ('Matriculation', 'Govt High School', '2020 - 2022', 'Completed secondary education with strong academic record. Developed interest in computers and technology.', 'completed', 3)
+ON CONFLICT DO NOTHING;
+
+-- Insert default AI providers
+INSERT INTO public.ai_providers (provider_name, api_key, model, status, priority, is_default) VALUES
+  ('groq', '${GROQ_API_KEY}', 'llama-3.3-70b-versatile', 'active', 1, true),
+  ('gemini', '${GEMINI_API_KEY}', 'gemini-2.0-flash', 'active', 2, false),
+  ('openrouter', '', 'openai/gpt-4o-mini', 'inactive', 3, false)
+ON CONFLICT (provider_name) DO NOTHING;
 
 -- Create function to auto-create user profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()

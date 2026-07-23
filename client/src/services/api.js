@@ -96,13 +96,43 @@ export const adminAPI = {
   // SEO
   getSEO: () => api.get('/admin/seo'),
   updateSEO: (data) => api.put('/admin/seo', data),
-  
+
+  // AI Providers
+  getAIProviders: () => api.get('/admin/ai-providers'),
+  createAIProvider: (data) => api.post('/admin/ai-providers', data),
+  updateAIProvider: (id, data) => api.put(`/admin/ai-providers/${id}`, data),
+  deleteAIProvider: (id) => api.delete(`/admin/ai-providers/${id}`),
+
+  // Experience
+  getExperience: () => api.get('/admin/experience'),
+  createExperience: (data) => api.post('/admin/experience', data),
+  updateExperience: (id, data) => api.put(`/admin/experience/${id}`, data),
+  deleteExperience: (id) => api.delete(`/admin/experience/${id}`),
+
+  // Education
+  getEducation: () => api.get('/admin/education'),
+  createEducation: (data) => api.post('/admin/education', data),
+  updateEducation: (id, data) => api.put(`/admin/education/${id}`, data),
+  deleteEducation: (id) => api.delete(`/admin/education/${id}`),
+
+  // FAQs
+  getFAQs: () => api.get('/admin/faqs'),
+  createFAQ: (data) => api.post('/admin/faqs', data),
+  updateFAQ: (id, data) => api.put(`/admin/faqs/${id}`, data),
+  deleteFAQ: (id) => api.delete(`/admin/faqs/${id}`),
+
+  // Certifications
+  getCertifications: () => api.get('/admin/certifications'),
+  createCertification: (data) => api.post('/admin/certifications', data),
+  updateCertification: (id, data) => api.put(`/admin/certifications/${id}`, data),
+  deleteCertification: (id) => api.delete(`/admin/certifications/${id}`),
+
   // Contact Form
   submitContact: (data) => api.post('/contact', data),
-  
+
   // Newsletter Subscribe
   subscribe: (email) => api.post('/newsletter', { email }),
-  
+
   // Chatbot
   chat: (message) => api.post('/chat', { message }),
 }

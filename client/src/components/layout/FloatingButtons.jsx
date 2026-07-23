@@ -23,7 +23,7 @@ export default function FloatingButtons() {
   }, [])
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
-  const openWA = () => { const wa = siteSettings?.whatsapp || '923291966097'; window.open(`https://wa.me/${wa}`, '_blank') }
+  const openWA = () => { const wa = siteSettings?.whatsapp || '923102850365'; window.open(`https://wa.me/${wa}`, '_blank') }
 
   if (chatbotOpen) return null
 

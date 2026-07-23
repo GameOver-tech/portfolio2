@@ -5,7 +5,7 @@ import SectionReveal from '../components/ui/SectionReveal'
 import { staggerContainerFast, staggerItemScale } from '../animations/variants'
 import { useApp } from '../context/AppContext'
 
-const defaultTeam = [{ name: 'Abdul Waheed', role: 'Founder & AI Engineer', photo_url: null, description: 'AI Engineer building production-grade intelligent systems.' }]
+const defaultTeam = [{ name: 'Ali Hassan', role: 'Founder & AI Engineer', photo_url: null, description: 'AI Engineer building production-grade intelligent systems.' }]
 const socialIconMap = { linkedin: FaLinkedin, twitter: FaTwitter, behance: FaBehance }
 
 export default function Team() {
@@ -13,7 +13,7 @@ export default function Team() {
   const teamMembers = team?.length > 0 ? team : defaultTeam
   return (
     <>
-      <Helmet><title>Team | Abdul Waheed</title></Helmet>
+      <Helmet><title>Team | Ali Hassan</title></Helmet>
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

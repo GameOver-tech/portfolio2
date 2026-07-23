@@ -17,6 +17,10 @@ export function AppProvider({ children }) {
   const [skills, setSkills] = useState([])
   const [team, setTeam] = useState([])
   const [testimonials, setTestimonials] = useState([])
+  const [experience, setExperience] = useState([])
+  const [education, setEducation] = useState([])
+  const [faqs, setFAQs] = useState([])
+  const [certifications, setCertifications] = useState([])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const fetchSiteData = useCallback(async () => {
@@ -44,6 +48,10 @@ export function AppProvider({ children }) {
     const { data: testimonialsRes } = await supabase.from('testimonials').select('*').eq('status', 'published')
     const { data: statsRes } = await supabase.from('stats').select('*').eq('active', true).order('order')
     const chatbotConfigRes = await safeSingle('chatbot_config')
+    const { data: experienceRes } = await supabase.from('experience').select('*').order('start_date', { ascending: false })
+    const { data: educationRes } = await supabase.from('education').select('*').order('order')
+    const { data: faqsRes } = await supabase.from('faqs').select('*').eq('active', true).order('order')
+    const { data: certsRes } = await supabase.from('certifications').select('*').eq('active', true).order('order')
 
     if (settingsRes) setSiteSettings(settingsRes)
     if (socialRes) setSocialLinks(socialRes)
@@ -56,6 +64,10 @@ export function AppProvider({ children }) {
     if (skillsRes) setSkills(skillsRes)
     if (teamRes) setTeam(teamRes)
     if (testimonialsRes) setTestimonials(testimonialsRes)
+    if (experienceRes) setExperience(experienceRes)
+    if (educationRes) setEducation(educationRes)
+    if (faqsRes) setFAQs(faqsRes)
+    if (certsRes) setCertifications(certsRes)
   }, [])
 
   const refetch = useCallback(async () => {
@@ -89,6 +101,10 @@ export function AppProvider({ children }) {
       skills,
       team,
       testimonials,
+      experience,
+      education,
+      faqs,
+      certifications,
       isMobileMenuOpen,
       setIsMobileMenuOpen,
       refetch,

@@ -37,7 +37,7 @@ export default function Navbar() {
   const location = useLocation()
   const { isScrolled } = useScrollPosition()
   const { siteSettings, socialLinks, heroData } = useApp()
-  const logoText = siteSettings?.logo_text || 'AW'
+  const logoText = siteSettings?.logo_text || 'AH'
   const logoImage = siteSettings?.logo_image_url || null
 
   const handleHomeClick = useCallback((e) => {

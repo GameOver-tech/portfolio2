@@ -16,16 +16,16 @@ export default function Contact() {
   const { siteSettings } = useApp()
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [status, setStatus] = useState('')
-  const contactEmail = siteSettings?.contact_email || 'abdulwaheedgraphics097@gmail.com'
-  const contactPhone = siteSettings?.phone || '+92 329 1966097'
-  const contactAddress = siteSettings?.address || 'Lahore, Pakistan'
-  const whatsappNumber = siteSettings?.whatsapp || '923291966097'
+  const contactEmail = siteSettings?.contact_email || 'alihassan.webstudio@gmail.com'
+  const contactPhone = siteSettings?.phone || '+92 310 2850365'
+  const contactAddress = siteSettings?.address || 'Gojra, Punjab, Pakistan'
+  const whatsappNumber = siteSettings?.whatsapp || '923102850365'
   const handleSubmit = async e => { e.preventDefault(); setStatus('loading'); try { await adminAPI.submitContact(form); setStatus('success'); setForm({ name: '', email: '', subject: '', message: '' }); setTimeout(() => setStatus(''), 4000) } catch { setStatus('error'); setTimeout(() => setStatus(''), 4000) } }
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value })
 
   return (
     <>
-      <Helmet><title>Contact | Abdul Waheed</title></Helmet>
+      <Helmet><title>Contact | Ali Hassan</title></Helmet>
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

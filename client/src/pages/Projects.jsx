@@ -44,7 +44,7 @@ export default function Projects() {
 
   return (
     <>
-      <Helmet><title>Portfolio | Abdul Waheed</title></Helmet>
+      <Helmet><title>Portfolio | Ali Hassan</title></Helmet>
       <section className="relative overflow-hidden pb-20 pt-32">
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

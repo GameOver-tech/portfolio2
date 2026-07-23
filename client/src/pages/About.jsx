@@ -7,10 +7,9 @@ import { staggerContainerFast, staggerItemScale, staggerItem } from '../animatio
 import { useApp } from '../context/AppContext'
 
 const timeline = [
-  { year: '2024', event: 'Senior AI Engineer at DeepTech', desc: 'Leading AI product development for enterprise clients.' },
-  { year: '2023', event: 'Launched AI Consultancy', desc: 'Started independent practice serving global startups.' },
-  { year: '2021', event: 'ML Engineering Lead', desc: 'Built production ML pipelines and AI systems.' },
-  { year: '2019', event: 'Started AI Career', desc: 'Began professional journey in machine learning and full-stack development.' },
+  { year: '2024', event: 'Full-Stack Developer (Freelance)', desc: 'Building custom web applications, AI systems, and APIs for clients worldwide.' },
+  { year: '2023', event: 'AI Engineer Intern', desc: 'Developed AI-powered chatbots, RAG systems, and LLM integrations for enterprise clients.' },
+  { year: '2022', event: 'Junior Web Developer', desc: 'Built responsive web applications using React, Node.js, and PostgreSQL.' },
 ]
 
 const tabVariants = {
@@ -20,11 +19,11 @@ const tabVariants = {
 }
 
 export default function About() {
-  const { aboutData, skills } = useApp()
+  const { aboutData, skills, certifications } = useApp()
   const [activeTab, setActiveTab] = useState('experience')
   return (
     <>
-      <Helmet><title>About | Abdul Waheed</title></Helmet>
+      <Helmet><title>About | Ali Hassan</title></Helmet>
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,7 +46,7 @@ export default function About() {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-accent rounded-3xl blur-3xl opacity-30" />
                 <motion.div className="relative aspect-square rounded-2xl border border-border-subtle overflow-hidden bg-bg-surface shadow-elevated" whileHover={{ scale: 1.01 }}>
-                  {aboutData?.photo_url ? <img src={aboutData.photo_url} alt="About" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><span className="text-8xl font-heading font-bold text-gradient">AW</span></div>}
+                  {aboutData?.photo_url ? <img src={aboutData.photo_url} alt="About" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><span className="text-8xl font-heading font-bold text-gradient">AH</span></div>}
                 </motion.div>
               </div>
             </SectionReveal>
@@ -74,7 +73,7 @@ export default function About() {
       <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal><div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
-            {['experience', 'skills', 'education'].map(tab => (
+            {['experience', 'skills', 'education', 'certifications'].map(tab => (
               <motion.button key={tab} onClick={() => setActiveTab(tab)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }}
                 className={`px-5 sm:px-6 min-h-[44px] rounded-full text-sm font-medium transition-all duration-300 ${activeTab === tab ? 'bg-accent text-background shadow-[0_0_20px_rgba(0,240,255,0.2)]' : 'border border-border-subtle text-text-muted hover:text-text-primary hover:border-border-visible'}`}>
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -108,9 +107,9 @@ export default function About() {
               {activeTab === 'skills' && (
                 <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {(skills?.length > 0 ? skills : [
-                    { name: 'Python / ML', level: 95 }, { name: 'React / Next.js', level: 92 }, { name: 'TensorFlow / PyTorch', level: 88 },
-                    { name: 'Node.js / Express', level: 90 }, { name: 'LLM / RAG Systems', level: 93 }, { name: 'Cloud (AWS/GCP)', level: 85 },
-                    { name: 'Databases / SQL', level: 88 }, { name: 'DevOps / Docker', level: 82 },
+                    { name: 'React.js', level: 85 }, { name: 'Node.js', level: 80 }, { name: 'TypeScript', level: 75 },
+                    { name: 'Python', level: 70 }, { name: 'Graphics Design', level: 90 }, { name: 'Adobe Creative Suite', level: 88 },
+                    { name: 'Supabase / SQL', level: 75 }, { name: 'Framer Motion', level: 82 },
                   ]).map((skill, i) => (
                     <motion.div key={skill.id || i} variants={staggerItemScale}>
                       <motion.div whileHover={{ y: -4, scale: 1.02 }} className="p-5 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/15 transition-all duration-500">
@@ -128,12 +127,36 @@ export default function About() {
 
               {activeTab === 'education' && (
                 <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="space-y-4">
-                  {[{ degree: 'BSCS (3rd Semester)', school: '(LIMS) Gojra', year: '2025 \u2013 Present' }, { degree: 'Intermediate', school: 'Quaid-e-Azam College Gojra', year: '2023 \u2013 2024' }, { degree: 'Matriculation', school: 'Government High School', year: '2021 \u2013 2022' }].map((edu, i) => (
+                  {[{ degree: 'BS Information Technology', school: 'Akhuwat University', year: '2024 \u2013 Present' }, { degree: 'ICS (Intermediate)', school: 'Punjab College', year: '2022 \u2013 2024' }, { degree: 'Matriculation', school: 'Govt High School', year: '2020 \u2013 2022' }].map((edu, i) => (
                     <motion.div key={i} variants={staggerItem}>
                       <motion.div whileHover={{ y: -2, x: 4 }} className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
                         <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2"><FiCalendar size={14} /><span>{edu.year}</span></div>
                         <h3 className="text-lg font-heading font-semibold text-text-primary">{edu.degree}</h3>
                         <p className="mt-1 text-sm text-text-muted">{edu.school}</p>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+
+              {activeTab === 'certifications' && (
+                <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="space-y-4">
+                  {(certifications?.length > 0 ? certifications : []).map((cert, i) => (
+                    <motion.div key={cert.id || i} variants={staggerItem}>
+                      <motion.div whileHover={{ y: -2, x: 4 }} className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-heading font-semibold text-text-primary">{cert.title}</h3>
+                            <p className="mt-1 text-sm text-accent">{cert.issuer}</p>
+                            {cert.description && <p className="mt-2 text-sm text-text-muted">{cert.description}</p>}
+                          </div>
+                          {cert.credential_url && (
+                            <motion.a href={cert.credential_url} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }}
+                              className="flex-shrink-0 px-4 py-2 rounded-full bg-accent/10 text-accent text-xs font-medium border border-accent/20 hover:bg-accent/20 transition-all">
+                              Verify →
+                            </motion.a>
+                          )}
+                        </div>
                       </motion.div>
                     </motion.div>
                   ))}

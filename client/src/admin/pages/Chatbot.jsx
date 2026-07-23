@@ -9,7 +9,7 @@ export default function AdminChatbot() {
   const [fetchError, setFetchError] = useState(false)
 
   const defaults = {
-    greeting: '👋 Hi! I\'m Abdul\'s AI assistant. Ask me about his work or how to get started!',
+    greeting: '👋 Hi! I\'m Ali\'s AI assistant. Ask me about his work or how to get started!',
     system_prompt: '',
     model: 'llama-3.3-70b-versatile',
     temperature: 0.7,

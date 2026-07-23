@@ -19,7 +19,7 @@ export default function ProjectDetail() {
 
   return (
     <>
-      <Helmet><title>{project.title} | Abdul Waheed</title></Helmet>
+      <Helmet><title>{project.title} | Ali Hassan</title></Helmet>
       <section className="relative pb-20 pt-32">
         <div className="blob blob-1" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

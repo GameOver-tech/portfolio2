@@ -12,12 +12,11 @@ export const config = {
   supabaseUrl: process.env.VITE_SUPABASE_URL,
   supabaseAnonKey: process.env.VITE_SUPABASE_ANON_KEY,
   supabaseServiceRole: process.env.VITE_SUPABASE_SERVICE_ROLE,
-  groqApiKey: process.env.GROQ_API_KEY,
   jwtSecret: process.env.JWT_SECRET,
   corsOrigins: process.env.CORS_ORIGINS?.split(',') || ['*'],
   smtpHost: process.env.SMTP_HOST,
   smtpPort: process.env.SMTP_PORT,
   smtpUser: process.env.SMTP_USER,
   smtpPass: process.env.SMTP_PASS,
-  adminEmail: process.env.ADMIN_EMAIL || 'abdulwaheedgraphics097@gmail.com',
+  adminEmail: process.env.ADMIN_EMAIL || 'alihassan.webstudio@gmail.com',
 }

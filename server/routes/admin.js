@@ -256,4 +256,111 @@ router.put('/seo', async (req, res) => {
   res.json(data)
 })
 
+// AI Providers
+router.get('/ai-providers', async (req, res) => {
+  const { data } = await supabase.from('ai_providers').select('*').order('priority')
+  res.json(data)
+})
+
+router.post('/ai-providers', async (req, res) => {
+  const { data, error } = await supabase.from('ai_providers').insert(req.body).select()
+  if (error) return res.status(400).json({ error: error.message })
+  res.json(data)
+})
+
+router.put('/ai-providers/:id', async (req, res) => {
+  const { data, error } = await supabase.from('ai_providers').update({ ...req.body, updated_at: new Date() }).eq('id', req.params.id).select()
+  if (error) return res.status(400).json({ error: error.message })
+  res.json(data)
+})
+
+router.delete('/ai-providers/:id', async (req, res) => {
+  await supabase.from('ai_providers').delete().eq('id', req.params.id)
+  res.json({ success: true })
+})
+
+// Experience
+router.get('/experience', async (req, res) => {
+  const { data } = await supabase.from('experience').select('*').order('order')
+  res.json(data)
+})
+
+router.post('/experience', async (req, res) => {
+  const { data } = await supabase.from('experience').insert(req.body).select()
+  res.json(data)
+})
+
+router.put('/experience/:id', async (req, res) => {
+  const { data } = await supabase.from('experience').update({ ...req.body, updated_at: new Date() }).eq('id', req.params.id).select()
+  res.json(data)
+})
+
+router.delete('/experience/:id', async (req, res) => {
+  await supabase.from('experience').delete().eq('id', req.params.id)
+  res.json({ success: true })
+})
+
+// Education
+router.get('/education', async (req, res) => {
+  const { data } = await supabase.from('education').select('*').order('order')
+  res.json(data)
+})
+
+router.post('/education', async (req, res) => {
+  const { data } = await supabase.from('education').insert(req.body).select()
+  res.json(data)
+})
+
+router.put('/education/:id', async (req, res) => {
+  const { data } = await supabase.from('education').update({ ...req.body, updated_at: new Date() }).eq('id', req.params.id).select()
+  res.json(data)
+})
+
+router.delete('/education/:id', async (req, res) => {
+  await supabase.from('education').delete().eq('id', req.params.id)
+  res.json({ success: true })
+})
+
+// FAQs
+router.get('/faqs', async (req, res) => {
+  const { data } = await supabase.from('faqs').select('*').order('order')
+  res.json(data)
+})
+
+router.post('/faqs', async (req, res) => {
+  const { data } = await supabase.from('faqs').insert(req.body).select()
+  res.json(data)
+})
+
+router.put('/faqs/:id', async (req, res) => {
+  const { data } = await supabase.from('faqs').update({ ...req.body, updated_at: new Date() }).eq('id', req.params.id).select()
+  res.json(data)
+})
+
+router.delete('/faqs/:id', async (req, res) => {
+  await supabase.from('faqs').delete().eq('id', req.params.id)
+  res.json({ success: true })
+})
+
+// Certifications
+router.get('/certifications', async (req, res) => {
+  const { data } = await supabase.from('certifications').select('*').order('order')
+  res.json(data)
+})
+
+router.post('/certifications', async (req, res) => {
+  const { data } = await supabase.from('certifications').insert(req.body).select()
+  res.json(data)
+})
+
+router.put('/certifications/:id', async (req, res) => {
+  const { data } = await supabase.from('certifications').update({ ...req.body, updated_at: new Date() }).eq('id', req.params.id).select()
+  res.json(data)
+})
+
+router.delete('/certifications/:id', async (req, res) => {
+  await supabase.from('certifications').delete().eq('id', req.params.id)
+  res.json({ success: true })
+})
+
 export default router

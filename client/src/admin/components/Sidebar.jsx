@@ -2,7 +2,8 @@ import { Link, useLocation } from 'react-router-dom'
 import {
   FiGrid, FiUser, FiBriefcase, FiFolder, FiLayers, FiCode,
   FiUsers, FiMail, FiSend, FiSettings, FiLink, FiMessageSquare,
-  FiSearch, FiLogOut, FiTrendingUp
+  FiSearch, FiLogOut, FiTrendingUp, FiCpu, FiHelpCircle,
+  FiBookOpen, FiAward
 } from 'react-icons/fi'
 
 const menuItems = [
@@ -14,7 +15,12 @@ const menuItems = [
   { path: '/admin/categories', icon: FiLayers, label: 'Categories' },
   { path: '/admin/stats', icon: FiTrendingUp, label: 'Stats' },
   { path: '/admin/skills', icon: FiCode, label: 'Skills' },
+  { path: '/admin/experience', icon: FiAward, label: 'Experience' },
+  { path: '/admin/education', icon: FiBookOpen, label: 'Education' },
+  { path: '/admin/certifications', icon: FiAward, label: 'Certifications' },
   { path: '/admin/team', icon: FiUsers, label: 'Team' },
+  { path: '/admin/faqs', icon: FiHelpCircle, label: 'FAQs' },
+  { path: '/admin/ai-providers', icon: FiCpu, label: 'AI Providers' },
   { path: '/admin/messages', icon: FiMail, label: 'Messages' },
   { path: '/admin/newsletter', icon: FiSend, label: 'Newsletter' },
   { path: '/admin/social-links', icon: FiLink, label: 'Social Links' },
@@ -36,7 +42,7 @@ export default function AdminSidebar() {
   return (
     <div className="fixed left-0 top-0 bottom-0 z-50 flex w-64 flex-col border-r border-border-subtle bg-bg-glass backdrop-blur-xl">
       <div className="flex-shrink-0 p-6">
-        <Link to="/" className="text-2xl font-heading font-bold text-gradient">AW</Link>
+        <Link to="/" className="text-2xl font-heading font-bold text-gradient">AH</Link>
       </div>
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3">

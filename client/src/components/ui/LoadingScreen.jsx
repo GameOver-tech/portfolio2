@@ -50,7 +50,7 @@ export default function LoadingScreen() {
               style={{ background: 'linear-gradient(135deg, #00F0FF, #7C3AED, #FF3B6F, #00F0FF)', backgroundSize: '300% 300%', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
               animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}>
-              AW
+              AH
             </motion.h1>
             {/* Progress bar */}
             <motion.div className="h-0.5 rounded-full w-32 mx-auto mb-4 relative z-10 overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>

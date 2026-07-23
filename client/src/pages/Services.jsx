@@ -20,7 +20,7 @@ export default function Services() {
 
   return (
     <>
-      <Helmet><title>Services | Abdul Waheed</title></Helmet>
+      <Helmet><title>Services | Ali Hassan</title></Helmet>
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

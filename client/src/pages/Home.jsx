@@ -41,7 +41,7 @@ export default function Home() {
   const t = siteSettings?.section_titles || {}
   return (
     <>
-      <Helmet><title>Abdul Waheed | AI Engineer</title><meta name="description" content="AI Engineer building production-grade AI systems, robotics, LLM applications, and intelligent software." /></Helmet>
+      <Helmet><title>Ali Hassan | AI Engineer</title><meta name="description" content="AI Engineer building production-grade AI systems, web applications, and intelligent software." /></Helmet>
       <HeroSection />
       <StatsSection />
 

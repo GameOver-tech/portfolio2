@@ -21,14 +21,14 @@ export default function Footer() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <motion.div variants={staggerItem} className="space-y-5">
-            <motion.div whileHover={{ scale: 1.03 }}><Link to="/" className="text-2xl font-heading font-bold text-gradient">AW</Link></motion.div>
+            <motion.div whileHover={{ scale: 1.03 }}><Link to="/" className="text-2xl font-heading font-bold text-gradient">AH</Link></motion.div>
             <p className="text-sm leading-7 text-text-muted">{siteSettings?.site_description || 'Building production-grade AI systems and software for businesses.'}</p>
             <div className="flex space-x-2">{(socialLinks || []).filter(s => s.active !== false).map(link => { const Icon = socialIconMap[link.platform] || FiMail; return <motion.a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.15, y: -2 }} whileTap={{ scale: 0.95 }} className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-bg-glass text-text-muted hover:border-accent/30 hover:bg-accent/10 hover:text-accent transition-colors duration-200" title={link.platform}><Icon size={14} /></motion.a> })}</div>
           </motion.div>
           <motion.div variants={staggerItem}><h3 className="mb-5 text-sm font-heading font-semibold text-text-primary tracking-wide uppercase">Quick Links</h3><ul className="space-y-2.5">{quickLinks.map(l => <motion.li key={l.path} whileHover={{ x: 3 }}><Link to={l.path} className="text-sm text-text-muted transition-colors duration-300 hover:text-accent">{l.name}</Link></motion.li>)}</ul></motion.div>
           <motion.div variants={staggerItem}><h3 className="mb-5 text-sm font-heading font-semibold text-text-primary tracking-wide uppercase">Contact</h3><ul className="space-y-3.5">
-            <motion.li whileHover={{ x: 3 }} className="flex items-start space-x-3 text-sm text-text-muted"><FiMail className="mt-0.5 flex-shrink-0 text-accent" size={15} /><span>{siteSettings?.contact_email || 'abdulwaheedgraphics097@gmail.com'}</span></motion.li>
-            <motion.li whileHover={{ x: 3 }} className="flex items-start space-x-3 text-sm text-text-muted"><FiPhone className="mt-0.5 flex-shrink-0 text-accent" size={15} /><span>{siteSettings?.phone || '+92 329 1966097'}</span></motion.li>
+            <motion.li whileHover={{ x: 3 }} className="flex items-start space-x-3 text-sm text-text-muted"><FiMail className="mt-0.5 flex-shrink-0 text-accent" size={15} /><span>{siteSettings?.contact_email || 'alihassan.webstudio@gmail.com'}</span></motion.li>
+            <motion.li whileHover={{ x: 3 }} className="flex items-start space-x-3 text-sm text-text-muted"><FiPhone className="mt-0.5 flex-shrink-0 text-accent" size={15} /><span>{siteSettings?.phone || '+92 310 2850365'}</span></motion.li>
             <motion.li whileHover={{ x: 3 }} className="flex items-start space-x-3 text-sm text-text-muted"><FiMapPin className="mt-0.5 flex-shrink-0 text-accent" size={15} /><span>{siteSettings?.address || 'Lahore, Pakistan'}</span></motion.li>
           </ul></motion.div>
           <motion.div variants={staggerItem}><motion.h3 whileHover={{ x: 3 }} className="mb-5 text-sm font-heading font-semibold text-text-primary tracking-wide uppercase">Newsletter</motion.h3>
@@ -44,7 +44,7 @@ export default function Footer() {
           </motion.div>
         </motion.div>
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-8 sm:flex-row">
-          <p className="text-sm text-text-muted">{siteSettings?.copyright_text || `\u00A9 ${new Date().getFullYear()} ${siteSettings?.site_name || 'Abdul Waheed'}. All rights reserved.`}</p>
+          <p className="text-sm text-text-muted">{siteSettings?.copyright_text || `\u00A9 ${new Date().getFullYear()} ${siteSettings?.site_name || 'Ali Hassan'}. All rights reserved.`}</p>
         </motion.div>
       </div>
     </footer>

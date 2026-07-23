@@ -71,7 +71,7 @@ function ProjectHero({ project }) {
             <motion.div initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.15 }} className="rounded-2xl border border-border-subtle bg-bg-card/80 backdrop-blur-sm p-6 space-y-4 shadow-card">
               {project.thumbnail_url && <div className="rounded-xl overflow-hidden mb-4"><img src={project.thumbnail_url} alt={project.title} className="w-full aspect-video object-cover" /></div>}
               <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm"><FiUser className="text-accent shrink-0" size={16} /><span className="text-text-muted">Designer:</span><span className="text-text-primary">Abdul Waheed</span></div>
+                <div className="flex items-center space-x-3 text-sm"><FiUser className="text-accent shrink-0" size={16} /><span className="text-text-muted">Designer:</span><span className="text-text-primary">Ali Hassan</span></div>
                 {project.created_at && <div className="flex items-center space-x-3 text-sm"><FiClock className="text-accent shrink-0" size={16} /><span className="text-text-muted">Date:</span><span className="text-text-primary">{fmt(project.created_at)}</span></div>}
                 {project.software && <div className="flex items-start space-x-3 text-sm"><FiLayers className="text-accent shrink-0 mt-0.5" size={16} /><div><span className="text-text-muted">Software:</span><span className="text-text-primary ml-1">{project.software}</span></div></div>}
                 {project.client && <div className="flex items-center space-x-3 text-sm"><FiTag className="text-accent shrink-0" size={16} /><span className="text-text-muted">Client:</span><span className="text-text-primary">{project.client}</span></div>}
@@ -109,7 +109,7 @@ function RelatedProjects({ current, projects }) {
 }
 
 function CTASection() {
-  const { siteSettings } = useApp(); const w = siteSettings?.whatsapp || '923291966097'
+  const { siteSettings } = useApp(); const w = siteSettings?.whatsapp || '923102850365'
   return (
     <section className="relative py-24 overflow-hidden"><div className="absolute inset-0 animated-grid opacity-15" /><div className="blob blob-1" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -147,7 +147,7 @@ export default function PortfolioViewer() {
 
   return (
     <>
-      <Helmet><title>{project.title} | Portfolio | Abdul Waheed</title><meta name="description" content={project.description?.slice(0, 160)} /></Helmet>
+      <Helmet><title>{project.title} | Portfolio | Ali Hassan</title><meta name="description" content={project.description?.slice(0, 160)} /></Helmet>
       <ProjectHero project={project} />
       {pdfUrl ? (
         <section className="relative pb-12"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

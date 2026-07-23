@@ -37,7 +37,7 @@ function ChatMarkdown({ content }) {
 export default function Chatbot() {
   const { chatbotConfig } = useApp()
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState([{ role: 'assistant', content: chatbotConfig?.greeting || '👋 Hi! I\'m Abdul Waheed\'s AI assistant. Ask me anything!' }])
+  const [messages, setMessages] = useState([{ role: 'assistant', content: chatbotConfig?.greeting || '👋 Hi! I\'m Ali Hassan\'s AI assistant. Ask me anything!' }])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null)
@@ -62,7 +62,7 @@ export default function Chatbot() {
       const res = await adminAPI.chat(userMessage)
       setMessages(p => [...p, { role: 'assistant', content: res.data.reply || res.data.message }])
     } catch {
-      setMessages(p => [...p, { role: 'assistant', content: 'Sorry, I couldn\'t process that. Please email abdulwaheedgraphics097@gmail.com for assistance.' }])
+      setMessages(p => [...p, { role: 'assistant', content: 'Sorry, I couldn\'t process that. Please email alihassan.webstudio@gmail.com for assistance.' }])
     } finally { setIsLoading(false) }
   }
 

@@ -44,7 +44,7 @@ export default function AdminLogin() {
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-heading font-bold text-gradient">AW</h1>
+          <h1 className="text-4xl font-heading font-bold text-gradient">AH</h1>
           <h2 className="text-2xl font-heading font-bold mt-4 text-white">Admin Login</h2>
           <p className="text-sm mt-2 text-text-secondary">Sign in to manage your portfolio</p>
         </div>

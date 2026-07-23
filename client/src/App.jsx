@@ -28,6 +28,11 @@ import AdminSocialLinks from './admin/pages/SocialLinks'
 import AdminChatbot from './admin/pages/Chatbot'
 import AdminSEO from './admin/pages/SEO'
 import AdminStats from './admin/pages/Stats'
+import AdminAIProviders from './admin/pages/AIProviders'
+import AdminExperience from './admin/pages/Experience'
+import AdminEducation from './admin/pages/Education'
+import AdminFAQs from './admin/pages/FAQs'
+import AdminCertifications from './admin/pages/Certifications'
 
 function BodyReset() {
   const { pathname } = useLocation()
@@ -121,6 +126,11 @@ export default function App() {
           <Route path="social-links" element={<AdminSocialLinks />} />
           <Route path="chatbot" element={<AdminChatbot />} />
           <Route path="seo" element={<AdminSEO />} />
+          <Route path="ai-providers" element={<AdminAIProviders />} />
+          <Route path="experience" element={<AdminExperience />} />
+          <Route path="education" element={<AdminEducation />} />
+          <Route path="faqs" element={<AdminFAQs />} />
+          <Route path="certifications" element={<AdminCertifications />} />
         </Route>
       </Routes>
     </>

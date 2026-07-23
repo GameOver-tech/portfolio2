@@ -215,8 +215,8 @@ const HeroPortrait = memo(function HeroPortrait({ photoUrl }) {
           {/* Image */}
           <div className="relative h-full w-full overflow-hidden rounded-full bg-gradient-to-b from-bg-surface to-background p-[2px] shadow-elevated">
             <div className="h-full w-full rounded-full bg-bg-surface overflow-hidden">
-              {photoUrl ? <img src={photoUrl} alt="Abdul Waheed" loading="eager" fetchpriority="high" decoding="async" width="440" height="440" className="h-full w-full rounded-full object-cover" />
-                : <div className="flex h-full w-full items-center justify-center text-5xl font-heading font-bold text-gradient sm:text-8xl">AW</div>}
+              {photoUrl ? <img src={photoUrl} alt="Ali Hassan" loading="eager" fetchpriority="high" decoding="async" width="440" height="440" className="h-full w-full rounded-full object-cover" />
+                : <div className="flex h-full w-full items-center justify-center text-5xl font-heading font-bold text-gradient sm:text-8xl">AH</div>}
             </div>
           </div>
           {/* Status dot */}

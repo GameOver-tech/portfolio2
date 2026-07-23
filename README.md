@@ -1,4 +1,4 @@
-# Abdul Waheed - Portfolio Website
+# Ali Hassan - Portfolio Website
 
 A world-class, production-ready portfolio website for a professional Graphic Designer. Built with React, Vite, TailwindCSS, Framer Motion, GSAP, and Supabase.
 
