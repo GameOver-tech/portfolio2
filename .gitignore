@@ -7,4 +7,3 @@ build/
 .DS_Store
 .vite/
 server/scripts/
-server/supabase/migration.sql

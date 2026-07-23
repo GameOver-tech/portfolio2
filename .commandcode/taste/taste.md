@@ -32,5 +32,8 @@ See [ui/taste.md](ui/taste.md)
 # accessibility
 - Pages must follow proper heading hierarchy (h1 → h2 → h3), include ARIA labels on interactive elements, support keyboard navigation, maintain sufficient color contrast for readability, and use semantic HTML elements. Also respect `prefers-reduced-motion` so users with motion sensitivity are not overwhelmed by animations — animations should degrade gracefully (fade transitions instead of slide/scale/stagger) rather than being disabled entirely. Confidence: 0.75
 
+# secrets-management
+- Never hardcode API keys, secrets, or credentials in source/config files that get committed to git — use environment variable placeholders (e.g., `${VARIABLE_NAME}`) in committed code and provide actual values via environment variables, runtime configuration, or admin UI settings. If secrets are accidentally committed, use `git filter-branch` (or `git filter-repo`) to purge them from all historical commits, then force push. Confidence: 0.90
+
 # coding-style
 - When building or redesigning pages, refactor them into small, focused reusable sub-components (e.g., dedicated files for hero, cards, timeline, stats, section titles) rather than one monolithic page component. Each sub-component should have a single responsibility. Avoid duplicate logic across these components. Confidence: 0.75
