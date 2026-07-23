@@ -18,8 +18,8 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-border-subtle bg-background">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10">
           <motion.div variants={staggerItem} className="space-y-5">
             <motion.div whileHover={{ scale: 1.03 }}><Link to="/" className="text-2xl font-heading font-bold text-gradient">AH</Link></motion.div>
             <p className="text-sm leading-7 text-text-muted">{siteSettings?.site_description || 'Building production-grade AI systems and software for businesses.'}</p>

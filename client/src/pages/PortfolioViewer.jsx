@@ -20,30 +20,30 @@ function PDFToolbar({ numPages, pageNumber, setPageNumber, scale, zoomIn, zoomOu
   const zi = ZOOM_LEVELS.indexOf(scale); const canIn = zi < ZOOM_LEVELS.length - 1; const canOut = zi > 0
   return (
     <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="sticky top-0 z-30 w-full bg-bg-surface/90 backdrop-blur-xl border-b border-border-subtle print:hidden">
-      <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between overflow-x-auto scrollbar-none">
-        <div className="flex items-center space-x-1">
-          <Link to="/projects" className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all text-sm whitespace-nowrap"><FiArrowLeft size={16} /><span className="hidden sm:inline">Back</span></Link>
-          <div className="w-px h-6 bg-white/10 mx-1" />
-          <a href={pdfUrl} download={fileName} className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all text-sm whitespace-nowrap"><FiDownload size={16} /><span className="hidden sm:inline">Download</span></a>
-          <button onClick={onShare} className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all text-sm whitespace-nowrap"><FiShare2 size={16} /><span className="hidden sm:inline">Share</span></button>
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto scrollbar-none">
+        <div className="flex items-center space-x-0.5 sm:space-x-1 shrink-0">
+          <Link to="/projects" className="flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all text-xs sm:text-sm whitespace-nowrap"><FiArrowLeft size={14} /><span className="hidden sm:inline">Back</span></Link>
+          <div className="w-px h-5 bg-white/10 mx-0.5" />
+          <a href={pdfUrl} download={fileName} className="flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all text-xs sm:text-sm whitespace-nowrap"><FiDownload size={14} /><span className="hidden sm:inline">Download</span></a>
+          <button onClick={onShare} className="flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all text-xs sm:text-sm whitespace-nowrap"><FiShare2 size={14} /><span className="hidden sm:inline">Share</span></button>
         </div>
-        <div className="flex items-center space-x-1 bg-white/5 rounded-lg px-2 py-1">
-          <button onClick={zoomOut} disabled={!canOut} className="p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiZoomOut size={16} /></button>
-          <span className="text-sm font-mono min-w-[48px] text-center text-text-primary select-none">{Math.round(scale * 100)}%</span>
-          <button onClick={zoomIn} disabled={!canIn} className="p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiZoomIn size={16} /></button>
-          <div className="w-px h-5 bg-white/10 mx-1" />
-          <button onClick={fitWidth} className="p-1.5 rounded-md hover:bg-white/5 text-text-muted hover:text-text-primary transition-all" title="Fit Width"><FiLayout size={14} /></button>
+        <div className="flex items-center space-x-0.5 bg-white/5 rounded-lg px-1.5 sm:px-2 py-1 shrink-0">
+          <button onClick={zoomOut} disabled={!canOut} className="p-1 sm:p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiZoomOut size={14} /></button>
+          <span className="text-xs sm:text-sm font-mono min-w-[36px] sm:min-w-[48px] text-center text-text-primary select-none">{Math.round(scale * 100)}%</span>
+          <button onClick={zoomIn} disabled={!canIn} className="p-1 sm:p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiZoomIn size={14} /></button>
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
+          <button onClick={fitWidth} className="p-1 sm:p-1.5 rounded-md hover:bg-white/5 text-text-muted hover:text-text-primary transition-all" title="Fit Width"><FiLayout size={12} /></button>
         </div>
-        <div className="flex items-center space-x-1">
-          <div className="flex items-center space-x-1 bg-white/5 rounded-lg px-2 py-1">
-            <button onClick={() => setPageNumber(Math.max(1, pageNumber - 1))} disabled={pageNumber <= 1} className="p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiChevronLeft size={16} /></button>
-            <input type="number" value={pageNumber} onChange={e => { const v = Math.min(numPages, Math.max(1, parseInt(e.target.value) || 1)); setPageNumber(v) }} className="w-10 bg-transparent text-center text-sm text-text-primary outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" min={1} max={numPages} />
-            <span className="text-xs text-text-muted select-none">/ {numPages}</span>
-            <button onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))} disabled={pageNumber >= numPages} className="p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiChevronRight size={16} /></button>
+        <div className="flex items-center space-x-0.5 shrink-0">
+          <div className="flex items-center space-x-0.5 bg-white/5 rounded-lg px-1.5 sm:px-2 py-1">
+            <button onClick={() => setPageNumber(Math.max(1, pageNumber - 1))} disabled={pageNumber <= 1} className="p-1 sm:p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiChevronLeft size={14} /></button>
+            <input type="number" value={pageNumber} onChange={e => { const v = Math.min(numPages, Math.max(1, parseInt(e.target.value) || 1)); setPageNumber(v) }} className="w-8 sm:w-10 bg-transparent text-center text-xs sm:text-sm text-text-primary outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" min={1} max={numPages} />
+            <span className="text-[11px] sm:text-xs text-text-muted select-none">/ {numPages}</span>
+            <button onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))} disabled={pageNumber >= numPages} className="p-1 sm:p-1.5 rounded-md hover:bg-white/10 text-text-muted hover:text-text-primary transition-all disabled:opacity-30"><FiChevronRight size={14} /></button>
           </div>
-          <div className="w-px h-6 bg-white/10 mx-1" />
-          <button onClick={onPrint} className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all"><FiPrinter size={16} /></button>
-          <button onClick={toggleFullscreen} className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all">{isFullscreen ? <FiMinimize2 size={16} /> : <FiMaximize2 size={16} />}</button>
+          <div className="w-px h-5 bg-white/10 mx-0.5" />
+          <button onClick={onPrint} className="p-1.5 sm:p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all"><FiPrinter size={14} /></button>
+          <button onClick={toggleFullscreen} className="p-1.5 sm:p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-text-primary transition-all">{isFullscreen ? <FiMinimize2 size={14} /> : <FiMaximize2 size={14} />}</button>
         </div>
       </div>
     </motion.div>
@@ -54,7 +54,7 @@ function ProjectHero({ project }) {
   const fmt = s => s ? new Date(s).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : ''
   const tags = project.software?.split(',').map(s => s.trim()) || []
   return (
-    <section className="relative pt-28 pb-12 overflow-hidden">
+    <section className="relative pt-28 pb-[72px] sm:pb-12 overflow-hidden">
       <div className="blob blob-1" /><div className="blob blob-2" /><div className="absolute inset-0 bg-gradient-to-b from-accent/3 via-transparent to-transparent pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.nav initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center space-x-2 text-sm text-text-muted mb-8">
@@ -63,12 +63,12 @@ function ProjectHero({ project }) {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
           <div className="lg:col-span-3">
             <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-block text-accent text-sm font-semibold uppercase tracking-wider mb-3">{project.category}</motion.span>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary mb-4 leading-tight">{project.title}</motion.h1>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary mb-4 leading-tight">{project.title}</motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg leading-relaxed max-w-2xl text-text-muted">{project.description}</motion.p>
             {tags.length > 0 && <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap gap-2 mt-6">{tags.map((t, i) => <span key={i} className="px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-medium border border-accent/20">{t}</span>)}</motion.div>}
           </div>
           <div className="lg:col-span-2">
-            <motion.div initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.15 }} className="rounded-2xl border border-border-subtle bg-bg-card/80 backdrop-blur-sm p-6 space-y-4 shadow-card">
+            <motion.div initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.15 }} className="rounded-2xl border border-border-subtle bg-[#111827] p-6 space-y-4 shadow-card">
               {project.thumbnail_url && <div className="rounded-xl overflow-hidden mb-4"><img src={project.thumbnail_url} alt={project.title} className="w-full aspect-video object-cover" /></div>}
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 text-sm"><FiUser className="text-accent shrink-0" size={16} /><span className="text-text-muted">Designer:</span><span className="text-text-primary">Ali Hassan</span></div>
@@ -113,13 +113,13 @@ function CTASection() {
   return (
     <section className="relative py-24 overflow-hidden"><div className="absolute inset-0 animated-grid opacity-15" /><div className="blob blob-1" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <SectionReveal><div className="rounded-3xl border border-border-subtle bg-bg-card/50 backdrop-blur-sm p-8 md:p-12 shadow-card">
+        <SectionReveal><div className="rounded-3xl border border-border-subtle bg-[#111827]/80 p-8 md:p-12 shadow-card">
           <h2 className="text-3xl md:text-4xl font-heading font-semibold text-text-primary mb-4">Like the project?</h2>
           <p className="text-text-muted text-lg mb-8 max-w-lg mx-auto">Let's work together and create something great.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/contact" className="px-8 py-3.5 bg-accent text-background font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,240,255,0.25)] transition-all duration-300 flex items-center space-x-2"><FiMail size={18} /><span>Contact Me</span></Link>
-            <Link to="/contact" className="px-8 py-3.5 border border-accent/30 text-accent font-semibold rounded-xl hover:bg-accent/10 transition-all duration-300 flex items-center space-x-2"><FiMessageCircle size={18} /><span>Hire Me</span></Link>
-            <a href={`https://wa.me/${w}`} target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 border border-border-visible text-text-muted font-semibold rounded-xl hover:bg-white/5 hover:text-text-primary transition-all duration-300 flex items-center space-x-2"><FaWhatsapp size={18} /><span>WhatsApp</span></a>
+          <div className="flex flex-wrap justify-center gap-4 w-full max-w-full">
+            <Link to="/contact" className="flex-1 sm:flex-none px-4 sm:px-8 py-3.5 bg-accent text-background font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,240,255,0.25)] transition-all duration-300 flex items-center justify-center space-x-2 min-w-0"><FiMail size={18} /><span>Contact Me</span></Link>
+            <Link to="/contact" className="flex-1 sm:flex-none px-4 sm:px-8 py-3.5 border border-accent/30 text-accent font-semibold rounded-xl hover:bg-accent/10 transition-all duration-300 flex items-center justify-center space-x-2 min-w-0"><FiMessageCircle size={18} /><span>Hire Me</span></Link>
+            <a href={`https://wa.me/${w}`} target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-none px-4 sm:px-8 py-3.5 border border-border-visible text-text-muted font-semibold rounded-xl hover:bg-white/5 hover:text-text-primary transition-all duration-300 flex items-center justify-center space-x-2 min-w-0"><FaWhatsapp size={18} /><span>WhatsApp</span></a>
           </div>
         </div></SectionReveal>
       </div>
@@ -150,7 +150,7 @@ export default function PortfolioViewer() {
       <Helmet><title>{project.title} | Portfolio | Ali Hassan</title><meta name="description" content={project.description?.slice(0, 160)} /></Helmet>
       <ProjectHero project={project} />
       {pdfUrl ? (
-        <section className="relative pb-12"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative pb-[72px] sm:pb-12"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal><motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-border-subtle bg-bg-card/50 overflow-hidden shadow-card">
             <PDFToolbar numPages={numPages || 1} pageNumber={pageNumber} setPageNumber={setPageNumber} scale={scale} zoomIn={zi} zoomOut={zo} fitWidth={fw} fitPage={() => {}} isFullscreen={isFullscreen} toggleFullscreen={tf} pdfUrl={pdfUrl} fileName={`${project.slug || 'portfolio'}.pdf`} onPrint={hp} onShare={hs} />
             <div ref={containerRef} className="bg-background relative min-h-[500px]">

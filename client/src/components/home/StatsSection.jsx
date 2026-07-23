@@ -16,7 +16,7 @@ function AnimatedCounter({ value, suffix, label }) {
   }, [inView, value])
   return (
     <div ref={ref} className="text-center">
-      <motion.span className="text-4xl md:text-5xl font-heading font-bold text-gradient block"
+      <motion.span className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-gradient block"
         initial={{ scale: 0.3, opacity: 0 }} animate={inView ? { scale: 1, opacity: 1 } : {}}
         transition={{ type: 'spring', stiffness: 150, damping: 12, delay: 0.2 }}>
         {count}{suffix}
@@ -33,14 +33,14 @@ export default function StatsSection() {
   const { stats } = useApp()
   const displayStats = stats || []
   return (
-    <section className="py-20 relative">
+    <section className="py-12 sm:py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {displayStats.length > 0 && (
           <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {displayStats.map((stat, i) => (
               <motion.div key={stat.id || stat.label || i} variants={staggerItemScale}
-                className="text-center p-6 sm:p-8 rounded-2xl glass-card group hover:border-accent/20">
+                className="text-center p-4 sm:p-6 md:p-8 rounded-2xl glass-card group hover:border-accent/20">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} label={stat.label} />
               </motion.div>
             ))}

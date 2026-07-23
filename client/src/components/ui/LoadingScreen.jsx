@@ -46,7 +46,7 @@ export default function LoadingScreen() {
               <LoadingRing size={140} duration={2.5} delay={0.3} color="rgba(124,58,237,0.3)" />
               <LoadingRing size={120} duration={2} delay={0.6} color="rgba(255,59,111,0.2)" reverse />
             </div>
-            <motion.h1 className="text-6xl font-heading font-bold mb-4 relative z-10"
+            <motion.h1 className="text-5xl sm:text-6xl font-heading font-bold mb-4 relative z-10"
               style={{ background: 'linear-gradient(135deg, #00F0FF, #7C3AED, #FF3B6F, #00F0FF)', backgroundSize: '300% 300%', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
               animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}>

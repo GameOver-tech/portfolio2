@@ -1,16 +1,179 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { Link, useLocation } from 'react-router-dom'
-import { FiDownload, FiTarget, FiEye, FiCalendar, FiArrowLeft, FiArrowRight, FiExternalLink, FiAward, FiFile } from 'react-icons/fi'
-import SectionReveal from '../components/ui/SectionReveal'
-import { staggerContainerFast, staggerItemScale, staggerItem } from '../animations/variants'
+import { FiDownload, FiTarget, FiEye, FiCalendar, FiArrowLeft, FiArrowRight, FiExternalLink, FiAward, FiFile, FiCode, FiBriefcase, FiBookOpen } from 'react-icons/fi'
 import { useApp } from '../context/AppContext'
 
-const tabVariants = {
-  enter: { opacity: 0, y: 20, scale: 0.95 },
-  center: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
-  exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] } },
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+}
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+}
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+}
+
+function SectionTitle({ label, title, highlight }) {
+  return (
+    <motion.div variants={itemVariants} className="text-center mb-10 sm:mb-16">
+      <span className="text-text-muted text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase">{label}</span>
+      <h2 className="text-[clamp(1.6rem,5vw,2.5rem)] sm:text-3xl md:text-4xl font-heading font-bold mt-3 sm:mt-4 text-text-primary">
+        {title} <span className="text-gradient">{highlight}</span>
+      </h2>
+      <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-accent/60 to-accent-neural/60" />
+    </motion.div>
+  )
+}
+
+function Reveal({ children, className = '', delay = 0 }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-60px' })
+  return (
+    <motion.div ref={ref} initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] }} className={className}>
+      {children}
+    </motion.div>
+  )
+}
+
+function AnimatedCounter({ value, suffix = '', label }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+  useEffect(() => {
+    if (!isInView) return
+    let start = 0; const dur = 2000; const step = Math.ceil(value / (dur / 16))
+    const timer = setInterval(() => { start += step; if (start >= value) { setCount(value); clearInterval(timer) } else setCount(start) }, 16)
+    return () => clearInterval(timer)
+  }, [isInView, value])
+  return (
+    <div ref={ref} className="text-center p-5 sm:p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm hover:border-accent/15 transition-all duration-500">
+      <motion.span className="text-3xl sm:text-4xl font-heading font-bold text-gradient block"
+        initial={{ scale: 0.3 }} animate={isInView ? { scale: 1 } : {}} transition={{ type: 'spring', stiffness: 150, damping: 12, delay: 0.2 }}>
+        {count}{suffix}
+      </motion.span>
+      <p className="text-text-muted text-xs sm:text-sm mt-2 font-medium">{label}</p>
+    </div>
+  )
+}
+
+function GlassCard({ children, className = '' }) {
+  return (
+    <div className={`group rounded-2xl border border-white/[0.06] bg-[#111827] shadow-card hover:border-accent/15 hover:shadow-[0_4px_30px_rgba(0,240,255,0.04)] transition-all duration-300 ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+function ProfileImage({ photoUrl }) {
+  return (
+    <div className="relative mx-auto w-56 h-56 sm:w-72 sm:h-72 lg:w-80 lg:h-80">
+      {/* Subtle glow */}
+      <motion.div className="absolute -inset-8 rounded-full lg:rounded-3xl bg-accent/5 blur-[60px]" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} />
+      {/* Image container */}
+      <div className="relative h-full w-full overflow-hidden rounded-full lg:rounded-3xl border-2 border-white/[0.06] bg-bg-surface shadow-elevated">
+        {photoUrl ? <img src={photoUrl} alt="Ali Hassan" className="h-full w-full rounded-full lg:rounded-2xl object-cover" />
+          : <div className="flex h-full w-full items-center justify-center text-4xl sm:text-6xl font-heading font-bold text-gradient">AH</div>}
+      </div>
+      {/* Floating badge */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.5 }}
+        className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full bg-[#0d1117]/90 backdrop-blur-md border border-white/[0.08] px-4 py-2 shadow-lg">
+        <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
+        <span className="text-xs font-medium text-white whitespace-nowrap">Available for Work</span>
+      </motion.div>
+    </div>
+  )
+}
+
+function StatsBar({ stats = [] }) {
+  if (!stats?.length) return null
+  return (
+    <section className="py-12 sm:py-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/[0.02] to-transparent pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {stats.map((stat, i) => (
+            <motion.div key={stat.id || i} variants={scaleIn}>
+              <AnimatedCounter value={stat.value} suffix={stat.suffix || '+'} label={stat.label} />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+function TimelineCard({ item, index }) {
+  return (
+    <Reveal delay={index * 0.1}>
+      <div className="relative pl-8 sm:pl-10">
+        {/* Timeline dot */}
+        <motion.div className="absolute left-0 top-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-accent bg-background z-10"
+          animate={{ boxShadow: ['0 0 0 rgba(0,240,255,0.4)', '0 0 16px rgba(0,240,255,0.6)', '0 0 0 rgba(0,240,255,0.4)'] }}
+          transition={{ duration: 3, repeat: Infinity, delay: index * 0.3 }}>
+          <div className="absolute inset-1 rounded-full bg-accent" />
+        </motion.div>
+        {/* Content */}
+        <GlassCard className="p-5 sm:p-6">
+          <div className="flex items-center gap-2 text-accent text-xs sm:text-sm font-medium mb-2">
+            <FiCalendar size={12} />
+            <span>{item.start_date ? new Date(item.start_date).getFullYear() : ''}{item.end_date ? ` — ${item.end_date === 'Present' ? 'Present' : new Date(item.end_date).getFullYear()}` : ''}</span>
+            {item.current && <span className="px-2 py-0.5 rounded-full bg-accent/10 text-[10px] font-semibold text-accent border border-accent/20">Current</span>}
+          </div>
+          <h3 className="text-base sm:text-lg font-heading font-semibold text-text-primary">{item.title}</h3>
+          {item.company && <p className="text-xs sm:text-sm text-accent/80 mt-0.5">{item.company}</p>}
+          <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-text-muted leading-relaxed">{item.description}</p>
+          {item.technologies?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-3">{item.technologies.map((tech, i) => <span key={i} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06] text-[10px] sm:text-xs text-text-muted">{tech}</span>)}</div>
+          )}
+        </GlassCard>
+      </div>
+    </Reveal>
+  )
+}
+
+function SkillCard({ skill }) {
+  return (
+    <motion.div variants={scaleIn} whileHover={{ y: -4 }}>
+      <GlassCard className="p-4 sm:p-5 text-center">
+        <div className="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-accent/10 flex items-center justify-center mb-3 shadow-[0_0_12px_rgba(0,240,255,0.06)]">
+          <FiCode className="text-accent" size={16} />
+        </div>
+        <h4 className="font-medium text-xs sm:text-sm text-text-primary mb-2">{skill.name}</h4>
+        <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+          <motion.div initial={{ width: 0 }} whileInView={{ width: `${skill.level || 80}%` }} transition={{ duration: 1.2, ease: 'easeOut' }}
+            className="h-full rounded-full bg-gradient-to-r from-accent to-accent-neural shadow-[0_0_8px_rgba(0,240,255,0.3)]" />
+        </div>
+        <span className="mt-1.5 block text-[10px] sm:text-xs text-text-muted">{skill.level || 80}%</span>
+      </GlassCard>
+    </motion.div>
+  )
+}
+
+function EducationCard({ edu }) {
+  return (
+    <motion.div variants={itemVariants}>
+      <GlassCard className="p-5 sm:p-6 flex items-start gap-4">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(0,240,255,0.06)]">
+          <FiBookOpen className="text-accent" size={18} />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-accent text-xs font-medium mb-1">
+            <FiCalendar size={10} />
+            <span>{edu.year || edu.duration || ''}</span>
+          </div>
+          <h3 className="text-base sm:text-lg font-heading font-semibold text-text-primary">{edu.degree}</h3>
+          <p className="mt-0.5 text-xs sm:text-sm text-text-muted">{edu.institution}</p>
+        </div>
+      </GlassCard>
+    </motion.div>
+  )
 }
 
 const certIcons = [
@@ -22,252 +185,244 @@ const certIcons = [
   'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
 ]
 
-function CertificationsView({ certifications }) {
-  const [selectedCert, setSelectedCert] = useState(null)
-
-  if (selectedCert) {
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
-        <motion.button
-          onClick={() => setSelectedCert(null)}
-          whileHover={{ x: -3 }}
-          className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors"
-        >
-          <FiArrowLeft size={16} /> Back to Certifications
-        </motion.button>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2 space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shadow-[0_0_10px_rgba(0,240,255,0.1)]">
-                  <FiAward className="text-accent" size={18} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-heading font-semibold text-text-primary">{selectedCert.title}</h3>
-                  <p className="text-sm text-accent">{selectedCert.issuer}</p>
-                </div>
-              </div>
-              {selectedCert.issue_date && (
-                <div className="flex items-center gap-2 text-xs text-text-muted mb-3">
-                  <FiCalendar size={12} />
-                  <span>Issued: {new Date(selectedCert.issue_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                </div>
-              )}
-              <p className="text-sm text-text-muted leading-relaxed">{selectedCert.description || 'No description available.'}</p>
-              {selectedCert.credential_url && (
-                <motion.a
-                  href={selectedCert.credential_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
-                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-accent/10 text-accent text-xs font-medium border border-accent/20 hover:bg-accent/20 transition-all"
-                >
-                  <FiExternalLink size={12} /> Verify Credential
-                </motion.a>
-              )}
-            </motion.div>
-          </div>
-
-          <div className="lg:col-span-3">
-            {(selectedCert.pdf_url || selectedCert.image_url) ? (
-              <Link to={`/certificate/${selectedCert.id}`}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  whileHover={{ y: -2 }}
-                  className="rounded-2xl overflow-hidden border border-border-subtle bg-bg-card shadow-card cursor-pointer group"
-                >
-                  <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-bg-glass">
-                    <span className="text-xs font-medium text-text-muted tracking-wide">CERTIFICATE</span>
-                    <span className="flex items-center gap-1.5 text-[10px] text-accent group-hover:gap-2 transition-all">
-                      <FiFile size={11} /> View full certificate
-                    </span>
-                  </div>
-                  <div className="p-8 flex items-center justify-center min-h-[200px] bg-[#0a0c12]">
-                    <div className="text-center">
-                      <FiAward size={40} className="mx-auto text-accent/40 mb-3" />
-                      <p className="text-sm text-text-muted">Click to view in full detail</p>
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="h-full min-h-[200px] rounded-2xl border border-dashed border-border-subtle bg-bg-card/30 flex items-center justify-center"
-              >
-                <p className="text-sm text-text-muted">No certificate file attached.</p>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </motion.div>
-    )
-  }
-
-  const certs = certifications?.length > 0 ? certifications : []
-
+function CertificationCard({ cert, index, onClick }) {
   return (
-    <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-3 gap-5">
-      {certs.map((cert, i) => (
-        <motion.div key={cert.id || i} variants={staggerItem}>
-          <motion.div
-            onClick={() => setSelectedCert(cert)}
-            whileHover={{ y: -4 }}
-            className="group relative cursor-pointer p-6 rounded-2xl bg-bg-card/40 backdrop-blur-sm border border-border-subtle hover:border-accent/25 transition-all duration-500 h-full flex flex-col"
-          >
-            <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-            <div className="flex flex-col items-center text-center flex-1">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/10 to-accent-neural/10 flex items-center justify-center mb-4 shadow-[0_0_12px_rgba(0,240,255,0.06)] group-hover:shadow-[0_0_20px_rgba(0,240,255,0.12)] transition-shadow duration-500">
-                <svg className="w-6 h-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d={certIcons[i % certIcons.length]} />
-                </svg>
-              </div>
-
-              <h3 className="text-base font-heading font-semibold text-text-primary mb-1 leading-snug">{cert.title}</h3>
-              <p className="text-xs text-text-muted mb-auto">{cert.issuer}</p>
-
-              <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-accent/70 group-hover:text-accent transition-colors duration-300">
-                <span>View details</span>
-                <FiArrowRight className="group-hover:translate-x-0.5 transition-transform" size={12} />
-              </div>
-            </div>
-
-            <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          </motion.div>
-        </motion.div>
-      ))}
+    <motion.div variants={scaleIn} whileHover={{ y: -4 }}>
+      <GlassCard className="cursor-pointer p-5 sm:p-6 text-center h-full flex flex-col" onClick={() => onClick(cert)}>
+        <div className="w-11 h-11 sm:w-12 sm:h-12 mx-auto rounded-xl bg-gradient-to-br from-accent/10 to-accent-neural/10 flex items-center justify-center mb-3 sm:mb-4 shadow-[0_0_12px_rgba(0,240,255,0.06)] group-hover:shadow-[0_0_20px_rgba(0,240,255,0.12)] transition-shadow">
+          <svg className="w-6 h-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d={certIcons[index % certIcons.length]} />
+          </svg>
+        </div>
+        <h3 className="text-sm sm:text-base font-heading font-semibold text-text-primary mb-1 leading-snug">{cert.title}</h3>
+        <p className="text-xs text-text-muted mb-auto">{cert.issuer}</p>
+        <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-accent/70 group-hover:text-accent transition-colors">
+          <span>View details</span>
+          <FiArrowRight className="group-hover:translate-x-0.5 transition-transform" size={12} />
+        </div>
+      </GlassCard>
     </motion.div>
   )
 }
 
+function CertDetailView({ cert, onBack }) {
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4 sm:space-y-6">
+      <motion.button onClick={onBack} whileHover={{ x: -3 }}
+        className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-accent transition-colors">
+        <FiArrowLeft size={14} /> Back to Certifications
+      </motion.button>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 space-y-4">
+          <GlassCard className="p-4 sm:p-6">
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
+              <div className="w-9 sm:w-11 h-9 sm:h-11 rounded-xl bg-accent/10 flex items-center justify-center"><FiAward className="text-accent" size={18} /></div>
+              <div>
+                <h3 className="text-base sm:text-lg font-heading font-semibold text-text-primary">{cert.title}</h3>
+                <p className="text-xs sm:text-sm text-accent">{cert.issuer}</p>
+              </div>
+            </div>
+            {cert.issue_date && (
+              <div className="flex items-center gap-2 text-xs text-text-muted mb-2 sm:mb-3"><FiCalendar size={10} /><span>Issued {new Date(cert.issue_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</span></div>
+            )}
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">{cert.description}</p>
+            {cert.credential_url && (
+              <a href={cert.credential_url} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-xl bg-accent/10 text-accent text-xs font-medium border border-accent/20 hover:bg-accent/20 transition-all">
+                <FiExternalLink size={12} /> Verify Credential
+              </a>
+            )}
+          </GlassCard>
+        </div>
+        <div className="lg:col-span-3">
+          {(cert.pdf_url || cert.image_url) ? (
+            <Link to={`/certificate/${cert.id}`}>
+              <GlassCard className="overflow-hidden cursor-pointer">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06]">
+                  <span className="text-xs font-medium text-text-muted tracking-wide">CERTIFICATE</span>
+                  <span className="flex items-center gap-1 text-[10px] text-accent group-hover:gap-2 transition-all"><FiFile size={11} /> View full certificate</span>
+                </div>
+                <div className="p-6 sm:p-8 flex items-center justify-center min-h-[160px] sm:min-h-[200px] bg-[#0a0c12]">
+                  <div className="text-center"><FiAward size={32} className="mx-auto text-accent/40 mb-2" /><p className="text-sm text-text-muted">Click to view in full detail</p></div>
+                </div>
+              </GlassCard>
+            </Link>
+          ) : (
+            <GlassCard className="p-6 sm:p-8 flex items-center justify-center min-h-[160px]"><p className="text-sm text-text-muted">No certificate file attached.</p></GlassCard>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+const TABS = [
+  { key: 'experience', label: 'Experience', icon: FiBriefcase },
+  { key: 'skills', label: 'Skills', icon: FiCode },
+  { key: 'education', label: 'Education', icon: FiBookOpen },
+  { key: 'certifications', label: 'Certifications', icon: FiAward },
+]
+
 export default function About() {
-  const { aboutData, skills, certifications, siteSettings, education, experience } = useApp()
+  const { aboutData, skills, certifications, siteSettings, education, experience, stats } = useApp()
   const location = useLocation()
   const content = siteSettings?.section_titles || {}
   const [activeTab, setActiveTab] = useState(location.state?.tab || 'experience')
+  const [selectedCert, setSelectedCert] = useState(null)
+
   return (
     <>
       <Helmet><title>About | Ali Hassan</title></Helmet>
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="blob blob-1" /><div className="blob blob-2" />
+
+      {/* ── Hero Section ── */}
+      <section className="relative pt-28 sm:pt-36 pb-[72px] sm:pb-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/[0.02] via-transparent to-transparent pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <SectionReveal type="left">
-              <div>
-                <span className="text-text-muted text-sm font-semibold tracking-[0.25em] uppercase">{content.about_subtitle || 'About'}</span>
-                <h1 className="text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 text-text-primary">{content.about_heading || 'The Work Behind the'} <span className="text-gradient">{content.about_heading_highlight || 'Systems'}</span></h1>
-                <p className="leading-relaxed mb-6 text-text-muted">{aboutData?.bio?.split('\n')[0] || content.about_bio_fallback || "I'm an AI Engineer and Full-Stack Developer focused on building production-grade intelligent systems."}</p>
-                <p className="leading-relaxed mb-8 text-text-muted">{aboutData?.bio?.split('\n')[1] || content.about_bio_fallback_2 || "Specializing in AI/ML systems, LLM applications, and scalable full-stack platforms."}</p>
+          <motion.div variants={containerVariants} initial="hidden" animate="visible"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-20 items-center">
+            <div className="order-2 lg:order-1 text-center lg:text-left">
+              <motion.span variants={itemVariants} className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/8 px-4 py-1.5 text-xs sm:text-sm font-medium text-accent backdrop-blur-sm mb-4 sm:mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
+                {content.about_subtitle || 'About'}
+              </motion.span>
+              <motion.h1 variants={itemVariants} className="text-[clamp(1.6rem,5vw,2.8rem)] sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-primary leading-tight">
+                {content.about_heading || 'The Work Behind the'} <span className="text-gradient">{content.about_heading_highlight || 'Systems'}</span>
+              </motion.h1>
+              <motion.p variants={itemVariants} className="leading-relaxed mt-4 sm:mt-6 text-sm sm:text-base text-text-muted max-w-xl mx-auto lg:mx-0">
+                {aboutData?.bio?.split('\n')[0] || "I'm an AI Engineer and Full-Stack Developer focused on building production-grade intelligent systems."}
+              </motion.p>
+              <motion.p variants={itemVariants} className="leading-relaxed mt-3 sm:mt-4 text-sm sm:text-base text-text-muted max-w-xl mx-auto lg:mx-0">
+                {aboutData?.bio?.split('\n')[1] || "Specializing in AI/ML systems, LLM applications, and scalable full-stack platforms."}
+              </motion.p>
+              <motion.div variants={itemVariants} className="flex flex-wrap justify-center lg:justify-start gap-3 mt-6 sm:mt-8">
                 {aboutData?.cv_url && (
-                  <motion.a href={aboutData.cv_url} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] bg-accent text-background font-semibold rounded-full shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all duration-300">
-                    <FiDownload /><span>{content.about_cv_button || 'Download CV'}</span>
-                  </motion.a>
+                  <a href={aboutData.cv_url} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 min-h-[48px] bg-accent text-background font-semibold rounded-full shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all duration-300">
+                    <FiDownload size={16} /> <span>{content.about_cv_button || 'Download CV'}</span>
+                  </a>
                 )}
-              </div>
-            </SectionReveal>
-            <SectionReveal type="right" delay={0.1}>
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-accent rounded-3xl blur-3xl opacity-30" />
-                <motion.div className="relative aspect-square rounded-2xl border border-border-subtle overflow-hidden bg-bg-surface shadow-elevated" whileHover={{ scale: 1.01 }}>
-                  {aboutData?.photo_url ? <img src={aboutData.photo_url} alt="About" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><span className="text-8xl font-heading font-bold text-gradient">AH</span></div>}
-                </motion.div>
-              </div>
-            </SectionReveal>
-          </div>
+              </motion.div>
+            </div>
+            <motion.div variants={scaleIn} className="order-1 lg:order-2 flex justify-center">
+              <ProfileImage photoUrl={aboutData?.photo_url} />
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-20 relative">
+      {/* ── Stats ── */}
+      <StatsBar stats={stats} />
+
+      {/* ── Mission & Vision ── */}
+      <section className="py-12 sm:py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/[0.015] to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div variants={staggerContainerFast} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[{ icon: FiTarget, title: content.about_mission_title || 'My Mission', desc: aboutData?.mission || content.about_mission_fallback || 'To build intelligent systems that empower businesses.' }, { icon: FiEye, title: content.about_vision_title || 'My Vision', desc: aboutData?.vision || content.about_vision_fallback || 'To be at the forefront of AI innovation.' }].map((item, i) => (
-              <motion.div key={i} variants={staggerItemScale}>
-                <motion.div whileHover={{ y: -4 }} className="p-8 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/15 transition-all duration-500">
-                  <motion.div className="text-accent text-xl mb-4" animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }}><item.icon /></motion.div>
-                  <h3 className="text-lg font-heading font-semibold mb-3 text-text-primary">{item.title}</h3>
-                  <p className="leading-relaxed text-text-muted">{item.desc}</p>
-                </motion.div>
+          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            {[
+              { icon: FiTarget, title: content.about_mission_title || 'My Mission', desc: aboutData?.mission || content.about_mission_fallback || 'To build intelligent systems that empower businesses.' },
+              { icon: FiEye, title: content.about_vision_title || 'My Vision', desc: aboutData?.vision || content.about_vision_fallback || 'To be at the forefront of AI innovation.' },
+            ].map((item, i) => (
+              <motion.div key={i} variants={scaleIn}>
+                <GlassCard className="p-6 sm:p-8 group">
+                  <motion.div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4 sm:mb-5 shadow-[0_0_16px_rgba(0,240,255,0.08)]"
+                    whileHover={{ scale: 1.1, rotate: [0, -8, 8, 0] }} transition={{ duration: 0.4 }}>
+                    <item.icon className="text-accent" size={20} />
+                  </motion.div>
+                  <h3 className="text-base sm:text-lg font-heading font-semibold text-text-primary mb-2 sm:mb-3">{item.title}</h3>
+                  <p className="leading-relaxed text-sm sm:text-base text-text-muted">{item.desc}</p>
+                </GlassCard>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      <section className="py-20 relative">
+      {/* ── Experience / Skills / Education / Certifications Tabs ── */}
+      <section className="py-12 sm:py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/[0.015] to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal><div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
-            {['experience', 'skills', 'education', 'certifications'].map(tab => (
-              <motion.button key={tab} onClick={() => setActiveTab(tab)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }}
-                className={`px-5 sm:px-6 min-h-[44px] rounded-full text-sm font-medium transition-all duration-300 ${activeTab === tab ? 'bg-accent text-background shadow-[0_0_20px_rgba(0,240,255,0.2)]' : 'border border-border-subtle text-text-muted hover:text-text-primary hover:border-border-visible'}`}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </motion.button>
-            ))}
-          </div></SectionReveal>
+          <Reveal>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
+              {TABS.map(tab => {
+                const isActive = activeTab === tab.key
+                const Icon = tab.icon
+                return (
+                  <motion.button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }}
+                    className={`relative px-4 sm:px-6 min-h-[44px] rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                      isActive
+                        ? 'bg-accent text-background shadow-[0_0_20px_rgba(0,240,255,0.25)]'
+                        : 'border border-white/[0.08] text-text-muted hover:text-text-primary hover:border-white/20 bg-white/[0.02]'
+                    }`}>
+                    <Icon size={14} />
+                    <span>{tab.label}</span>
+                  </motion.button>
+                )
+              })}
+            </div>
+          </Reveal>
 
           <AnimatePresence mode="wait">
-            <motion.div key={activeTab} variants={tabVariants} initial="enter" animate="center" exit="exit">
+            <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}>
+              
+              {/* Experience Timeline */}
               {activeTab === 'experience' && (
-                <div className="relative">
-                  <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-neural/30 to-transparent hidden md:block" />
-                  <div className="space-y-6 sm:space-y-10">
+                <div className="relative max-w-3xl mx-auto">
+                  {/* Center line */}
+                  <div className="absolute left-[7px] sm:left-[9px] top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-neural/20 to-transparent" />
+                  <div className="space-y-8 sm:space-y-12">
                     {(experience || []).map((item, i) => (
-                      <SectionReveal key={item.id || i} delay={i * 0.1} type={i % 2 === 0 ? 'left' : 'right'}>
-                        <div className={`relative flex items-center ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                          <div className="hidden md:block flex-1" />
-                          <motion.div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-accent shadow-[0_0_12px_rgba(0,240,255,0.5)]" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }} />
-                          <motion.div whileHover={{ x: i % 2 === 0 ? 5 : -5 }} className="flex-1 p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
-                            <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2"><FiCalendar size={14} /><span>{item.start_date ? new Date(item.start_date).getFullYear() : ''}{item.end_date ? ` - ${item.end_date === 'Present' ? 'Present' : new Date(item.end_date).getFullYear()}` : ''}</span></div>
-                            <h3 className="text-lg font-heading font-semibold text-text-primary">{item.title}</h3>
-                            <p className="mt-2 text-sm text-text-muted">{item.description}</p>
-                          </motion.div>
-                        </div>
-                      </SectionReveal>
+                      <TimelineCard key={item.id || i} item={item} index={i} />
                     ))}
+                    {(!experience || experience.length === 0) && (
+                      <div className="pl-10"><GlassCard className="p-6 text-center"><p className="text-sm text-text-muted">No experience entries yet.</p></GlassCard></div>
+                    )}
                   </div>
                 </div>
               )}
 
+              {/* Skills Grid */}
               {activeTab === 'skills' && (
-                <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {(skills || []).map((skill, i) => (
-                    <motion.div key={skill.id || i} variants={staggerItemScale}>
-                      <motion.div whileHover={{ y: -4, scale: 1.02 }} className="p-5 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/15 transition-all duration-500">
-                        <h4 className="font-medium text-sm text-text-primary mb-3">{skill.name}</h4>
-                        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                          <motion.div initial={{ width: 0 }} whileInView={{ width: `${skill.level || 80}%` }} transition={{ duration: 1.5, delay: i * 0.1, ease: 'easeOut' }}
-                            className="h-full bg-gradient-accent rounded-full shadow-[0_0_8px_rgba(0,240,255,0.3)]" />
-                        </div>
-                        <span className="mt-1 block text-xs text-text-muted">{skill.level || 80}%</span>
-                      </motion.div>
-                    </motion.div>
-                  ))}
+                <motion.div variants={containerVariants} initial="hidden" animate="visible"
+                  className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                  {(skills || []).map((skill, i) => <SkillCard key={skill.id || i} skill={skill} />)}
+                  {(!skills || skills.length === 0) && (
+                    <div className="col-span-full"><GlassCard className="p-8 text-center"><p className="text-sm text-text-muted">No skills added yet.</p></GlassCard></div>
+                  )}
                 </motion.div>
               )}
 
+              {/* Education */}
               {activeTab === 'education' && (
-                <motion.div variants={staggerContainerFast} initial="hidden" animate="visible" className="space-y-4">
-                  {(education?.length > 0 ? education : []).map((edu, i) => (
-                    <motion.div key={edu.id || i} variants={staggerItem}>
-                      <motion.div whileHover={{ y: -2, x: 4 }} className="p-6 rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card hover:border-accent/10 transition-all duration-500">
-                        <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2"><FiCalendar size={14} /><span>{edu.year || edu.duration || ''}</span></div>
-                        <h3 className="text-lg font-heading font-semibold text-text-primary">{edu.degree}</h3>
-                        <p className="mt-1 text-sm text-text-muted">{edu.institution}</p>
-                      </motion.div>
-                    </motion.div>
-                  ))}
+                <motion.div variants={containerVariants} initial="hidden" animate="visible"
+                  className="max-w-3xl mx-auto space-y-4">
+                  {(education || []).map((edu, i) => <EducationCard key={edu.id || i} edu={edu} />)}
+                  {(!education || education.length === 0) && (
+                    <GlassCard className="p-8 text-center"><p className="text-sm text-text-muted">No education entries yet.</p></GlassCard>
+                  )}
                 </motion.div>
               )}
 
-              {activeTab === 'certifications' && <CertificationsView certifications={certifications} />}
+              {/* Certifications */}
+              {activeTab === 'certifications' && (
+                <div>
+                  {selectedCert ? (
+                    <CertDetailView cert={selectedCert} onBack={() => setSelectedCert(null)} />
+                  ) : (
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible"
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                      {(certifications || []).map((cert, i) => (
+                        <CertificationCard key={cert.id || i} cert={cert} index={i} onClick={setSelectedCert} />
+                      ))}
+                      {(!certifications || certifications.length === 0) && (
+                        <div className="col-span-full"><GlassCard className="p-8 text-center"><p className="text-sm text-text-muted">No certifications yet.</p></GlassCard></div>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              )}
+
             </motion.div>
           </AnimatePresence>
         </div>

@@ -2,11 +2,22 @@
 
 [cmd]: https://commandcode.ai/
 
+# workflow
+- When fixing a mobile responsiveness or layout issue on one page, proactively audit and fix ALL other pages that have the same class of issue in a single pass — do not fix pages individually one at a time. The user expects comprehensive, cross-page fixes rather than repeated per-page requests. Confidence: 0.8
+
+- When debugging layout/styling bugs, perform a **systematic, exhaustive audit** following a structured methodology: (1) scan every component file; (2) inspect every CSS file for problematic properties (position, z-index, overflow, transform, clip-path, negative margins, backdrop-filter, height: 100vh); (3) inspect every parent container for document flow correctness; (4) check all responsive breakpoints (320px, 375px, 425px, 768px, 1024px, 1440px, 1920px); (5) check animations for layout-shifting side effects; (6) inspect the full z-index hierarchy across the app; (7) explain why each dangerous CSS usage is safe or unsafe; (8) fix every issue. Do not stop until every overlap and blur issue is eliminated. Confidence: 0.85
+
+- When debugging blurry text or mobile rendering issues, search systematically for ALL these CSS properties on text-containing elements: `filter: blur()`, `backdrop-filter`, `transform: translateZ()`, `transform: scale()`, `opacity` (sub-1), `mix-blend-mode`, `will-change`, `perspective`, `overflow: hidden`, and `z-index`. Enforce a strict CSS separation: every heading and paragraph must have `filter: none; backdrop-filter: none; transform: none; opacity: 1; position: relative; z-index: 2;` while every decorative glow/blob element must have `position: absolute; z-index: 0; pointer-events: none;`. Content containers should use `position: relative; z-index: 10;` to ensure they render above background effects. Confidence: 0.85
+
+- When debugging layout issues, **preserve the existing visual design exactly** — do not change colors, fonts, spacing, animations, cards, or buttons. Only repair layout problems (overlaps, z-index conflicts, overflow, blur from covering layers, inconsistent spacing, positioning bugs). Confidence: 0.85
+
 # communication
 - The user communicates via structured, numbered task bulletins with explicit role-playing ("Act as a Lead Full-Stack Developer") — each sub-task is a concrete, auditable deliverable specifying what to verify (backend audit), build (admin UI), and integrate (frontend binding). Respond with corresponding clear sub-tasks, progress tracking, and a summary of every file changed and why. Confidence: 0.80
 
+- When reporting debugging/fix results, deliver a structured audit report with: per-issue tables (File Name, Line Number, Problem, Reason, Old Code, New Code, Explanation), a complete z-index hierarchy table, a positions/overflow audit table, and a final checklist (✔ Layout Issues Found, ✔ Files Modified, ✔ Responsive Tests Passed, ✔ Overlapping Fixed, ✔ Blur Issues Fixed, ✔ Mobile Fixed, ✔ Desktop Fixed, ✔ No Console Errors, ✔ Production Ready). Confidence: 0.85
+
 # animation
-- Add heavy, impressive animations on every page, every interaction, and during loading states — animations should be visible everywhere to impress. Prefer **fast, energetic animation speeds** (not slow/ambient) to create a dynamic, modern tech feel; when increasing animation speed, always pair with performance optimizations (GPU-composited properties like transform/scale/opacity, `will-change`, hardware acceleration) to prevent frame drops at higher velocities. Confidence: 0.85
+- Add heavy, impressive animations on every page, every interaction, and during loading states — animations should be visible everywhere to impress. Prefer **fast, energetic animation speeds** (not slow/ambient) to create a dynamic, modern tech feel; when increasing animation speed, always pair with performance optimizations (GPU-composited properties like transform/scale/opacity, `will-change`, hardware acceleration) to prevent frame drops at higher velocities. Use Framer Motion with a custom `easeOut` cubic-bezier easing (`[0.25, 0.46, 0.45, 0.94]`), durations of 0.4s–0.8s, and **no excessive bouncing** or spring overshoot for a polished, professional feel. Use `useInView` for scroll-triggered reveals (fade up, slide, scale, stagger reveal) with `once: true` so animations play only on first scroll entry. Confidence: 0.85
 
 # backend
 - All API routes should have robust try/catch error handling with proper HTTP status codes (400/500) and meaningful error messages returned in the response — never silently swallow errors or return null. Confidence: 0.80
@@ -17,3 +28,9 @@
 
 # ui
 See [ui/taste.md](ui/taste.md)
+
+# accessibility
+- Pages must follow proper heading hierarchy (h1 → h2 → h3), include ARIA labels on interactive elements, support keyboard navigation, maintain sufficient color contrast for readability, and use semantic HTML elements. Also respect `prefers-reduced-motion` so users with motion sensitivity are not overwhelmed by animations — animations should degrade gracefully (fade transitions instead of slide/scale/stagger) rather than being disabled entirely. Confidence: 0.75
+
+# coding-style
+- When building or redesigning pages, refactor them into small, focused reusable sub-components (e.g., dedicated files for hero, cards, timeline, stats, section titles) rather than one monolithic page component. Each sub-component should have a single responsibility. Avoid duplicate logic across these components. Confidence: 0.75

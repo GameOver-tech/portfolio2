@@ -216,7 +216,7 @@ const HeroPortrait = memo(function HeroPortrait({ photoUrl }) {
           <div className="relative h-full w-full overflow-hidden rounded-full bg-gradient-to-b from-bg-surface to-background p-[2px] shadow-elevated">
             <div className="h-full w-full rounded-full bg-bg-surface overflow-hidden">
               {photoUrl ? <img src={photoUrl} alt="Ali Hassan" loading="eager" fetchpriority="high" decoding="async" width="440" height="440" className="h-full w-full rounded-full object-cover" />
-                : <div className="flex h-full w-full items-center justify-center text-5xl font-heading font-bold text-gradient sm:text-8xl">AH</div>}
+                : <div className="flex h-full w-full items-center justify-center text-4xl sm:text-6xl md:text-8xl font-heading font-bold text-gradient">AH</div>}
             </div>
           </div>
           {/* Status dot */}
@@ -246,9 +246,9 @@ export default function HeroSection() {
       <NeuralLines />
 
       {/* Floating gradient orbs */}
-      <motion.div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-accent/5 blur-[150px] pointer-events-none"
+      <motion.div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-accent/5 blur-[150px] pointer-events-none max-w-[200vw]"
         animate={{ scale: [1, 1.2, 1], rotate: [0, 20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} />
-      <motion.div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-accent-neural/4 blur-[150px] pointer-events-none"
+      <motion.div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-accent-neural/4 blur-[150px] pointer-events-none max-w-[200vw]"
         animate={{ scale: [1.2, 1, 1.2], rotate: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
 
       {/* Parallax blobs */}
@@ -271,7 +271,7 @@ export default function HeroSection() {
 
             {/* Headline with letter animation */}
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35 }}
-              className="text-[clamp(2.2rem,7vw,3rem)] sm:text-5xl lg:text-7xl xl:text-[5.5rem] font-heading font-bold leading-[1.05] sm:leading-[1] lg:leading-[0.95] tracking-[-0.03em] text-text-primary">
+              className="text-[clamp(2rem,8vw,3rem)] sm:text-5xl lg:text-7xl xl:text-[5.5rem] font-heading font-bold leading-[1.1] sm:leading-[1] lg:leading-[0.95] tracking-[-0.03em] text-text-primary">
               {heroName}<br /><span className="text-gradient-pulse">{heroTitle}</span>{heroSubtitle && <><br />{heroSubtitle}</>}
             </motion.h1>
 

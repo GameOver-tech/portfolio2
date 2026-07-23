@@ -13,7 +13,7 @@ export default function MainLayout() {
   const location = useLocation()
   if (loading) return <LoadingScreen />
   return (
-    <div className="min-h-screen bg-background text-text-primary">
+    <div className="min-h-screen bg-background text-text-primary overflow-x-hidden">
       <div className="noise-overlay" />
       <CursorEffect />
       <Navbar />

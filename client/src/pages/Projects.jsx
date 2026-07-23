@@ -15,7 +15,7 @@ function ProjectCard({ project, i }) {
   return (
     <motion.div layout initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5, delay: (i || 0) * 0.05 }}
       whileHover={{ y: -6, scale: 1.02 }}
-      className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-bg-card backdrop-blur-sm shadow-card transition-all duration-500 hover:border-accent/20 hover:shadow-glow">
+      className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-[#111827] shadow-card transition-all duration-500 hover:border-accent/20 hover:shadow-glow">
       <a href={externalUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} live site`} className="block" onClick={e => { if (externalUrl === '#') e.preventDefault() }}>
         <div className="relative aspect-[4/3] overflow-hidden bg-bg-surface">
           <div className="absolute inset-0 flex items-center justify-center text-text-muted"><div className="flex flex-col items-center space-y-2"><FiImage size={36} /><span className="text-xs">No image</span></div></div>
@@ -45,16 +45,16 @@ export default function Projects() {
   return (
     <>
       <Helmet><title>Portfolio | Ali Hassan</title></Helmet>
-      <section className="relative overflow-hidden pb-20 pt-32">
+      <section className="relative overflow-hidden pb-[72px] sm:pb-20 pt-24 sm:pt-32">
         <div className="blob blob-1" /><div className="blob blob-2" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionReveal type="scale"><div className="mx-auto mb-12 max-w-3xl text-center">
+          <SectionReveal type="scale"><div className="mx-auto mb-8 sm:mb-12 max-w-3xl text-center">
             <motion.span initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} className="text-sm font-semibold uppercase tracking-[0.25em] text-text-muted">Portfolio</motion.span>
-            <h1 className="mt-4 mb-6 font-heading text-[clamp(2rem,7vw,2.8rem)] sm:text-4xl md:text-6xl font-bold text-text-primary">My <span className="text-gradient">Work</span></h1>
-            <p className="text-lg leading-8 text-text-muted">A selection of AI systems, applications, and technical solutions I've built.</p>
+            <h1 className="mt-4 mb-4 sm:mb-6 font-heading text-[clamp(1.8rem,6vw,2.8rem)] sm:text-4xl md:text-6xl font-bold text-text-primary">My <span className="text-gradient">Work</span></h1>
+            <p className="text-sm sm:text-lg leading-8 text-text-muted">A selection of AI systems, applications, and technical solutions I've built.</p>
           </div></SectionReveal>
 
-          <SectionReveal type="blur"><motion.div className="mb-12 flex flex-col items-center justify-between gap-4 sm:gap-6 rounded-2xl border border-border-subtle bg-bg-card/50 backdrop-blur-sm p-4 sm:p-5 md:flex-row md:p-6 shadow-card">
+          <SectionReveal type="blur"><motion.div className="mb-8 sm:mb-12 flex flex-col items-center justify-between gap-4 sm:gap-6 rounded-2xl border border-border-subtle bg-[#111827]/60 p-4 sm:p-5 md:flex-row md:p-6 shadow-card">
             <div className="relative w-full md:w-72"><FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
               <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search projects..."
                 className="w-full rounded-full border border-border-subtle bg-bg-glass py-3 pl-12 pr-4 text-sm text-text-primary transition-colors focus:border-accent/30 focus:outline-none focus:ring-0 min-h-[48px] placeholder:text-text-muted" />

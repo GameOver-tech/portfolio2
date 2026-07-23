@@ -156,7 +156,7 @@ export default function Chatbot() {
       {!isOpen && (
         <button id="chatbot-toggle" onClick={() => setIsOpen(true)}
           className="fixed z-[999] w-12 h-12 rounded-full bg-accent flex items-center justify-center text-background shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,240,255,0.5)]"
-          style={{ bottom: 'max(90px, calc(90px + env(safe-area-inset-bottom, 0px)))', right: '24px' }}
+          style={{ bottom: 'max(152px, calc(152px + env(safe-area-inset-bottom, 0px)))', right: 'max(16px, calc(16px + env(safe-area-inset-right, 0px)))' }}
           aria-label="Open AI Assistant">
           <FaRobot size={18} />
         </button>
@@ -192,7 +192,7 @@ export default function Chatbot() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 300, mass: 0.8 }}
-            className="fixed top-0 right-0 z-[90] h-full w-[400px] max-w-[95vw] bg-bg-surface/95 backdrop-blur-2xl border-l border-border-subtle shadow-elevated flex flex-col"
+            className="fixed top-0 right-0 z-[90] h-full w-[400px] max-w-[92vw] bg-bg-surface/95 backdrop-blur-2xl border-l border-border-subtle shadow-elevated flex flex-col"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-border-subtle shrink-0">
