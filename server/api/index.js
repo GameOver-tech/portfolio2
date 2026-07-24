@@ -39,7 +39,13 @@ app.use(cors({
 // Serve uploaded files
 app.use('/uploads', express.static(resolve(__dirname, '../../public/uploads')))
 
-const apiPrefix = process.env.VERCEL === '1' ? '' : '/api'
+const routePaths = ['/auth', '/api/auth']
+const adminPaths = ['/admin', '/api/admin']
+const contactPaths = ['/contact', '/api/contact']
+const newsletterPaths = ['/newsletter', '/api/newsletter']
+const chatPaths = ['/chat', '/api/chat']
+const healthPaths = ['/health', '/api/health']
+const uploadsPaths = ['/uploads', '/api/uploads']
 
 // Rate limiting — more generous for admin panel (200 req / 15 min)
 const limiter = rateLimit({
@@ -48,21 +54,24 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 })
-app.use(`${apiPrefix}/`, limiter)
+app.use(['/','/api/'], limiter)
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 
+// Serve uploaded files on both root and /api
+app.use(uploadsPaths, express.static(resolve(__dirname, '../../public/uploads')))
+
 // Routes
-app.use(`${apiPrefix}/auth`, authRoutes)
-app.use(`${apiPrefix}/admin`, adminRoutes)
-app.use(`${apiPrefix}/contact`, contactRoutes)
-app.use(`${apiPrefix}/newsletter`, newsletterRoutes)
-app.use(`${apiPrefix}/chat`, chatRoutes)
+app.use(routePaths, authRoutes)
+app.use(adminPaths, adminRoutes)
+app.use(contactPaths, contactRoutes)
+app.use(newsletterPaths, newsletterRoutes)
+app.use(chatPaths, chatRoutes)
 
 // Health check
-app.get(`${apiPrefix}/health`, (req, res) => {
+app.get(healthPaths, (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
