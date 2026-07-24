@@ -4,7 +4,7 @@ import './env.js'
 import app from '../server/api/index.js'
 
 export const config = {
-  runtime: 'nodejs18.x',
+  runtime: 'nodejs',
 }
 
 export default app
