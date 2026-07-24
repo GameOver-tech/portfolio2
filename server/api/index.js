@@ -39,6 +39,8 @@ app.use(cors({
 // Serve uploaded files
 app.use('/uploads', express.static(resolve(__dirname, '../../public/uploads')))
 
+const apiPrefix = process.env.VERCEL === '1' ? '' : '/api'
+
 // Rate limiting — more generous for admin panel (200 req / 15 min)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -46,21 +48,21 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 })
-app.use('/api/', limiter)
+app.use(`${apiPrefix}/`, limiter)
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 
 // Routes
-app.use('/api/auth', authRoutes)
-app.use('/api/admin', adminRoutes)
-app.use('/api/contact', contactRoutes)
-app.use('/api/newsletter', newsletterRoutes)
-app.use('/api/chat', chatRoutes)
+app.use(`${apiPrefix}/auth`, authRoutes)
+app.use(`${apiPrefix}/admin`, adminRoutes)
+app.use(`${apiPrefix}/contact`, contactRoutes)
+app.use(`${apiPrefix}/newsletter`, newsletterRoutes)
+app.use(`${apiPrefix}/chat`, chatRoutes)
 
 // Health check
-app.get('/api/health', (req, res) => {
+app.get(`${apiPrefix}/health`, (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 

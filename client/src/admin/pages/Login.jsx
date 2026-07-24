@@ -36,12 +36,16 @@ export default function AdminLogin() {
     } catch (err) {
       // Never pass a non-string to setError — React can't render objects as children
       const raw = err.response?.data?.error || err.message || 'Invalid credentials'
+      const message = typeof raw === 'string'
+        ? raw
+        : raw?.message || JSON.stringify(raw)
+
       if (err.response?.status === 500) {
         setError('Server error. Check that environment variables are set on Vercel.')
       } else if (err.code === 'ERR_NETWORK') {
         setError('Cannot reach server. Is the API running?')
       } else {
-        setError(typeof raw === 'string' ? raw : String(raw))
+        setError(message)
       }
     } finally {
       setLoading(false)
