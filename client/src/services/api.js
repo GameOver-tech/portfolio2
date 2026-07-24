@@ -22,126 +22,141 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('admin_token')
-      // Don't do a full page reload — let AdminLayout's verify() handle the redirect
-      // via React Router's <Navigate>, which avoids chunk loading race conditions.
     }
     return Promise.reject(error)
   }
 )
 
+// Helper: extract data array from paginated or flat responses
+function extractData(res) {
+  if (res.data?.data && Array.isArray(res.data.data)) return res.data.data
+  if (Array.isArray(res.data)) return res.data
+  return res.data || []
+}
+
 export const adminAPI = {
-  login: (email, password) => api.post('/auth/login', { email, password }),
-  verify: () => api.get('/auth/verify'),
-  getDashboard: () => api.get('/admin/dashboard'),
-  
+  // Auth
+  login: (email, password) => api.post('/api/auth/login', { email, password }),
+  verify: () => api.get('/api/auth/verify'),
+
+  // Dashboard
+  getDashboard: () => api.get('/api/admin/dashboard'),
+
   // Hero
-  getHero: () => api.get('/admin/hero'),
-  updateHero: (data) => api.put('/admin/hero', data),
-  
+  getHero: () => api.get('/api/admin/hero'),
+  updateHero: (data) => api.put('/api/admin/hero', data),
+
   // About
-  getAbout: () => api.get('/admin/about'),
-  updateAbout: (data) => api.put('/admin/about', data),
-  
+  getAbout: () => api.get('/api/admin/about'),
+  updateAbout: (data) => api.put('/api/admin/about', data),
+
   // Services
-  getServices: (params) => api.get('/admin/services', { params }),
-  createService: (data) => api.post('/admin/services', data),
-  updateService: (id, data) => api.put(`/admin/services/${id}`, data),
-  deleteService: (id) => api.delete(`/admin/services/${id}`),
-  
+  getServices: (params) => api.get('/api/admin/services', { params }).then(extractData),
+  createService: (data) => api.post('/api/admin/services', data),
+  updateService: (id, data) => api.put(`/api/admin/services/${id}`, data),
+  deleteService: (id) => api.delete(`/api/admin/services/${id}`),
+
   // Projects
-  getProjects: (params) => api.get('/admin/projects', { params }),
-  createProject: (data) => api.post('/admin/projects', data),
-  updateProject: (id, data) => api.put(`/admin/projects/${id}`, data),
-  deleteProject: (id) => api.delete(`/admin/projects/${id}`),
-  
+  getProjects: (params) => api.get('/api/admin/projects', { params }).then(extractData),
+  createProject: (data) => api.post('/api/admin/projects', data),
+  updateProject: (id, data) => api.put(`/api/admin/projects/${id}`, data),
+  deleteProject: (id) => api.delete(`/api/admin/projects/${id}`),
+
   // Categories
-  getCategories: () => api.get('/admin/categories'),
-  createCategory: (data) => api.post('/admin/categories', data),
-  deleteCategory: (id) => api.delete(`/admin/categories/${id}`),
-  
+  getCategories: () => api.get('/api/admin/categories').then(extractData),
+  createCategory: (data) => api.post('/api/admin/categories', data),
+  deleteCategory: (id) => api.delete(`/api/admin/categories/${id}`),
+
+  // Stats
+  getStats: () => api.get('/api/admin/stats').then(extractData),
+  createStat: (data) => api.post('/api/admin/stats', data),
+  updateStat: (id, data) => api.put(`/api/admin/stats/${id}`, data),
+  deleteStat: (id) => api.delete(`/api/admin/stats/${id}`),
+
   // Skills
-  getSkills: () => api.get('/admin/skills'),
-  createSkill: (data) => api.post('/admin/skills', data),
-  updateSkill: (id, data) => api.put(`/admin/skills/${id}`, data),
-  deleteSkill: (id) => api.delete(`/admin/skills/${id}`),
-  
+  getSkills: () => api.get('/api/admin/skills').then(extractData),
+  createSkill: (data) => api.post('/api/admin/skills', data),
+  updateSkill: (id, data) => api.put(`/api/admin/skills/${id}`, data),
+  deleteSkill: (id) => api.delete(`/api/admin/skills/${id}`),
+
   // Team
-  getTeam: () => api.get('/admin/team'),
-  createTeam: (data) => api.post('/admin/team', data),
-  updateTeam: (id, data) => api.put(`/admin/team/${id}`, data),
-  deleteTeam: (id) => api.delete(`/admin/team/${id}`),
-  
+  getTeam: () => api.get('/api/admin/team').then(extractData),
+  createTeam: (data) => api.post('/api/admin/team', data),
+  updateTeam: (id, data) => api.put(`/api/admin/team/${id}`, data),
+  deleteTeam: (id) => api.delete(`/api/admin/team/${id}`),
+
   // Messages
-  getMessages: (params) => api.get('/admin/messages', { params }),
-  deleteMessage: (id) => api.delete(`/admin/messages/${id}`),
-  
+  getMessages: (params) => api.get('/api/admin/messages', { params }).then(extractData),
+  deleteMessage: (id) => api.delete(`/api/admin/messages/${id}`),
+
   // Newsletter
-  getNewsletter: () => api.get('/admin/newsletter'),
-  deleteNewsletter: (id) => api.delete(`/admin/newsletter/${id}`),
-  
+  getNewsletter: () => api.get('/api/admin/newsletter').then(extractData),
+  deleteNewsletter: (id) => api.delete(`/api/admin/newsletter/${id}`),
+
   // Settings
-  getSettings: () => api.get('/admin/settings'),
-  updateSettings: (data) => api.put('/admin/settings', data),
-  
+  getSettings: () => api.get('/api/admin/settings'),
+  updateSettings: (data) => api.put('/api/admin/settings', data),
+
   // Social Links
-  getSocialLinks: () => api.get('/admin/social-links'),
-  createSocialLink: (data) => api.post('/admin/social-links', data),
-  updateSocialLink: (id, data) => api.put(`/admin/social-links/${id}`, data),
-  deleteSocialLink: (id) => api.delete(`/admin/social-links/${id}`),
-  
+  getSocialLinks: () => api.get('/api/admin/social-links').then(extractData),
+  createSocialLink: (data) => api.post('/api/admin/social-links', data),
+  updateSocialLink: (id, data) => api.put(`/api/admin/social-links/${id}`, data),
+  deleteSocialLink: (id) => api.delete(`/api/admin/social-links/${id}`),
+
   // Chatbot
-  getChatbotConfig: () => api.get('/admin/chatbot'),
-  updateChatbotConfig: (data) => api.put('/admin/chatbot', data),
-  
+  getChatbotConfig: () => api.get('/api/admin/chatbot'),
+  updateChatbotConfig: (data) => api.put('/api/admin/chatbot', data),
+
   // SEO
-  getSEO: () => api.get('/admin/seo'),
-  updateSEO: (data) => api.put('/admin/seo', data),
+  getSEO: () => api.get('/api/admin/seo'),
+  updateSEO: (data) => api.put('/api/admin/seo', data),
 
   // AI Providers
-  getAIProviders: () => api.get('/admin/ai-providers'),
-  createAIProvider: (data) => api.post('/admin/ai-providers', data),
-  updateAIProvider: (id, data) => api.put(`/admin/ai-providers/${id}`, data),
-  deleteAIProvider: (id) => api.delete(`/admin/ai-providers/${id}`),
+  getAIProviders: () => api.get('/api/admin/ai-providers').then(extractData),
+  createAIProvider: (data) => api.post('/api/admin/ai-providers', data),
+  updateAIProvider: (id, data) => api.put(`/api/admin/ai-providers/${id}`, data),
+  updateAIProviderApiKey: (id, api_key) => api.put(`/api/admin/ai-providers/${id}/api-key`, { api_key }),
+  deleteAIProvider: (id) => api.delete(`/api/admin/ai-providers/${id}`),
 
   // Experience
-  getExperience: () => api.get('/admin/experience'),
-  createExperience: (data) => api.post('/admin/experience', data),
-  updateExperience: (id, data) => api.put(`/admin/experience/${id}`, data),
-  deleteExperience: (id) => api.delete(`/admin/experience/${id}`),
+  getExperience: () => api.get('/api/admin/experience').then(extractData),
+  createExperience: (data) => api.post('/api/admin/experience', data),
+  updateExperience: (id, data) => api.put(`/api/admin/experience/${id}`, data),
+  deleteExperience: (id) => api.delete(`/api/admin/experience/${id}`),
 
   // Education
-  getEducation: () => api.get('/admin/education'),
-  createEducation: (data) => api.post('/admin/education', data),
-  updateEducation: (id, data) => api.put(`/admin/education/${id}`, data),
-  deleteEducation: (id) => api.delete(`/admin/education/${id}`),
+  getEducation: () => api.get('/api/admin/education').then(extractData),
+  createEducation: (data) => api.post('/api/admin/education', data),
+  updateEducation: (id, data) => api.put(`/api/admin/education/${id}`, data),
+  deleteEducation: (id) => api.delete(`/api/admin/education/${id}`),
 
   // FAQs
-  getFAQs: () => api.get('/admin/faqs'),
-  createFAQ: (data) => api.post('/admin/faqs', data),
-  updateFAQ: (id, data) => api.put(`/admin/faqs/${id}`, data),
-  deleteFAQ: (id) => api.delete(`/admin/faqs/${id}`),
+  getFAQs: () => api.get('/api/admin/faqs').then(extractData),
+  createFAQ: (data) => api.post('/api/admin/faqs', data),
+  updateFAQ: (id, data) => api.put(`/api/admin/faqs/${id}`, data),
+  deleteFAQ: (id) => api.delete(`/api/admin/faqs/${id}`),
 
   // Certifications
-  getCertifications: () => api.get('/admin/certifications'),
-  createCertification: (data) => api.post('/admin/certifications', data),
-  updateCertification: (id, data) => api.put(`/admin/certifications/${id}`, data),
-  deleteCertification: (id) => api.delete(`/admin/certifications/${id}`),
+  getCertifications: () => api.get('/api/admin/certifications').then(extractData),
+  createCertification: (data) => api.post('/api/admin/certifications', data),
+  updateCertification: (id, data) => api.put(`/api/admin/certifications/${id}`, data),
+  deleteCertification: (id) => api.delete(`/api/admin/certifications/${id}`),
   uploadCertificationFile: (file) => {
     const formData = new FormData()
     formData.append('file', file)
-    return api.post('/admin/certifications/upload', formData, {
+    return api.post('/api/admin/certifications/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
   },
 
   // Contact Form
-  submitContact: (data) => api.post('/contact', data),
+  submitContact: (data) => api.post('/api/contact', data),
 
   // Newsletter Subscribe
-  subscribe: (email) => api.post('/newsletter', { email }),
+  subscribe: (email) => api.post('/api/newsletter', { email }),
 
   // Chatbot
-  chat: (message) => api.post('/chat', { message }),
+  chat: (message) => api.post('/api/chat', { message }),
 }
 
 export default api

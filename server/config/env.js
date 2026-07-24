@@ -6,9 +6,11 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 // Try the local .env file (development only)
-try { dotenv.config({ path: resolve(__dirname, '../../.env') }) } catch {}
+try { dotenv.config({ path: resolve(__dirname, '../../.env') }) } catch (e) {
+  if (process.env.VERCEL !== '1') console.warn('No .env file found, using process.env')
+}
 
-// Priority: SUPABASE_URL (Vercel dashboard or api/env.js) → VITE_SUPABASE_URL (local .env) → ''
+// Priority: direct key → VITE_ prefix (for Vercel build-time injection) → ''
 const env = (key) => process.env[key] || process.env[`VITE_${key}`] || ''
 
 export const config = {
@@ -16,7 +18,7 @@ export const config = {
   supabaseUrl: env('SUPABASE_URL'),
   supabaseAnonKey: env('SUPABASE_ANON_KEY'),
   supabaseServiceRole: env('SUPABASE_SERVICE_ROLE'),
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: process.env.JWT_SECRET || '',
   corsOrigins: process.env.CORS_ORIGINS?.split(',') || ['*'],
   smtpHost: process.env.SMTP_HOST,
   smtpPort: process.env.SMTP_PORT,

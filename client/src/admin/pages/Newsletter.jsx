@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { adminSupabase as supabase } from '../../services/supabase'
+import { adminAPI } from '../../services/api'
 import DataTable from '../components/DataTable'
 import { showToast } from '../../components/ui/Toast'
 
@@ -7,20 +7,18 @@ export default function AdminNewsletter() {
   const [subscribers, setSubscribers] = useState([])
 
   useEffect(() => {
-    supabase.from('newsletter').select('*').order('created_at', { ascending: false }).then(({ data }) => {
+    adminAPI.getNewsletter().then(data => {
       if (data) setSubscribers(data)
-    })
+    }).catch(() => {})
   }, [])
 
   const handleDelete = async (item) => {
     if (!confirm('Delete this subscriber?')) return
     try {
-      const { error } = await supabase.from('newsletter').delete().eq('id', item.id)
-      if (error) throw error
+      await adminAPI.deleteNewsletter(item.id)
       setSubscribers(subscribers.filter((s) => s.id !== item.id))
       showToast('Subscriber deleted!')
-    } catch (err) {
-      console.error('Error deleting subscriber:', err)
+    } catch {
       showToast('Error deleting subscriber', 'error')
     }
   }

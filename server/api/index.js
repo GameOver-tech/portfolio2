@@ -25,10 +25,12 @@ console.log('Server starting with config:', {
   port: config.port,
 })
 
-// Security
+// Security headers
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
 }))
+
+// CORS
 app.use(cors({
   origin: config.corsOrigins.includes('*')
     ? (origin, cb) => cb(null, origin || true)
@@ -36,42 +38,62 @@ app.use(cors({
   credentials: true,
 }))
 
-// Serve uploaded files
-app.use('/uploads', express.static(resolve(__dirname, '../../public/uploads')))
+// Body parsing
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true }))
 
-const routePaths = ['/auth', '/api/auth']
-const adminPaths = ['/admin', '/api/admin']
-const contactPaths = ['/contact', '/api/contact']
-const newsletterPaths = ['/newsletter', '/api/newsletter']
-const chatPaths = ['/chat', '/api/chat']
-const healthPaths = ['/health', '/api/health']
-const uploadsPaths = ['/uploads', '/api/uploads']
+// Serve uploaded files (only in dev; Vercel uses Supabase Storage)
+if (process.env.VERCEL !== '1') {
+  app.use('/api/uploads', express.static(resolve(__dirname, '../../public/uploads')))
+}
 
-// Rate limiting — more generous for admin panel (200 req / 15 min)
-const limiter = rateLimit({
+// ── Dedicated rate limiters ──
+const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
   standardHeaders: true,
   legacyHeaders: false,
 })
-app.use(['/','/api/'], limiter)
 
-// Body parsing
-app.use(express.json({ limit: '10mb' }))
-app.use(express.urlencoded({ extended: true }))
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Try again later.' },
+})
 
-// Serve uploaded files on both root and /api
-app.use(uploadsPaths, express.static(resolve(__dirname, '../../public/uploads')))
+const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many chat requests. Try again later.' },
+})
 
-// Routes
-app.use(routePaths, authRoutes)
-app.use(adminPaths, adminRoutes)
-app.use(contactPaths, contactRoutes)
-app.use(newsletterPaths, newsletterRoutes)
-app.use(chatPaths, chatRoutes)
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many submissions. Try again later.' },
+})
+
+// Apply rate limiters
+app.use('/api', generalLimiter)
+app.use('/api/auth/login', authLimiter)
+app.use('/api/chat', chatLimiter)
+app.use('/api/contact', contactLimiter)
+
+// Routes (single /api prefix)
+app.use('/api/auth', authRoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/contact', contactRoutes)
+app.use('/api/newsletter', newsletterRoutes)
+app.use('/api/chat', chatRoutes)
 
 // Health check
-app.get(healthPaths, (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 

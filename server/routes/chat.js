@@ -1,6 +1,7 @@
 import { Router } from 'express'
-import { supabase } from '../supabase/client.js'
+import { supabaseAnon } from '../supabase/client.js'
 import { chatWithFallback } from '../services/ai-client.js'
+import { validate, schemas } from '../middleware/validate.js'
 
 const router = Router()
 
@@ -29,7 +30,7 @@ const TOOLS = [
     type: 'function',
     function: {
       name: 'get_personal_info',
-      description: 'Fetch Ali Hassan\'s contact details, bio, education, experience, certifications, location, social links, and stats.',
+      description: 'Fetch contact details, bio, education, experience, certifications, location, social links, and stats.',
       parameters: { type: 'object', properties: {} },
     },
   },
@@ -37,7 +38,7 @@ const TOOLS = [
 
 const toolExecutors = {
   get_portfolio_projects: async (args) => {
-    let query = supabase
+    let query = supabaseAnon
       .from('projects')
       .select('title, description, category, client, duration, software, thumbnail_url, project_url, github_url')
       .eq('status', 'published')
@@ -50,21 +51,21 @@ const toolExecutors = {
 
   get_services_and_expertise: async () => {
     const [servicesRes, skillsRes] = await Promise.all([
-      supabase.from('services').select('title, description, icon, price, features').eq('status', 'published').order('order'),
-      supabase.from('skills').select('name, level, category').eq('active', true).order('name'),
+      supabaseAnon.from('services').select('title, description, icon, price, features').eq('status', 'published').order('order'),
+      supabaseAnon.from('skills').select('name, level, category').eq('active', true).order('name'),
     ])
     return JSON.stringify({ services: servicesRes.data || [], skills: skillsRes.data || [] })
   },
 
   get_personal_info: async () => {
     const [settingsRes, socialRes, aboutRes, statsRes, experienceRes, educationRes, certsRes] = await Promise.all([
-      supabase.from('settings').select('site_name, site_description, contact_email, phone, address, whatsapp, github, linkedin, working_hours').limit(1).maybeSingle(),
-      supabase.from('social_links').select('platform, url').eq('active', true),
-      supabase.from('about').select('bio, mission, vision').limit(1).maybeSingle(),
-      supabase.from('stats').select('label, value, suffix').eq('active', true).order('order'),
-      supabase.from('experience').select('*').order('start_date', { ascending: false }),
-      supabase.from('education').select('*').order('order'),
-      supabase.from('certifications').select('title, issuer, credential_url, description').eq('active', true).order('order'),
+      supabaseAnon.from('settings').select('site_name, site_description, contact_email, phone, address, whatsapp, github, linkedin, working_hours').limit(1).maybeSingle(),
+      supabaseAnon.from('social_links').select('platform, url').eq('active', true),
+      supabaseAnon.from('about').select('bio, mission, vision').limit(1).maybeSingle(),
+      supabaseAnon.from('stats').select('label, value, suffix').eq('active', true).order('order'),
+      supabaseAnon.from('experience').select('*').order('start_date', { ascending: false }),
+      supabaseAnon.from('education').select('*').order('order'),
+      supabaseAnon.from('certifications').select('title, issuer, credential_url, description').eq('active', true).order('order'),
     ])
     return JSON.stringify({
       name: 'Ali Hassan',
@@ -90,15 +91,14 @@ function getLocalAnswer(message) {
   return null
 }
 
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.chat), async (req, res) => {
   try {
     const { message } = req.body
-    if (!message) return res.status(400).json({ error: 'Message is required' })
 
     const localAnswer = getLocalAnswer(message)
     if (localAnswer) return res.json({ reply: localAnswer })
 
-    const chatbotCfg = await supabase
+    const chatbotCfg = await supabaseAnon
       .from('chatbot_config')
       .select('model, temperature, max_tokens')
       .limit(1)

@@ -2,33 +2,34 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import { supabase, supabaseAnon } from '../supabase/client.js'
 import { config } from '../config/env.js'
+import { validate, schemas } from '../middleware/validate.js'
+import { verifyToken } from '../middleware/auth.js'
 
 const router = Router()
 
 // Admin login
-router.post('/login', async (req, res) => {
+router.post('/login', validate(schemas.login), async (req, res) => {
   try {
     const { email, password } = req.body
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' })
-    }
-
-    // Use the anon-key client for user sign-in (service-role may fail)
     const { data, error } = await supabaseAnon.auth.signInWithPassword({
       email,
       password,
     })
 
     if (error) {
+      if (error.message?.includes('Email not confirmed')) {
+        return res.status(401).json({ error: 'Please confirm your email before logging in' })
+      }
       return res.status(401).json({ error: 'Invalid credentials' })
     }
 
-    // Generate JWT
+    const role = data.user?.user_metadata?.role || 'admin'
+
     const token = jwt.sign(
-      { userId: data.user.id, email: data.user.email, role: 'admin' },
+      { userId: data.user.id, email: data.user.email, role },
       config.jwtSecret,
-      { expiresIn: '7d' }
+      { algorithm: 'HS256', expiresIn: '7d' }
     )
 
     res.json({
@@ -36,6 +37,7 @@ router.post('/login', async (req, res) => {
       user: {
         id: data.user.id,
         email: data.user.email,
+        role,
       },
     })
   } catch (error) {
@@ -48,19 +50,8 @@ router.post('/login', async (req, res) => {
 })
 
 // Verify token
-router.get('/verify', async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization
-    if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'No token provided' })
-    }
-
-    const token = authHeader.split(' ')[1]
-    const decoded = jwt.verify(token, config.jwtSecret)
-    res.json({ valid: true, user: decoded })
-  } catch {
-    res.status(401).json({ error: 'Invalid token' })
-  }
+router.get('/verify', verifyToken, (req, res) => {
+  res.json({ valid: true, user: req.user })
 })
 
 export default router

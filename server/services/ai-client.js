@@ -6,10 +6,23 @@ const PROVIDER_ENDPOINTS = {
   openrouter: 'https://openrouter.ai/api/v1/chat/completions',
 }
 
+const FETCH_TIMEOUT = 8000
+
+async function fetchWithTimeout(url, options, timeout = FETCH_TIMEOUT) {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeout)
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal })
+    return res
+  } finally {
+    clearTimeout(id)
+  }
+}
+
 export async function getEnabledProviders() {
   const { data } = await supabase
     .from('ai_providers')
-    .select('*')
+    .select('provider_name, api_key, model, status, priority, is_default')
     .eq('status', 'active')
     .order('priority', { ascending: true })
 
@@ -20,7 +33,26 @@ function buildGeminiPayload(messages, tools, model, maxTokens, temperature) {
   const contents = messages.map(m => {
     if (m.role === 'system') return { role: 'user', parts: [{ text: m.content }] }
     if (m.role === 'user') return { role: 'user', parts: [{ text: m.content }] }
-    if (m.role === 'assistant') return { role: 'model', parts: [{ text: m.content || '' }] }
+    if (m.role === 'assistant') {
+      const parts = []
+      if (m.content) parts.push({ text: m.content })
+      if (m.tool_calls) {
+        m.tool_calls.forEach(tc => {
+          let args = {}
+          try { args = JSON.parse(tc.function.arguments) } catch {}
+          parts.push({
+            functionCall: { name: tc.function.name, args }
+          })
+        })
+      }
+      return { role: 'model', parts }
+    }
+    if (m.role === 'tool') {
+      return {
+        role: 'function',
+        parts: [{ functionResponse: { name: 'get_tool_result', response: { response: m.content } } }]
+      }
+    }
     return null
   }).filter(Boolean)
 
@@ -89,7 +121,7 @@ export async function chatWithProvider(provider, messages, tools, model, maxToke
   if (provider.provider_name === 'gemini') {
     const url = `${endpoint}/${actualModel}:generateContent?key=${provider.api_key}`
     const payload = buildGeminiPayload(messages, tools, actualModel, maxTokens, temperature)
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -114,7 +146,7 @@ export async function chatWithProvider(provider, messages, tools, model, maxToke
   }
 
   const payload = buildStandardPayload(messages, tools, actualModel, maxTokens, temperature)
-  const res = await fetch(endpoint, {
+  const res = await fetchWithTimeout(endpoint, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),

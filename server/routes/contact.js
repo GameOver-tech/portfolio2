@@ -1,19 +1,14 @@
 import { Router } from 'express'
-import { supabase } from '../supabase/client.js'
-import { config } from '../config/env.js'
+import { supabaseAnon } from '../supabase/client.js'
+import { validate, schemas } from '../middleware/validate.js'
 
 const router = Router()
 
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.contact), async (req, res) => {
   try {
     const { name, email, subject, message } = req.body
 
-    if (!name || !email || !subject || !message) {
-      return res.status(400).json({ error: 'All fields required' })
-    }
-
-    // Store in Supabase
-    const { error } = await supabase.from('messages').insert({
+    const { error } = await supabaseAnon.from('messages').insert({
       name,
       email,
       subject,

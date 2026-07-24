@@ -1,8 +1,14 @@
 {
-  "buildCommand": "cd client && npm run build && cd .. && node scripts/generate-env.js",
+  "buildCommand": "cd client && npm run build; cd .. && node scripts/generate-env.js",
   "outputDirectory": "client/dist",
   "installCommand": "npm install && cd client && npm install",
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ]
+  ],
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30,
+      "memory": 2048
+    }
+  }
 }

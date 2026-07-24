@@ -1,28 +1,24 @@
 import { Router } from 'express'
-import { supabase } from '../supabase/client.js'
+import { supabaseAnon } from '../supabase/client.js'
+import { validate, schemas } from '../middleware/validate.js'
 
 const router = Router()
 
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.newsletter), async (req, res) => {
   try {
     const { email } = req.body
 
-    if (!email) {
-      return res.status(400).json({ error: 'Email required' })
-    }
-
-    // Check if already subscribed
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAnon
       .from('newsletter')
       .select('id')
       .eq('email', email)
-      .single()
+      .maybeSingle()
 
     if (existing) {
       return res.json({ success: true, message: 'Already subscribed!' })
     }
 
-    const { error } = await supabase.from('newsletter').insert({ email })
+    const { error } = await supabaseAnon.from('newsletter').insert({ email })
 
     if (error) throw error
 

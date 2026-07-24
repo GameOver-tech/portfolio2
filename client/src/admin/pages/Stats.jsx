@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { adminSupabase as supabase } from '../../services/supabase'
+import { adminAPI } from '../../services/api'
 import DataTable from '../components/DataTable'
 import { showToast } from '../../components/ui/Toast'
 import { refreshSite } from '../../utils/refresh'
@@ -16,74 +16,61 @@ export default function AdminStats() {
   useEffect(() => { fetchData() }, [])
 
   const fetchData = async () => {
-    const { data } = await supabase.from('stats').select('*').order('order')
-    if (data) setStats(data)
+    try { const data = await adminAPI.getStats(); setStats(data) } catch {}
   }
 
   const handleSave = async (e) => {
     e.preventDefault()
     setLoading(true)
-    let error
-    if (editing) {
-      const res = await supabase.from('stats').update({ ...form, updated_at: new Date().toISOString() }).eq('id', editing.id)
-      error = res.error
-    } else {
-      const res = await supabase.from('stats').insert({ ...form })
-      error = res.error
-    }
+    try {
+      if (editing) { const res = await adminAPI.updateStat(editing.id, form); console.log(res) }
+      else { await adminAPI.createStat(form) }
+      showToast(editing ? 'Stat updated!' : 'Stat created!')
+      refreshSite(); setShowModal(false); setForm(defaultForm); setEditing(null); fetchData()
+    } catch { showToast('Error saving stat', 'error') }
     setLoading(false)
-    if (error) { showToast('Error saving stat', 'error'); console.error(error) }
-    else { showToast(editing ? 'Stat updated!' : 'Stat created!'); refreshSite() }
-    setShowModal(false)
-    setForm(defaultForm)
-    setEditing(null)
-    fetchData()
   }
 
   const handleEdit = (item) => { setForm(item); setEditing(item); setShowModal(true) }
   const handleDelete = async (item) => {
     if (!confirm('Delete this stat?')) return
-    const { error } = await supabase.from('stats').delete().eq('id', item.id)
-    if (error) { showToast('Error deleting stat', 'error'); console.error(error) }
-    else { showToast('Stat deleted!'); refreshSite() }
-    fetchData()
+    try { await adminAPI.deleteStat(item.id); showToast('Stat deleted!'); refreshSite(); fetchData() }
+    catch { showToast('Error deleting stat', 'error') }
   }
 
   const columns = [
     { key: 'label', label: 'Label' },
-    { key: 'value', label: 'Value', render: (v) => v },
+    { key: 'value', label: 'Value' },
     { key: 'suffix', label: 'Suffix' },
     { key: 'order', label: 'Order' },
-    { key: 'active', label: 'Active', render: (v) => v ? <span className="text-primary">✓</span> : '-' },
+    { key: 'active', label: 'Active', render: (v) => v ? <span className="text-accent">✓</span> : '-' },
   ]
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-heading font-bold">Stats Counters</h2>
-        <button onClick={() => { setForm(defaultForm); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl">Add Stat</button>
+        <button onClick={() => { setForm(defaultForm); setEditing(null); setShowModal(true) }} className="px-6 py-2.5 bg-accent text-background font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all duration-300">Add Stat</button>
       </div>
-
       <DataTable columns={columns} data={stats} onEdit={handleEdit} onDelete={handleDelete} searchPlaceholder="Search stats..." />
-
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg bg-card border border-white/10 rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-lg bg-bg-surface border border-border-subtle rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-heading font-bold mb-6">{editing ? 'Edit Stat' : 'Add Stat'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
-              <input value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} placeholder="Label (e.g. Years Experience)" required className="w-full px-4 py-3 bg-background border border-white/10 rounded-xl text-white" />
+              <input value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} placeholder="Label" required className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors" />
               <div className="grid grid-cols-3 gap-4">
-                <input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: parseInt(e.target.value) || 0 })} placeholder="Value" className="px-4 py-3 bg-background border border-white/10 rounded-xl text-white" />
-                <input value={form.suffix} onChange={(e) => setForm({ ...form, suffix: e.target.value })} placeholder="Suffix (e.g. +)" className="px-4 py-3 bg-background border border-white/10 rounded-xl text-white" />
-                <input type="number" value={form.order} onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })} placeholder="Order" className="px-4 py-3 bg-background border border-white/10 rounded-xl text-white" />
+                <input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: parseInt(e.target.value) || 0 })} placeholder="Value" className="px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors" />
+                <input value={form.suffix} onChange={(e) => setForm({ ...form, suffix: e.target.value })} placeholder="Suffix" className="px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors" />
+                <input type="number" value={form.order} onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })} placeholder="Order" className="px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors" />
               </div>
               <label className="flex items-center space-x-2 text-sm">
-                <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="rounded border-white/20" />
-                <span>Active</span>
+                <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="rounded border-border-subtle" />
+                <span className="text-text-primary">Active</span>
               </label>
               <div className="flex justify-end space-x-3 pt-2">
-                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 border border-white/10 rounded-xl text-gray">Cancel</button>
-                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-gradient-primary text-white font-semibold rounded-xl disabled:opacity-50">{loading ? 'Saving...' : 'Save'}</button>
+                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 border border-border-subtle rounded-xl text-text-muted hover:text-text-primary transition-all">Cancel</button>
+                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-accent text-background font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all duration-300 disabled:opacity-50">{loading ? 'Saving...' : 'Save'}</button>
               </div>
             </form>
           </div>
