@@ -1,5 +1,4 @@
-// Vercel serverless entry point
-// Statically import build-injected env vars so Vercel's tracer bundles them
+// Vercel serverless catch-all entry point for /api/*
 import './env.js'
 import app from '../server/api/index.js'
 
