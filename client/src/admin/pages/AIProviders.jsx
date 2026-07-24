@@ -27,7 +27,7 @@ export default function AdminAIProviders() {
 
   const fetchData = async () => {
     try {
-      const { data } = await adminAPI.getAIProviders()
+      const data = await adminAPI.getAIProviders()
       setProviders(data || [])
     } catch {}
   }
@@ -37,7 +37,13 @@ export default function AdminAIProviders() {
     setLoading(true)
     try {
       if (editing) {
-        await adminAPI.updateAIProvider(editing.id, form)
+        // Update non-key fields first
+        const { api_key, ...safeFields } = form
+        await adminAPI.updateAIProvider(editing.id, safeFields)
+        // If a new API key was entered, send it via the secure endpoint
+        if (api_key && api_key !== '••••••••') {
+          await adminAPI.updateAIProviderApiKey(editing.id, api_key)
+        }
         showToast('Provider updated!')
       } else {
         await adminAPI.createAIProvider(form)
@@ -53,7 +59,15 @@ export default function AdminAIProviders() {
   }
 
   const handleEdit = (item) => {
-    setForm({ provider_name: item.provider_name, api_key: item.api_key, model: item.model, status: item.status, priority: item.priority, is_default: item.is_default })
+    // Don't show the actual API key — show masked placeholder
+    setForm({
+      provider_name: item.provider_name || '',
+      api_key: '••••••••',
+      model: item.model || '',
+      status: item.status || 'active',
+      priority: item.priority || 1,
+      is_default: item.is_default || false,
+    })
     setEditing(item)
     setShowModal(true)
   }
@@ -75,6 +89,7 @@ export default function AdminAIProviders() {
   const columns = [
     { key: 'provider_name', label: 'Provider', render: (v) => <span className="capitalize">{v}</span> },
     { key: 'model', label: 'Model' },
+    { key: 'has_key', label: 'API Key', render: (v) => v ? <span className="text-accent text-xs">✓ Configured</span> : <span className="text-text-muted text-xs">—</span> },
     { key: 'status', label: 'Status', render: (v) => <span className={v === 'active' ? 'text-green-400' : 'text-red-400'}>{v}</span> },
     { key: 'priority', label: 'Priority' },
     { key: 'is_default', label: 'Default', render: (v) => v ? <span className="text-accent">✓</span> : '-' },
@@ -88,7 +103,6 @@ export default function AdminAIProviders() {
           className="px-6 py-2.5 bg-accent text-background font-semibold rounded-xl hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all duration-300">Add Provider</button>
       </div>
       <DataTable columns={columns} data={providers} onEdit={handleEdit} onDelete={handleDelete} searchPlaceholder="Search providers..." />
-
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg bg-bg-surface border border-border-subtle rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
@@ -99,9 +113,9 @@ export default function AdminAIProviders() {
                 <option value="">Select provider...</option>
                 {PROVIDERS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
               </select>
-              <input value={form.api_key} onChange={(e) => setForm({ ...form, api_key: e.target.value })} placeholder="API Key" required
+              <input value={form.api_key} onChange={(e) => setForm({ ...form, api_key: e.target.value })} placeholder={editing ? "Leave as-is or enter new key" : "API Key"} required={!editing}
                 className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors" />
-              <input value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} placeholder="Model (e.g., llama-3.3-70b-versatile)" required
+              <input value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} placeholder="Model" required
                 className="w-full px-4 py-3 bg-bg-glass border border-border-subtle rounded-xl text-text-primary focus:outline-none focus:border-accent/30 transition-colors" />
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -120,7 +134,7 @@ export default function AdminAIProviders() {
               </div>
               <label className="flex items-center space-x-2 text-sm">
                 <input type="checkbox" checked={form.is_default} onChange={(e) => setForm({ ...form, is_default: e.target.checked })} className="rounded border-border-subtle" />
-                <span>Set as default provider</span>
+                <span className="text-text-primary">Set as default provider</span>
               </label>
               <div className="flex justify-end space-x-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 border border-border-subtle rounded-xl text-text-muted hover:text-text-primary transition-all">Cancel</button>

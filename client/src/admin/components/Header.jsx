@@ -29,7 +29,7 @@ export default function AdminHeader() {
 
   return (
     <header
-      className={`fixed top-0 right-0 left-64 z-40 flex h-16 items-center justify-between px-6 transition-all duration-300 ${
+      className={`fixed top-0 right-0 left-0 lg:left-64 z-30 flex h-16 items-center justify-between px-4 sm:px-6 pl-14 lg:pl-6 transition-all duration-300 ${
         isScrolled ? 'border-b border-border-subtle bg-bg-glass backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
@@ -44,7 +44,7 @@ export default function AdminHeader() {
         href="/"
         target="_blank"
         rel="noopener noreferrer"
-        className="rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-all duration-300 hover:bg-accent/20"
+        className="rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-all duration-300 hover:bg-accent/20 whitespace-nowrap"
       >
         View Site
       </a>

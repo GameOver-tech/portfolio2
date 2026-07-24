@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api'
+const API_BASE = import.meta.env.VITE_API_URL || ''
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -148,6 +148,12 @@ export const adminAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
   },
+
+  // Process Steps
+  getProcessSteps: () => api.get('/api/admin/process-steps').then(extractData),
+  createProcessStep: (data) => api.post('/api/admin/process-steps', data),
+  updateProcessStep: (id, data) => api.put(`/api/admin/process-steps/${id}`, data),
+  deleteProcessStep: (id) => api.delete(`/api/admin/process-steps/${id}`),
 
   // Contact Form
   submitContact: (data) => api.post('/api/contact', data),

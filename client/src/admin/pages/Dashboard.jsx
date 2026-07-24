@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { FiUsers, FiFolder, FiMessageSquare, FiEye, FiTrendingUp, FiMail } from 'react-icons/fi'
-import { adminSupabase as supabase } from '../../services/supabase'
+import { FiUsers, FiFolder, FiMessageSquare, FiTrendingUp, FiMail } from 'react-icons/fi'
+import { adminAPI } from '../../services/api'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -14,25 +14,13 @@ export default function AdminDashboard() {
   useEffect(() => { fetchStats() }, [])
 
   const fetchStats = async () => {
-    // Use select('id') + .then(res => res.data.length) instead of count: 'exact'
-    // because Supabase anon key returns null count on free tier / RLS
-    const countRows = async (table) => {
-      try {
-        const { data, error } = await supabase.from(table).select('id')
-        if (error) return 0
-        return data?.length || 0
-      } catch {
-        return 0
-      }
+    try {
+      const res = await adminAPI.getDashboard()
+      setStats(res.data)
+    } catch {
+      const s = { projects: 0, services: 0, messages: 0, subscribers: 0 }
+      setStats(s)
     }
-
-    const [projects, services, messages, subscribers] = await Promise.all([
-      countRows('projects'),
-      countRows('services'),
-      countRows('messages'),
-      countRows('newsletter'),
-    ])
-    setStats({ projects, services, messages, subscribers })
   }
 
   const statCards = [
@@ -45,7 +33,6 @@ export default function AdminDashboard() {
   return (
     <div>
       <h2 className="text-2xl font-heading font-bold text-white mb-8">Dashboard Overview</h2>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {statCards.map((card, i) => (
           <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
@@ -60,7 +47,6 @@ export default function AdminDashboard() {
           </motion.div>
         ))}
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="p-6 rounded-2xl bg-bg-card border border-border-subtle">
           <h3 className="text-lg font-heading font-bold text-white mb-4">Quick Actions</h3>

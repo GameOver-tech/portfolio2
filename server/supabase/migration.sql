@@ -23,8 +23,7 @@ CREATE TABLE IF NOT EXISTS public.process_steps (
 );
 
 ALTER TABLE public.process_steps ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Public read" ON public.process_steps FOR SELECT USING (true);
-CREATE POLICY "Admin all" ON public.process_steps FOR ALL USING (auth.role() = 'authenticated');
+-- Policies are created below with standardized names
 
 -- Insert default process steps
 INSERT INTO public.process_steps (step, title, description, "order") VALUES
@@ -484,6 +483,8 @@ DROP POLICY IF EXISTS "Admin full access" ON public.blogs;
 DROP POLICY IF EXISTS "Admin full access" ON public.ai_providers;
 DROP POLICY IF EXISTS "Public read access" ON public.certifications;
 DROP POLICY IF EXISTS "Admin full access" ON public.certifications;
+DROP POLICY IF EXISTS "Public read access" ON public.process_steps;
+DROP POLICY IF EXISTS "Admin full access" ON public.process_steps;
 
 -- Public read access for published data
 CREATE POLICY "Public read access" ON public.hero FOR SELECT USING (true);
@@ -499,6 +500,7 @@ CREATE POLICY "Public read access" ON public.categories FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON public.settings FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON public.seo FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON public.chatbot_config FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON public.process_steps FOR SELECT USING (active = true);
 
 -- Public insert for contact form and newsletter (unauthenticated users)
 CREATE POLICY "Allow public insert" ON public.messages FOR INSERT TO anon WITH CHECK (true);
@@ -533,6 +535,7 @@ CREATE POLICY "Admin full access" ON public.blogs FOR ALL USING (auth.role() = '
 CREATE POLICY "Admin full access" ON public.ai_providers FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Public read access" ON public.certifications FOR SELECT USING (active = true);
 CREATE POLICY "Admin full access" ON public.certifications FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin full access" ON public.process_steps FOR ALL USING (auth.role() = 'authenticated');
 
 -- Insert default social links
 INSERT INTO public.social_links (platform, url) VALUES
@@ -781,8 +784,8 @@ ON CONFLICT DO NOTHING;
 
 -- Insert default AI providers
 INSERT INTO public.ai_providers (provider_name, api_key, model, status, priority, is_default) VALUES
-  ('groq', '${GROQ_API_KEY}', 'llama-3.3-70b-versatile', 'active', 1, true),
-  ('gemini', '${GEMINI_API_KEY}', 'gemini-2.0-flash', 'active', 2, false),
+  ('groq', '', 'llama-3.3-70b-versatile', 'active', 1, true),
+  ('gemini', '', 'gemini-2.0-flash', 'active', 2, false),
   ('openrouter', '', 'openai/gpt-4o-mini', 'inactive', 3, false)
 ON CONFLICT (provider_name) DO NOTHING;
 
